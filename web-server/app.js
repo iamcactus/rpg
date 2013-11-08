@@ -123,7 +123,7 @@ app.post('/quick_reg', function(req, res) {
       // regist
       var loginName   = quickRegUtil.getName(deviceInfo);
       var passwordHash = Token.cryptPass(quickRegUtil.getPasswordHash(deviceInfo));
-      loginDao.createUser(dbhandle_m, deviceInfo, loginName, passwordHash, function(err, user) {
+      loginDao.createUser(mysql_m, deviceInfo, loginName, passwordHash, function(err, user) {
         if (err || !user) {
           console.error(err);
           if (err && err.code === 1062) {
