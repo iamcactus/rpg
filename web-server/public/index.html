@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+            chatofpomelo
+        </title>
+        <link rel="stylesheet" href="style.css" type="text/css" />
+        <script src="js/lib/jquery-1.8.0.min.js" type="text/javascript">
+        </script>
+
+        <script src="js/lib/build/build.js" type="text/javascript">
+
+        </script>
+        <script type="text/javascript">
+         
+         require('boot');
+        </script> 
+        <script src="js/client.js">
+                		
+        </script>
+        <script src="js/pop.js" type="text/javascript">
+
+        </script>
+    </head>
+    
+    <body>
+        <div id="app">
+            <div id="quickLoginView">
+                <div id="quickLoginTitle">
+                    这里展示[快速游戏]<br>
+                    点击[快速游戏]，直接进入号码为1234的聊天室
+                    刷新页面即可退出（即断开socket连接)
+
+                    <br>
+                    <form action="/quick_reg" method="POST">
+                      deviceInfo: <input type="text" name="deviceInfo" /><br>
+                      <input type="submit" value="快速游戏"/>
+                    </form>
+                </div>
+<hr>
+                <div id="quickLoginTitle">
+                    这里展示[注册]<br>
+                    点击[注册]，
+                    channel为聊天室号码(默认为1234)
+                    刷新页面即可退出（即断开socket连接)
+                    <br>
+                    <form action="/regist" method="POST">
+                      <input type="text" name="name" id="name" placeholder="帐号"/><br>
+                      <input type="text" name="password" id="password" placeholder="密码"/><br>
+                      <input name="channels" type="text" id="channelList" placeholder="channel" /><br>
+                      帐号密码皆请输入英数字<br>
+                      <input type="submit" value="注册"/>
+                    </form>
+                </div>
+<hr>
+                <div id="quickLoginTitle">
+                    这里展示[登陆]<br>
+                    点击[登陆]，直接进入号码为1234的聊天室
+                    channel为聊天室号码(默认为1234)
+                    刷新页面即可退出（即断开socket连接)
+                    <br>
+                    <form action="/login" method="POST">
+                      <input type="text" name="name" id="name" placeholder="帐号"/><br>
+                      <input type="text" name="password" id="password" placeholder="密码"/><br>
+                      <input name="channels" type="text" id="channelList" placeholder="channel" /><br>
+                      帐号密码皆请输入英数字<br>
+                      <input type="submit" value="登陆"/>
+                    </form>
+                </div>
+
+            </div>
+
+            <div id="loginView">
+                <div id="loginTitle">
+                    Chat of Pomelo
+                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <input id="userId" type="text" placeholder="enter your uid" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name="token" type="text" id="token" placeholder="enter your token" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name="worldId" type="text" id="worldId" placeholder="enter your worldId" />
+                        </td>
+                    </tr>
+                        <tr>
+                            <td>
+                                <input id="login" type='button' value="join" />
+                            </td>
+                        </tr>
+                </table>
+                <div id="loginError">
+                </div>
+            </div>
+
+<hr>
+<hr>
+<hr>
+
+
+            <div id="chatHistory">
+            </div>
+            <div id="toolbar">
+                <ul id="status">
+                    <li>
+                        users:
+                        <select name="users" id="usersList">
+                            <option value="*">
+                                all
+                            </option>
+                        </select>
+                    </li>
+                    <li>
+                        userId:
+                        <span id="userId">
+                        </span>
+                    </li>
+                    <li>
+                        loginName:
+                        <span id="name">
+                        </span>
+                    </li>
+                    <li>
+                        room:
+                        <span id="room">
+                        </span>
+                    </li>
+                </ul>
+                <input tabindex="1" type="text" id="entry" />
+            </div>
+        </div>
+        <div id="pop">
+            <div id="popHead">
+                <a id="popClose" title="close">Close</a>
+                <h2>
+                    Tip
+                </h2>
+            </div>
+            <div id="popContent">
+                <dl>
+                    <dd id="popIntro">
+                    </dd>
+                </dl>
+                <p id="popMore">
+                    No Tip Again
+                </p>
+            </div>
+        </div>
+    </body>
+
+</html>

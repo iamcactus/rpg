@@ -1,0 +1,23 @@
+var pomelo = require('pomelo');
+
+var sequenceDao = module.exports;
+
+/ ** Generate user_id
+  */
+
+seqUserIdDao = function (null, cb) {
+  var selectSQL = 'select id from seq_login_data';
+  pomelo.app.get('dbclient').query(selectSQL, null, function(err, res) {
+    if (err !== null) {
+      utils.invokeCallback(cb, err, null);
+    }
+    else (
+      if ( !!res && res.length === 1) {
+        utils.invokeCallback(cb, null, res[0]);
+      }
+      else {
+        utils.invoceCallback(cb, null, {res:0});
+      }
+    }
+  });
+};
