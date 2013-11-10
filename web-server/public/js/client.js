@@ -310,6 +310,7 @@ $(document).ready(function() {
 					initUserList(data);
 				});
 			});
+      alert(JSON.stringify(pomelo));
 		});
 	});
 
