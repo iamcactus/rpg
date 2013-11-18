@@ -26,6 +26,11 @@ module.exports = {
 		FA_NO_SERVER_AVAILABLE: 2001
 	}, 
 
+  PLAYER: {
+    ERR_WRONG_NAME: 6001,
+    ERR_NAME_EXIST: 6002,
+  },
+
 	CHAT: {
 		FA_CHANNEL_CREATE: 		3001, 
 		FA_CHANNEL_NOT_EXIST: 	3002, 

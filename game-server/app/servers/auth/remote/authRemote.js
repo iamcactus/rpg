@@ -1,3 +1,5 @@
+var pomelo = require('pomelo');
+var logger = require('pomelo-logger').getLogger(__filename);
 var tokenService = require('../../../../../shared/token');
 var loginDao = require('../../../dao/loginDao');
 var CODE = require('../../../../../shared/code');
@@ -37,10 +39,13 @@ remote.auth = function(token, cb) {
 		return;
 	}
 
-  var dbhandle = 'game_master_s';
-	loginDao.getLoginDataByUid(dbhandle, res.uid, function(err, user) {
+  // read from slave DB
+  var dbhandle_s = 'game_master_s';
+  var mysqlc = this.app.get(dbhandle_s);
+
+	loginDao.getLoginDataByUid(mysqlc, res.uid, function(err, user) {
 		if(err) {
-			cb(err);
+			cb(err.message, err.code, null);
 			return;
 		}
 

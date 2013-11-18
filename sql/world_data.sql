@@ -1,5 +1,6 @@
 USE game_master;
-Drop table if exists world_data;
+
+#DROP TABLE IF EXISTS world_data;
 CREATE TABLE world_data (
   id              int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '世界id',
   name            varchar(80) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '世界名',

@@ -5,6 +5,8 @@ logs/*.log
 !.gitignore
 game-server/node_modules/*
 web-server/node_modules/*
+game-server/nohup.out
+web-server/nohup.out
 .project
 .settings/
 **/*.svn

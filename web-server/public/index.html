@@ -104,7 +104,7 @@
                 <hr>
                 uid为用户ID<br>
                 token为用户认证成功后返回的token<br>
-                worldId为世界服务器ID, 例如1001<br>
+                worldId为世界服务器ID, 当前只有1001<br>
                 <br>
                 * uid, token可以从登陆／注册的返回页面复制粘贴
                 <hr>
@@ -116,6 +116,63 @@
 <hr>
 <hr>
 
+            <div id="debugView">
+                <div id="quickLoginTitle">
+                DebugView
+                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <input id="worldId" name="worldId" type="text" placeholder="enter your worldId" />
+                            enter your worldId
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="userId" type="text" placeholder="enter your uid" />
+                            enter your uid, this uidd must be same as the uid you used in "join" above. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="cardId" type="text" placeholder="enter your cardId" />
+                            enter your cardId
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="nickname" type="text" placeholder="enter your nickname" />
+                            enter your nickname
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <input type="radio" name="sex" value="1" id="sexType" checked />Male<br>
+                        <input type="radio" name="sex" value="0" id="sexType" />Female
+                        </td>
+                    </tr>
+                        <tr>
+                            <td>
+                                <input id="createPlayer" type='button' value="join" />
+                            </td>
+                        </tr>
+                </table>
+                <hr>
+                uid为用户ID<br>
+                Only worked after your "join" succeed. (Cauz u need got session)
+                <hr>
+            </div>
+
+            <div id="hideView">
+                <div id="quickLoginTitle">
+                brabra<br>
+                asdfasdf<br>
+                <table><tr><td>Mkvv vszrox6 ro wsvv luy yyu NSOT MYVK
+                </td></tr></table>
+                brabra<br>
+                asdfasdf<br>
+                </div>
+            </div>
 
             <div id="chatHistory">
             </div>
@@ -140,12 +197,14 @@
                         </span>
                     </li>
                     <li>
-                        room:
-                        <span id="room">
+                        world:
+                        <span id="wid">
                         </span>
                     </li>
                 </ul>
+                <!--
                 <input tabindex="1" type="text" id="entry" />
+                -->
             </div>
         </div>
         <div id="pop">

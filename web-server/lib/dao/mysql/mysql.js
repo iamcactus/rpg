@@ -1,73 +1,29 @@
 // mysql CRUD
-var sqlclient = module.exports;
-
-var _pool;
-
-var NND = {};
-
-/*
- * Init sql connection pool
- * @param {Object} app The app for the server.
- */
-NND.init = function(app, dbhandle){
-  console.log('in NND.init');
-  console.log(dbhandle);
-	_pool = require('./dao-pool').createMysqlPool(app, dbhandle);
-};
-
-/**
- * Excute sql statement
- * @param {String} sql Statement The sql need to excute.
- * @param {Object} args The args for the sql.
- * @param {fuction} cb Callback function.
- * 
- */
-NND.query = function(sql, args, cb){
-	_pool.acquire(function(err, client) {
-		if (!!err) {
-			console.error('[sqlqueryErr] '+err.stack);
-			return;
-		}
-		client.query(sql, args, function(err, res) {
-			_pool.release(client);
-			cb(err, res);
-		});
-	});
-};
-
-/**
- * Close connection pool.
- */
-NND.shutdown = function(){
-	_pool.destroyAllNow();
-};
-
 /**
  * init database
  */
-sqlclient.init = function(app, dbhandle) {
-	if (!!_pool){
-		return sqlclient;
-	} else {
-		NND.init(app, dbhandle);
-		sqlclient.insert = NND.query;
-		sqlclient.update = NND.query;
-		sqlclient.delete = NND.query;
-		sqlclient.query = NND.query;
+module.exports = function(app, dbhandle) {
+  var Pool = require('./dao-pool');
+	this.pool = (new Pool(app, dbhandle)).pool;
+  app.set(dbhandle, this.pool);
 
-		return sqlclient;
-	}
+  this.pool.insert = this.pool.update = this.pool.delete = this.pool.query = function(sql, args, cb){
+    app.settings[dbhandle].acquire(function(err, client) {
+    	if (!!err) {
+    		console.error('[sqlqueryErr] '+err.stack);
+    		return;
+    	}
+    	client.query(sql, args, function(err, res) {
+    		app.settings[dbhandle].release(client);
+    		cb(err, res);
+    	});
+    });
+  };
+  this.pool.dbhandle = dbhandle;
+  this.pool.shutdown = function() {
+    this.pool.desctroyAllNow();
+  };
+  this.pool.getName = function() {
+    this.pool.getName();
+  }
 };
-
-/**
- * shutdown database
- */
-sqlclient.shutdown = function(app) {
-	NND.shutdown(app);
-};
-
-
-
-
-
-

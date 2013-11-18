@@ -6,16 +6,14 @@ var secret = require('../shared/config/session').secret;
 var loginDao = require('./lib/dao/loginDao');
 
 var app = express.createServer();
-var mysql = require('./lib/dao/mysql/mysql');
-
-// mysql handle
-var dbhandle_m = 'game_master_m';
-var dbhandle_s = 'game_master_s';
 
 //Init mysql
-var mysql_m = mysql.init(app, dbhandle_m);
-var mysql_s = mysql.init(app, dbhandle_s);
-
+// mysql_m master handle, mysql_s slave handle
+var dbclient = require('./lib/dao/mysql/mysql');
+var dbhandle_m = 'game_master_m';
+var dbhandle_s = 'game_master_s';
+var mysql_m = new dbclient(app, dbhandle_m).pool;
+var mysql_s = new dbclient(app, dbhandle_s).pool;
 var publicPath = __dirname + '/public';
 
 // quick regist
@@ -76,7 +74,6 @@ app.post('/login', function(req, res) {
       res.send({code: CODE.LOGIN.ERR_WRONG_PARAM});
       return;
     }
-    console.log(user);
     console.log(msg.name + ' login! userId:' + user.id);
     res.send({code: 200, token: Token.create(user.id, Date.now(), secret), uid: user.id});
   });
@@ -112,12 +109,10 @@ app.post('/quick_reg', function(req, res) {
   // check deviceInfo exists or not
   loginDao.getLoginDataByDeviceInfo(mysql_m, deviceInfo, function (err, user) {
     if (user) { // exists
-      console.log(' Got exists ' + user.id);
       res.send({code: CODE.REGIST.ERR_EXIST, 
                 token: Token.create(user.id, Date.now(), secret), 
                 uid: user.id});
       return;
-      console.log('check if come here');
     }
     else {
       // regist
@@ -125,7 +120,6 @@ app.post('/quick_reg', function(req, res) {
       var passwordHash = Token.cryptPass(quickRegUtil.getPasswordHash(deviceInfo));
       loginDao.createUser(mysql_m, deviceInfo, loginName, passwordHash, function(err, user) {
         if (err || !user) {
-          console.error(err);
           if (err && err.code === 1062) {
             res.send({code: CODE.REGIST.ERR_DUPLICATED});
           } else {
@@ -141,7 +135,6 @@ app.post('/quick_reg', function(req, res) {
 });
 
 app.post('/regist', function(req, res) {
-  console.log('req.params');
   var msg = req.body;
   if (!msg.name || !msg.password) {
     res.send({code: CODE.REGIST.ERR_WRONG_PARAM});
@@ -159,7 +152,6 @@ app.post('/regist', function(req, res) {
     deviceInfo = msg.name; // deviceInfo is unique, so set unvalid deviceInfo to msg.name
   }
 
-  console.log('di:' + deviceInfo);
   // check deviceInfo exists or not
   loginDao.getLoginDataByLoginName(mysql_m, msg.name, function (err, user) {
     if (user) { // exists

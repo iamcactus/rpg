@@ -1,6 +1,9 @@
 var pomelo = window.pomelo;
 var username;
 var userId;
+var cardId;
+var worldId;
+var sexType;
 var token;
 var users;
 var rid;
@@ -131,7 +134,7 @@ function setUserId() {
 
 // set your name
 function setName() {
-	$("#name").text(username);
+	$("#name").text(name);
 };
 
 // set your room
@@ -139,6 +142,10 @@ function setRoom() {
 	$("#room").text(rid);
 };
 
+// set your world
+function setWorld() {
+	$("#World").text(WorldId);
+};
 // show error
 function showError(content) {
 	$("#loginError").text(content);
@@ -148,6 +155,8 @@ function showError(content) {
 // show login panel
 function showLogin() {
 	$("#loginView").show();
+	$("#debugView").hide();
+	$("#hideView").hide();
 	$("#chatHistory").hide();
 	$("#toolbar").hide();
 	$("#loginError").hide();
@@ -158,6 +167,8 @@ function showLogin() {
 function showChat() {
 	$("#loginView").hide();
 	$("#loginError").hide();
+	$("#debugView").show();
+	$("#hideView").show();
 	$("#toolbar").show();
 	//$("entry").focus();
 	//scrollDown(base);
@@ -270,6 +281,7 @@ $(document).ready(function() {
 	$("#login").click(function() {
 		userId = $("#userId").attr("value");
 		token = $('#token').val();
+    worldId = $("#worldId").attr("value");
     rid = 1234;
     /*
 		if(username.length > 20 || username.length == 0 || rid.length > 20 || rid.length == 0) {
@@ -294,6 +306,7 @@ $(document).ready(function() {
 				pomelo.request(route, {
 					userId: userId,
 					token: token,
+          worldId: worldId,
           rid: rid
 				}, function(data) {
         alert(JSON.stringify(data));
@@ -307,10 +320,50 @@ $(document).ready(function() {
 					setName();
 					setRoom();
 					showChat();
-					initUserList(data);
+					//initUserList(data);
 				});
 			});
-      alert(JSON.stringify(pomelo));
+		});
+	});
+
+	//deal with createPlayer button click.
+	$("#createPlayer").click(function() {
+		userId = $("#userId").attr("value");
+		cardId = $("#cardId").attr("value");
+		username = $("#nickname").attr("value");
+		sexType = $("#sexType").attr("value");
+		worldId = $("#worldId").attr("value");
+		//worldId = $('#worldId').val();
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "connector.roleHandler.createPlayer";
+				pomelo.request(route, {
+          name: username,
+          sexType: sexType,
+          cardId: cardId,
+          worldId: worldId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          //userName = ;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
 		});
 	});
 

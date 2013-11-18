@@ -1,5 +1,6 @@
 var pomelo = require('pomelo');
 var routeUtil = require('./app/util/routeUtil');
+var assert = require('assert');
 /**
  * Init app for client.
  */
@@ -46,11 +47,12 @@ app.configure('production|development', function() {
 // database configure
 app.configure('production|development', 'auth|chat|connector', function() {
   var mysqlConf = (app.get('mysql'));
+  var dbclient = require('./app/dao/mysql/mysql')
   for (var dbhandle in mysqlConf) {
-    var dbclient = require('./app/dao/mysql/mysql')
-    dbclient.init(app, dbhandle);
-    app.set(dbhandle, dbclient);
+    // set dbhandle withandle name in mysql.json
+    app.set(dbhandle, new dbclient(app, dbhandle).pool); 
   }
+  //assert.deepEqual(app.get('game_master_s'), app.get('game_world_1001_s'));
   //app.use(sync, {sync: {path:__dirname + 'app/dao/mapping', dbclient: dbclient}});
 });
 

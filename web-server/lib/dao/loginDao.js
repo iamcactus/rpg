@@ -1,10 +1,10 @@
 var mysql = require('./mysql/mysql');
 
 /*
-var dbhandle_m = 'game_master_m';
-var dbhandle_s = 'game_master_s';
-var mysql_m = mysql.init(dbhandle_m);
-var mysql_s = mysql.init(dbhandle_s);
+var mysqlc_m = 'game_master_m';
+var mysqlc_s = 'game_master_s';
+var mysql_m = mysql.init(mysqlc_m);
+var mysql_s = mysql.init(mysqlc_s);
 console.log('in loginDao');
 console.log(mysql_m);
 console.log(mysql_s);
@@ -20,13 +20,13 @@ var gdb = require('util');
  * @param {String} password_hash 
  * @param {Number} created_on registed datetime
  */
-loginDao.createUser = function (dbhandle, deviceInfo, loginName, passwordHash, cb) {
+loginDao.createUser = function (mysqlc, deviceInfo, loginName, passwordHash, cb) {
   var insertSQL = 
     'insert into login_data(device_info, login_name, password_hash, created_on) values (?,?,?,?)';
   var createdOn   = Math.round(new Date().getTime()/1000); // unixtime
   var args = [deviceInfo, loginName, passwordHash, createdOn];
   console.log(deviceInfo + loginName + passwordHash + createdOn);
-  dbhandle.insert(insertSQL, args, function(err, res) {
+  mysqlc.insert(insertSQL, args, function(err, res) {
     if (err !== null) {
       console.log(err);
       cb({code: err.number, msg: err.message}, null);
@@ -40,37 +40,27 @@ loginDao.createUser = function (dbhandle, deviceInfo, loginName, passwordHash, c
 
 /**
  * Get loginData by deviceInfo
- * @param {String} dbhandle handle for Master DB or Slave DB, default is Slave DB
+ * @param {String} mysqlc handle for Master DB or Slave DB, default is Slave DB
  * @param {String} deviceInfo  unique string generate by app/apk 
  * @param {function} cb
  * @returns {Object} loginData or null
  */
-loginDao.getLoginDataByDeviceInfo = function (dbhandle, deviceInfo, cb) {
+loginDao.getLoginDataByDeviceInfo = function (mysqlc, deviceInfo, cb) {
   var selectSQL = 'select * from login_data where device_info = ?'; 
   var args = [deviceInfo];
-  console.log("------222-------");
   console.log(deviceInfo);
-  console.log(dbhandle);
 
-  dbhandle.query(selectSQL, args, function(err, res) {
+  mysqlc.query(selectSQL, args, function(err, res) {
     if (err !== null) {
-      console.log("------444-------");
       cb(err.message, null);
     }
     else {
-    console.log(gdb.inspect(res));
       if (!!res && res.length === 1) {
-        console.log('in if');
-        console.log(res);
         var rs = res[0];
         var user = {id:rs.uid, name:rs.login_name};
         cb(null, user);
       }
       else {
-        console.log('in else');
-        console.log(gdb.inspect(cb));
-        console.log("------666-------");
-        console.log(gdb.inspect(user));
         cb(null, null);
       }
     }
@@ -79,36 +69,26 @@ loginDao.getLoginDataByDeviceInfo = function (dbhandle, deviceInfo, cb) {
 
 /**
  * Get loginData by loginName
- * @param {String} dbhandle handle for Master DB or Slave DB, default is Slave DB
+ * @param {String} mysqlc handle for Master DB or Slave DB, default is Slave DB
  * @param {String} loginName 
  * @param {function} cb
  * @returns {Object} loginData or null
  */
-loginDao.getLoginDataByLoginName = function (dbhandle, loginName, cb) {
+loginDao.getLoginDataByLoginName = function (mysqlc, loginName, cb) {
   var selectSQL = 'select * from login_data where login_name = ?'; 
   var args = [loginName];
 
-  console.log("------555-------");
-  console.log("dbhandle:");
-  console.log(dbhandle);
-  console.log("------556-------");
-
-  dbhandle.query(selectSQL, args, function(err, res) {
+  mysqlc.query(selectSQL, args, function(err, res) {
     if (err !== null) {
-      console.log(err);
-      console.log(device_info);
       cb(err.message, null);
     }
     else {
       if (!!res && res.length === 1) {
-        console.log('in if');
-        console.log(res);
         var rs = res[0];
         var user = {id:rs.uid, name:rs.login_name, psw:rs.password_hash};
         cb(null, user);
       }
       else {
-        console.log('in else');
         cb(null, null);
       }
     }
@@ -120,23 +100,20 @@ loginDao.getLoginDataByLoginName = function (dbhandle, loginName, cb) {
  * @param {String} passwordHash
  * @param {Number} userId
  */
-loginDao.updatePassword = function (dbhandle, passwordHash, userId, cb) {
+loginDao.updatePassword = function (mysqlc, passwordHash, userId, cb) {
   var updateSQL = 'update login_data set password_hash=? where uid=?'; 
   var args = [passwordHash, userId];
 
-  dbhandle.query(updateSQL, args, function(err, res) {
+  mysqlc.query(updateSQL, args, function(err, res) {
     if (err !== null) {
-      console.log(err);
       cb(err.message, null);
     }
     else {
       if (!!res && res.affectedRows > 0) {
-        console.log('in if');
         console.log(res);
         cb(null, true);
       }
       else {
-        console.log('in else');
         cb(' failed ', null);
       }
     }

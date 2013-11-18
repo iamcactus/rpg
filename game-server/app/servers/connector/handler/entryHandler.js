@@ -4,10 +4,9 @@ var utils = require('../../../util/utils');
 var commonUtils = require('../../../../../shared/util/commonUtils');
 var CODE = require('../../../../../shared/code');
 var logger = require('pomelo-logger').getLogger(__filename);
-var playerDao = require('../../../dao/playerDao.js');
 
-var publicPath = __dirname;
-console.log('in connector.entryHandler.entry, publicPath is:' + publicPath);
+var loginDao = require('../../../dao/loginDao.js');
+var playerDao = require('../../../dao/playerDao.js');
 
 module.exports = function(app) {
 	return new Handler(app);
@@ -24,14 +23,22 @@ var pro = Handler.prototype;
 
 /**
  * New client entry game server. Check token and bind user info into session.
- *
  * @param  {Object}   msg     request message
  * @param  {Object}   session current session object
  * @param  {Function} next    next stemp callback
  * @return {Void}
  */
+
+// Process flow: 
+// step one, auth token and get userData
+// step two, kick session
+// step three, bind session
+// step four, get playerData
+// return 
 pro.entry = function(msg, session, next) {
 	var token = msg.token, self = this;
+  var uid, player, playerId;
+  var worldId = commonUtils.normalizeWorldId(msg.worldId);
 
   console.log('enter connector.entry');
   console.log(msg);
@@ -41,51 +48,60 @@ pro.entry = function(msg, session, next) {
 		return;
 	}
 
-	var uid, players, player;
 	async.waterfall([
+    // TODO, add world status check.
 		function(cb) {
 			// auth token, and get userData
 			self.app.rpc.auth.authRemote.auth(session, token, cb);
 		}, function(code, user, cb) {
 			if(code !== CODE.OK) {
-        console.log(' not OK in auth' + code);
 				next(null, {code: code});
 				return;
 			}
-
 			if(!user) {
 				next(null, {code: CODE.ENTRY.FA_USER_NOT_EXIST});
 				return;
 			}
-      console.log('Got user');
-      console.log(user);
-			// query player info by user id
 			uid = user.id;
-      var worldId = commonUtils.normalizeWorldId(msg.worldId);
-      var dbhandle = 'game_world_' + worldId + '_s';
-			playerDao.getPlayersByUid(dbhandle, uid, cb);
-		}, function(res, cb) {
-      console.log('Got player');
-			// generate session and register chat status
-			players = res;
-      console.log('TODO: kick happened here!');
+      // one user, one session
 			self.app.get('sessionService').kick(uid, cb);
 		}, function(cb) {
       console.log('bind uid' + uid);
 			session.bind(uid, cb);
-		}, function(cb) {
-			if(!players || players.length === 0) {
-				next(null, {code: CODE.OK});
-        // app/apk should show player generation scene
+    }, function(cb) {
+			// query player info by user id
+      var dbhandle_s = 'game_master_s';
+      var mysqlc = self.app.get(dbhandle_s);
+      //var dbhandle_s = commonUtils.worldDBR(msg.worldId);
+      //var mysqlc = self.app.get(dbhandle_s);
+			if(!mysqlc) {
+				next(null, {code: CODE.FAIL});
 				return;
 			}
 
-			player = players[0];
-      console.log('Got player' + player);
+      // check if exists player in the world of the uid
+      loginDao.getWorldPlayerByUidAndWorldId(mysqlc, uid, worldId, cb);
+		}, function(res, cb) {
+      console.log('After loginDao.getWorldPlayerByUidAndWorldId');
+      console.log('res:' + res);
+
+      // TODO if there is no further process,
+      // following shoule be removed into callback function "function(err, result)"
+      // return result there would be more reasonable
+
+			player = res[0];
+			if(!player || player.length === 0) {
+        // no player data, app/apk should show player generation scene
+				next(null, {code: CODE.OK, player:null});
+				return;
+			}
+
+      playerId = player.player_id;
+      console.log('Got player: ' + playerId);
       // TODO add world ID
 			//session.set('serverId', self.app.get('areaIdMap')[player.areaId]);
-			session.set('playerName', player.name);
-			session.set('playerId', player.id);
+			session.set('playerId', playerId);
+      session.set('worldId', worldId);
 			session.on('closed', onUserLeave.bind(null, self.app));
 			session.pushAll(cb);
 		}
@@ -96,15 +112,11 @@ pro.entry = function(msg, session, next) {
 		}
     */
 	], function(err, result) {
-  console.log('enter into callback');
-  console.log(err);
-  console.log(result);
 		if(err) {
 			next(err, {code: CODE.FAIL});
 			return;
 		}
-    console.log('player' + player);
-		next(null, {code: CODE.OK, player: players ? players[0] : null});
+		next(null, {code: CODE.OK, player: playerId ? playersId : null});
 	});
 };
 
