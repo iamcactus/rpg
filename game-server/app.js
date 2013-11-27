@@ -45,7 +45,7 @@ app.configure('production|development', function() {
 });
 
 // database configure
-app.configure('production|development', 'auth|chat|connector', function() {
+app.configure('production|development', 'mission|auth|chat|connector', function() {
   var mysqlConf = (app.get('mysql'));
   var dbclient = require('./app/dao/mysql/mysql')
   for (var dbhandle in mysqlConf) {
@@ -57,7 +57,7 @@ app.configure('production|development', 'auth|chat|connector', function() {
 });
 
 // memcached configure
-app.configure('production|development', 'auth|chat|connector', function() {
+app.configure('production|development', 'mission|auth|chat|connector', function() {
   var memcached = require('./app/dao/memcached/memcached').init(app);
   app.set('memcached', memcached);
   //app.use(sync, {sync: {path:__dirname + 'app/dao/mapping', dbclient: dbclient}});

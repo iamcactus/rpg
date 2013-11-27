@@ -27,7 +27,7 @@ var mysqlc_r = pomelo.app.get(DBCONF.GAME_MASTER_R);
  * @param {Number} uid User Id.
  * @param {function} cb Callback function.
  */
-playerItemDao.get = function (playerId, cb) {
+playerItemDao.get = function(playerId, cb) {
 	var selectSQL = 'select * from player_item where player_id=?';
 	var args = [playerId];
 
@@ -49,7 +49,7 @@ playerItemDao.get = function (playerId, cb) {
 	});
 };
 
-playerItemDao.add = function (id, playerId, itemId, num, cb) {
+playerItemDao.add = function(id, playerId, itemId, num, cb) {
   var insertSQL = 
     'insert into play_item(id, player_id, item_id, num, created_on, updated_on) values (?,?,?,?, ?,?)';
   var createdOn = Math.round(new Date().getTime()/1000); //unixtime
@@ -75,7 +75,7 @@ playerItemDao.add = function (id, playerId, itemId, num, cb) {
   });
 };
 
-playerItemDao.delete = function (id, cb) {
+playerItemDao.delete = function(id, cb) {
   var deleteSQL = 'delete from play_item where id=?';
   var args = [id];
   console.log(id);
@@ -99,19 +99,17 @@ playerItemDao.delete = function (id, cb) {
   });
 };
 
-playerItemDao.getSequenceID = function (cb) {
+playerItemDao.getSequenceID = function(cb) {
   var sql = 'update seq_player_item set id=LAST_INSERT_ID(id+1)';
 
   // set mysql client with master
   mysqlc_w.query(sql, null, function(err, res) {
     if (err !== null) {
-      console.log(err);
       utils.invokeCallback(cb, err.message, null);
     }
     else {
-      if (!!res && res.affectedRows > 0) {
-        console.log(err);
-        utils.invokeCallback(cb, null, res.updateid);
+      if (!!res && res.affectedRows > 0 && res.insertId) {
+        utils.invokeCallback(cb, null, res.insertId);
       }
       else {
         logger.error('getSequenceID of player_item FAILER!');

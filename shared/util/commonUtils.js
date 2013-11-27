@@ -1,5 +1,8 @@
 var commonUtils = module.exports;
 var DBCONF = require('../dbconf');
+var PARAMRULES = require('../paramRules');
+var iz = require('iz');
+var are = iz.are;
 
 /**
  * Velidate World ID
@@ -7,7 +10,7 @@ var DBCONF = require('../dbconf');
  * @returns {Boolean} 
  */
 var regNum = /^[0-9]+$/;
-commonUtils.normalizeWorldId = function (worldId) {
+commonUtils.normalizeWorldId = function(worldId) {
   if (!worldId || !regNum.test(worldId)) {
     return false;
   }
@@ -20,7 +23,7 @@ commonUtils.normalizeWorldId = function (worldId) {
  * @param  {Number} worldId
  * @returns {String} master dbhandle
  */
-commonUtils.worldDBW = function (worldId) {
+commonUtils.worldDBW = function(worldId) {
   if (!worldId || !regNum.test(worldId)) {
     return null;
   }
@@ -40,7 +43,7 @@ commonUtils.worldDBW = function (worldId) {
  * @param  {Number} worldId
  * @returns {String} slave dbhandle
  */
-commonUtils.worldDBR = function (worldId) {
+commonUtils.worldDBR = function(worldId) {
   if (!worldId || !regNum.test(worldId)) {
     return null;
   }
@@ -52,7 +55,7 @@ commonUtils.worldDBR = function (worldId) {
       return DBCONF[d];
     }
   }
-  return null
+  return null;
 };
 
 /**
@@ -60,7 +63,7 @@ commonUtils.worldDBR = function (worldId) {
  * @param  {Number} worldId
  * @returns {String} backup dbhandle
  */
-commonUtils.worldDBB = function (worldId) {
+commonUtils.worldDBB = function(worldId) {
   if (!worldId || !regNum.test(worldId)) {
     return null;
   }
@@ -72,5 +75,33 @@ commonUtils.worldDBB = function (worldId) {
       return DBCONF[d];
     }
   }
-  return null
+  return null;
+};
+
+/**
+ * validate the request parameters by 'iz'
+ * @param {String} key for target handler
+ * @param {Object} request parameters
+ */
+commonUtils.validate = function(key, param) {
+  if (iz.empty(key) || iz.empty(param)) {
+    return false;
+  }
+  console.log(param);
+  var rules = PARAMRULES[key];
+  try {
+    return are(PARAMRULES[key]).validFor(param);
+  }
+  catch (err) {
+    return false;
+  }
+};
+
+/** 
+ * parse value into Int
+ * @param {Number} val should be number, '' or String or float is parsed as 0
+ * @returns {Number} val or 0
+ */ 
+commonUtils.parseNumber = function(val) {
+  return isNaN(parseInt(val)) ? 0 : parseInt(val);
 };

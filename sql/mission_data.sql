@@ -1,9 +1,10 @@
 USE game_master;
 
-#DROP TABLE IF EXISTS mission_data;
+DROP TABLE IF EXISTS mission_data;
 CREATE TABLE mission_data (
-  mission_id  int(10) unsigned NOT NULL, 
+  id          int(10) unsigned NOT NULL AUTO_INCREMENT, # serial id
   map_id      int(10) unsigned NOT NULL, # 章节ID
+  mission_id  int(10) unsigned NOT NULL, 
   is_talk     int(10) unsigned NOT NULL,
   pic         int(10) unsigned NOT NULL,
   power       int(10) unsigned NOT NULL,
@@ -20,6 +21,6 @@ CREATE TABLE mission_data (
   ctatk_addon int(10) unsigned NOT NULL, # 反击
   kill_addon  int(10) unsigned NOT NULL, # 必杀
   opened_on   int(10) unsigned NOT NULL,
-  PRIMARY KEY (mission_id),
-  KEY on_map_id (map_id)
+  PRIMARY KEY (id),
+  KEY on_map_id_and_mission_id (map_id, mission_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

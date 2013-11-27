@@ -1,5 +1,5 @@
 var logger = require('pomelo-logger').getLogger(__filename);
-var pomelo = require('pomelo');
+//var pomelo = require('pomelo');
 var DBCONF = require('../../../shared/dbconf');
 //var LEVELCONF = require('../../../shared/levelConf');
 
@@ -19,19 +19,20 @@ var utils = require('../util/utils');
 
 var playerCardDao = module.exports;
 
-var mysqlc_w = pomelo.app.get(DBCONF.GAME_MASTER_W);
-var mysqlc_r = pomelo.app.get(DBCONF.GAME_MASTER_R);
+//var mysqlc_w = pomelo.app.get(DBCONF.GAME_MASTER_W);
+//var mysqlc_r = pomelo.app.get(DBCONF.GAME_MASTER_R);
 
 /**
  * Get an user's all players by userId
+ * @param {String} mysqlc mysql client for Master DB or Slave DB
  * @param {Number} uid User Id.
  * @param {function} cb Callback function.
  */
-playerCardDao.get = function (playerId, cb) {
+playerCardDao.get = function(mysqlc, playerId, cb) {
 	var selectSQL = 'select * from player_card where player_id=?';
 	var args = [playerId];
 
-	mysqlc_r.query(selectSQL, args, function(err, res) {
+	mysqlc.query(selectSQL, args, function(err, res) {
     console.log('in playerCardDao.getAll');
     console.log(err);
     console.log(res);
@@ -49,16 +50,16 @@ playerCardDao.get = function (playerId, cb) {
 	});
 };
 
-playerCardDao.add = function (
-  id, playerId, cardId, exp, level, evolvedCnt, maxLevel, cb
+playerCardDao.add = function(
+  mysqlc, id, playerId, cardId, exp, level, evolvedCnt, maxLevel, cb
 ) {
   var insertSQL = 
-    'insert into play_card(id, player_id, card_id, exp, level, evolved_cnt, max_level, created_on, updated_on) values (?,?,?, ?,?,?,?, ?,?)';
+    'insert into player_card(id, player_id, card_id, exp, level, evolved_cnt, max_level, created_on, updated_on) values (?,?,?, ?,?,?,?, ?,?)';
   var createdOn = Math.round(new Date().getTime()/1000); //unixtime
   var args = [id, playerId, cardId, exp, level, evolvedCnt, maxLevel, createdOn, createdOn];
   console.log(id, playerId, cardId, exp, level, evolvedCnt, maxLevel, createdOn, createdOn);
 
-  mysqlc_w.insert(insertSQL, args, function(err, res) {
+  mysqlc.insert(insertSQL, args, function(err, res) {
     if (err !== null) {
       console.log(err);
       cb({code: err.number, msg: err.message}, null);
@@ -67,7 +68,7 @@ playerCardDao.add = function (
       if (!!res && res.affectedRows > 0) {
         console.log('in playerCardDao.add');
         console.log(res);
-        utils.invokeCallback(cb, null, true);
+        utils.invokeCallback(cb, null, res);
       }
       else {
         logger.error('add player_card Failed!');
@@ -77,12 +78,12 @@ playerCardDao.add = function (
   });
 };
 
-playerCardDao.delete = function (id, cb) {
-  var deleteSQL = 'delete from play_card where id=?';
+playerCardDao.delete = function(mysqlc, id, cb) {
+  var deleteSQL = 'delete from player_card where id=?';
   var args = [id];
   console.log(id);
 
-  mysqlc_w.delete(deleteSQL, args, function(err, res) {
+  mysqlc.delete(deleteSQL, args, function(err, res) {
     if (err !== null) {
       console.log(err);
       cb({code: err.number, msg: err.message}, null);
@@ -101,23 +102,21 @@ playerCardDao.delete = function (id, cb) {
   });
 };
 
-playerCardDao.getSequenceID = function (cb) {
+playerCardDao.getSequenceID = function(mysqlc, cb) {
   var sql = 'update seq_player_card set id=LAST_INSERT_ID(id+1)';
 
   // set mysql client with master
-  mysqlc_w.query(sql, null, function(err, res) {
+  mysqlc.query(sql, null, function(err, res) {
     if (err !== null) {
-      console.log(err);
       utils.invokeCallback(cb, err.message, null);
     }
     else {
-      if (!!res && res.affectedRows > 0) {
-        console.log(err);
-        utils.invokeCallback(cb, null, res.updateid);
+      if (!!res && res.affectedRows > 0 && res.insertId) {
+        utils.invokeCallback(cb, null, res.insertId);
       }
       else {
         logger.error('getSequenceID of player_card FAILER!');
-        utils.invokeCallback(cb, null, false);
+        utils.invokeCallback(cb, null, null);
       }
     }
   });

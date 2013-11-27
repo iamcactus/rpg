@@ -1,8 +1,9 @@
 USE game_master;
 
-#DROP TABLE IF EXISTS mission_npc;
+DROP TABLE IF EXISTS mission_npc;
 CREATE TABLE mission_npc (
-  mission_id    int(10) unsigned NOT NULL,
-  npc_id    int(10) unsigned NOT NULL,
-  PRIMARY KEY (mission_id, npc_id)
+  mission_data_id int(10) unsigned NOT NULL, # id in mission_data
+  npc_id          int(10) unsigned NOT NULL,
+  position_id     tinyint(3)  unsigned NOT NULL,
+  PRIMARY KEY (mission_data_id, npc_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

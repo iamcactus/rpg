@@ -1,4 +1,4 @@
-USE game_master;
+USE game_world_1001;
 
 DROP TABLE IF EXISTS seq_player_equip;
 CREATE TABLE seq_player_equip (

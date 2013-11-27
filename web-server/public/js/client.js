@@ -155,7 +155,8 @@ function showError(content) {
 // show login panel
 function showLogin() {
 	$("#loginView").show();
-	$("#debugView").hide();
+	$("#createPlayerDebugView").hide();
+	$("#getMissionListDebugView").hide();
 	$("#hideView").hide();
 	$("#chatHistory").hide();
 	$("#toolbar").hide();
@@ -167,7 +168,8 @@ function showLogin() {
 function showChat() {
 	$("#loginView").hide();
 	$("#loginError").hide();
-	$("#debugView").show();
+	$("#createPlayerDebugView").show();
+	$("#getMissionListDebugView").show();
 	$("#hideView").show();
 	$("#toolbar").show();
 	//$("entry").focus();
@@ -332,9 +334,12 @@ $(document).ready(function() {
 		cardId = $("#cardId").attr("value");
 		username = $("#nickname").attr("value");
 		sexType = $("#sexType").attr("value");
-		worldId = $("#worldId").attr("value");
-		//worldId = $('#worldId').val();
+		//worldId = $("#worldId").attr("value");
+		worldId = $('#worldId').val();
     rid = 1234;
+    alert(userId);
+    alert(username);
+    alert(worldId);
 		//query entry of connection
 		queryEntry(userId, function(host, port) {
 			pomelo.init({
@@ -348,6 +353,7 @@ $(document).ready(function() {
           sexType: sexType,
           cardId: cardId,
           worldId: worldId,
+          uid:userId,
           rid: rid
 				}, function(data) {
         alert(JSON.stringify(data));
@@ -356,6 +362,51 @@ $(document).ready(function() {
 						return;
 					}
           //userName = ;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
+	//deal with getMissionList button click.
+	$("#getMissionList").click(function() {
+		userId = $("#userId").attr("value");
+		playerId = $("#playerId").attr("value");
+		mapId = $("#mapId").attr("value");
+		//missionDataId = $("#missionDataId").attr("value");
+		//worldId = $("#worldId").attr("value");
+		//worldId = $('#worldId').val();
+    rid = 1234;
+    alert(userId);
+    alert(playerId);
+    alert(mapId);
+    //alert(missionDataId);
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "mission.missionHandler.getMissionList";
+				pomelo.request(route, {
+          playerId:playerId,
+          mapId:mapId,
+          //missionDataId:missionDataId,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
 
           setUserId();
 					setName();

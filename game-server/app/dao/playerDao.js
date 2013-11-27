@@ -32,7 +32,7 @@ var mysqlc_r = pomelo.app.get(DBCONF.GAME_MASTER_R);
  * @param {function} cb Callback function.
  * @returns {object} playerData or null
  */
-playerDao.getPlayersByUId = function (mysqlc, uid, cb) {
+playerDao.getPlayersByUId = function(mysqlc, uid, cb) {
 	var selectSQL = 'select * from player_data where uid=?';
 	var args = [uid];
 
@@ -57,7 +57,7 @@ playerDao.getPlayersByUId = function (mysqlc, uid, cb) {
  * @param {function} cb Callback function.
  * @returns {object} playerData or null
  */
-playerDao.getPlayerByName = function (mysqlc, name, cb) {
+playerDao.getPlayerByName = function(mysqlc, name, cb) {
 	var selectSQL = 'select * from player_data where name=?';
 	var args = [name];
 
@@ -84,7 +84,7 @@ playerDao.getPlayerByName = function (mysqlc, name, cb) {
  * @param {function} cb Callback function.
  * @returns {object} playerData or null
  */
-playerDao.initPlayerData = function (mysqlc, playerId, name, sexType, cb) {
+playerDao.initPlayerData = function(mysqlc, playerId, name, sexType, cb) {
   var insertSQL = 
     'insert into player_data(player_id, name, sex_type, created_on) values (?,?,?,?)';
   var createdOn = Math.round(new Date().getTime()/1000); //unixtime
@@ -114,7 +114,7 @@ playerDao.initPlayerData = function (mysqlc, playerId, name, sexType, cb) {
  * @param {function} cb Callback function.
  * @returns {object} playerParam or null
  */
-playerDao.initPlayerParam = function (mysqlc, playerId, lead, cb) {
+playerDao.initPlayerParam = function(mysqlc, playerId, lead, cb) {
   var insertSQL = 
     'insert into player_param(player_id, max_power, max_energy, lead, power, energy) values (?,?,?, ?,?,?)';
   var updatedOn = Math.round(new Date().getTime()/1000); //unixtime
@@ -143,7 +143,7 @@ playerDao.initPlayerParam = function (mysqlc, playerId, lead, cb) {
   });
 };
 
-playerDao.getSequenceID = function (cb) {
+playerDao.getSequenceID = function(cb) {
   var sql = 'update seq_player set id=LAST_INSERT_ID(id+1)';
 
   // set mysql client with master

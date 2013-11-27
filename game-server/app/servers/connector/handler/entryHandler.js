@@ -7,6 +7,7 @@ var logger = require('pomelo-logger').getLogger(__filename);
 
 var loginDao = require('../../../dao/loginDao.js');
 var playerDao = require('../../../dao/playerDao.js');
+var worldPlayerDao = require('../../../dao/worldPlayerDao.js');
 
 module.exports = function(app) {
 	return new Handler(app);
@@ -80,10 +81,11 @@ pro.entry = function(msg, session, next) {
 			}
 
       // check if exists player in the world of the uid
-      loginDao.getWorldPlayerByUidAndWorldId(mysqlc, uid, worldId, cb);
+      worldPlayerDao.getWorldPlayerByUidAndWorldId(mysqlc, uid, worldId, cb);
 		}, function(res, cb) {
-      console.log('After loginDao.getWorldPlayerByUidAndWorldId');
+      console.log('After worldPlayerDao.getWorldPlayerByUidAndWorldId');
       console.log('res:' + res);
+      console.log(session);
 
       // TODO if there is no further process,
       // following shoule be removed into callback function "function(err, result)"
@@ -92,7 +94,7 @@ pro.entry = function(msg, session, next) {
 			player = res[0];
 			if(!player || player.length === 0) {
         // no player data, app/apk should show player generation scene
-				next(null, {code: CODE.OK, player:null});
+				next(null, {code: CODE.NONE_PLAYER, player:null});
 				return;
 			}
 

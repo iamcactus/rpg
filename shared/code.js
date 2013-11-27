@@ -1,6 +1,9 @@
 module.exports = {
-	OK: 200, 
+	OK: 200,
+  NONE_PLAYER: 201, // should create player
+
 	FAIL: 500, 
+  ERR_WRONG_PARAM: 501,
 
   REGIST: {
     ERR_WRONG_PARAM: 4001,
@@ -29,6 +32,10 @@ module.exports = {
   PLAYER: {
     ERR_WRONG_NAME: 6001,
     ERR_NAME_EXIST: 6002,
+  },
+
+  MISSION: {
+
   },
 
 	CHAT: {

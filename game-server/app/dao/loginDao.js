@@ -30,30 +30,4 @@ loginDao.getLoginDataByUid = function (mysqlc, uid, cb) {
       utils.invokeCallback(cb, null, null);
     }
   });
-}
-
-/**
- * Get world_player by uid_and_world_id
- * @param {String} mysqlc mysql client for Master DB or Slave DB
- * @param {Number} uid
- * @param {Number} world_id
- * @returns {Object} world_player data
- */
-loginDao.getWorldPlayerByUidAndWorldId = function (mysqlc, uid, worldId, cb) {
-  var selectSQL = 'select * from world_player where uid=? and world_id=?';
-  var args = [uid, worldId];
-
-  mysqlc.query(selectSQL, args, function(err, res) {
-    if (err !== null) {
-      utils.invokeCallback(cb, err.message, null);
-      return;
-    }
-
-    if (!!res && res.length === 1) {
-      utils.invokeCallback(cb, null, res[0]);
-    }
-    else {
-      utils.invokeCallback(cb, null, []);
-    }
-  });
-}
+};

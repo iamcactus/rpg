@@ -90,11 +90,13 @@
                             <input name="token" type="text" id="token" placeholder="enter your token" />
                         </td>
                     </tr>
+                    <!--
                     <tr>
                         <td>
                             <input name="worldId" type="text" id="worldId" placeholder="enter your worldId" />
                         </td>
                     </tr>
+                    -->
                         <tr>
                             <td>
                                 <input id="login" type='button' value="join" />
@@ -104,7 +106,7 @@
                 <hr>
                 uid为用户ID<br>
                 token为用户认证成功后返回的token<br>
-                worldId为世界服务器ID, 当前只有1001<br>
+                <!--worldId为世界服务器ID, 当前只有1001<br> -->
                 <br>
                 * uid, token可以从登陆／注册的返回页面复制粘贴
                 <hr>
@@ -116,7 +118,7 @@
 <hr>
 <hr>
 
-            <div id="debugView">
+            <div id="createPlayerDebugView">
                 <div id="quickLoginTitle">
                 DebugView
                 </div>
@@ -130,7 +132,7 @@
                     <tr>
                         <td>
                             <input id="userId" type="text" placeholder="enter your uid" />
-                            enter your uid, this uidd must be same as the uid you used in "join" above. 
+                            enter your uid, this uid must be same as the uid you used in "join" above. 
                         </td>
                     </tr>
                     <tr>
@@ -159,6 +161,47 @@
                 </table>
                 <hr>
                 uid为用户ID<br>
+                Only worked after your "join" succeed. (Cauz u need got session)
+                <hr>
+            </div>
+
+            <div id="getMissionListDebugView">
+                <div id="quickLoginTitle">
+                getMissionListDebugView
+                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <input id="userId" type="text" placeholder="enter your uid" />
+                            enter your uid, this uid must be same as the uid you used in "join" above. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="playerId" name="playerId" type="text" placeholder="enter your playerId" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="mapId" type="text" placeholder="enter your mapId" />
+                            mapId should be stored in the player object inside app/apk
+                        </td>
+                    </tr>
+                    <!--
+                    <tr>
+                        <td>
+                            <input id="missionDataId" type="text" placeholder="enter your missionDataId" />
+                            missionDataId should be stored in the player object inside app/apk
+                        </td>
+                    </tr>
+                    -->
+                    <tr>
+                        <td>
+                            <input id="getMissionList" type='button' value="get" />
+                        </td>
+                    </tr>
+                </table>
+                <hr>
                 Only worked after your "join" succeed. (Cauz u need got session)
                 <hr>
             </div>

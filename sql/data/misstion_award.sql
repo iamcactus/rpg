@@ -1,0 +1,10 @@
+use game_master;
+insert into mission_award (mission_data_id, award_id) values(5, 5102);
+insert into mission_award (mission_data_id, award_id) values(9, 5104);
+insert into mission_award (mission_data_id, award_id) values(11, 5103);
+insert into mission_award (mission_data_id, award_id) values(14, 5102);
+insert into mission_award (mission_data_id, award_id) values(15, 5102);
+insert into mission_award (mission_data_id, award_id) values(19, 5106);
+insert into mission_award (mission_data_id, award_id) values(22, 5201);
+insert into mission_award (mission_data_id, award_id) values(27, 5204);
+insert into mission_award (mission_data_id, award_id) values(28, 5202);
