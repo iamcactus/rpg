@@ -29,6 +29,25 @@
         <div id="app">
             <div id="quickLoginView">
                 <div id="quickLoginTitle">
+                    这里展示[世界列表]<br>
+                    <br>
+                    <form action="/entry" method="POST">
+                      if deviceInfo binded, you will get worldData and loginData<br>
+                      if deviceInfo is new, you will get worldData only<br>
+                      if token is valid, you will get worldData and loginData<br>
+                      if token is null or unvalid, you will get worldData only<br>
+                      if uid, send it and it will be checked with token/deviceInfo<br>
+                      else, left it as null<br>
+                      <input id="deviceInfo" type="text" name="deviceInfo" placeholder="enter your deviceInfo" /><br>
+                      <input name="token" type="text" id="token" placeholder="enter your token" /><br>
+                      <input name="uid" id="uid" type="text" placeholder="enter your uid" />
+                      <br>
+                      <input type="submit" value="世界列表"/>
+                    </form>
+                </div>
+<hr>
+
+                <div id="quickLoginTitle">
                     这里展示[快速游戏]<br>
                     点击[快速游戏]，直接进入号码为1234的聊天室
                     刷新页面即可退出（即断开socket连接)

@@ -1,9 +1,19 @@
 var express = require('express');
+var async = require('async');
 
 var CODE = require('../shared/code');
 var Token = require('../shared/token');
-var secret = require('../shared/config/session').secret;
+var tokenSecret = require('../shared/config/token').DEFAULT_SECRET;
+var tokenExpire = require('../shared/config/token').DEFAULT_EXPIRE;
 var loginDao = require('./lib/dao/loginDao');
+var worldDao = require('./lib/dao/worldDao');
+
+/*
+var log4js = require('log4js');
+log4js.configure('./config/log4js.json', {});
+//var logger = log4js.getLogger('node-log', {'nolog': /\.(js|gif|jpe?g|png)$/});
+var logger = log4js.getLogger('node-log'); // TODO add nolog
+*/
 
 var app = express.createServer();
 
@@ -27,6 +37,23 @@ var util = require('util');
 app.configure(function(){
 	app.use(express.methodOverride());
 	app.use(express.bodyParser());
+
+  // log
+  /*
+  app.use(function(req, res, next) {
+    logger.info([
+      req.headers['x-forwarded-for'] ||
+      new Date().toLocaleString(),
+      req.method,
+      req.url,
+      res.statusCode,
+      req.headers.referer || '-',
+      req.headers['user-agent'] || '-'
+      ].join('\t')
+    );
+    next();
+  });
+  */
 	app.use(app.router);
 
 	app.set('view engine', 'jade');
@@ -48,20 +75,23 @@ app.configure('production', function(){
 
 app.post('/login', function(req, res) {
   var msg = req.body;
+  console.log(msg);
   if (!msg.name || !msg.password) {
-    res.send({code: CODE.REGIST.ERR_WRONG_PARAM});
+    alert(11);
+    res.send({code: CODE.LOGIN.ERR_WRONG_PARAM}); // code:5001
     return;
   }
 
   if ( !regEng.test(msg.name) || !regEng.test(msg.password)) {
-    res.send({code: CODE.REGIST.ERR_WRONG_PARAM}); //code: 4001
+    alert(12);
+    res.send({code: CODE.LOGIN.ERR_WRONG_PARAM}); // code:5001
     return;
   }
 
   // check deviceInfo exists or not
   loginDao.getLoginDataByLoginName(mysql_s, msg.name, function (err, user) {
     if (err) {
-      res.send({code: 500});
+      res.send({code: CODE.FAIL});
       return;
     }
     if (!user) {
@@ -70,18 +100,79 @@ app.post('/login', function(req, res) {
     }
 
     var passwordHash = Token.cryptPass(msg.password);
+    console.log(passwordHash);
+    console.log(user.psw);
     if (user.psw != passwordHash) {
-      res.send({code: CODE.LOGIN.ERR_WRONG_PARAM});
+      res.send({code: CODE.LOGIN.ERR_WRONG_PASSWORD}); // code: 5003
       return;
     }
-    console.log(msg.name + ' login! userId:' + user.id);
-    res.send({code: 200, token: Token.create(user.id, Date.now(), secret), uid: user.id});
+    console.log(msg.name + ' login! userId:' + user.uid);
+    res.send({code: CODE.OK, token: Token.create(user.uid, Date.now(), tokenSecret), uid: user.uid});
+  });
+});
+
+// app/apk first request, 
+// timing is after version checking, before regist/login
+// req includes deviceInfo, token, uid
+// return world list and account info if exist
+app.post('/entry', function(req, res) {
+  console.log(req.body);
+  var msg         = req.body;
+  var deviceInfo  = msg.deviceInfo;
+  var uid         = msg.uid;   // null if new installed
+  var token       = msg.token; // null if new installed
+
+  async.auto({
+    worldData: function(callback) {
+      worldDao.getWorldList(mysql_s, callback);
+    },
+    loginData: function(callback) {
+      if (!!token && regEng.test(token)) {
+        console.log('--111---');
+        console.log(token);
+        var rHash = Token.parse(token, tokenSecret);
+        console.log(rHash);
+        if (!!rHash && !!rHash.uid && rHash.uid === uid && Token.checkExpire(rHash, tokenExpire)) {
+          console.log('----222----');
+          loginDao.getLoginDataByUid(mysql_s, rHash.uid, callback);
+        }
+        else {
+          console.log('token failed' + token);
+          callback(null);
+        }
+      }
+      else if (!!deviceInfo && regEng.test(deviceInfo)) {
+        loginDao.getLoginDataByDeviceInfo(mysql_s, deviceInfo, callback);
+      }
+      else {
+        console.log('114');
+        callback(null);
+      }
+    }
+  }, function(err, results) {
+    console.log('---in entry----');
+    console.log(err);
+    console.log(results);
+    if (err) {
+      res.send({code: CODE.FAIL});
+      return;
+    }
+    else {
+      if (!!results.loginData) {
+        results.loginData['token'] = Token.create(results.loginData.uid, Date.now(), tokenSecret);
+      }
+      console.log('115');
+      console.log(results);
+      res.send({code: CODE.OK,
+                res: results});
+      return;
+    }
   });
 });
 
 // quick login
 app.post('/quick_reg', function(req, res) {
-  console.log('req.params');
+  console.log(req.params);
   var msg = req.body;
   var deviceInfo = msg.deviceInfo;
 
@@ -110,8 +201,8 @@ app.post('/quick_reg', function(req, res) {
   loginDao.getLoginDataByDeviceInfo(mysql_m, deviceInfo, function (err, user) {
     if (user) { // exists
       res.send({code: CODE.REGIST.ERR_EXIST, 
-                token: Token.create(user.id, Date.now(), secret), 
-                uid: user.id});
+                token: Token.create(user.uid, Date.now(), tokenSecret), 
+                uid: user.uid});
       return;
     }
     else {
@@ -123,11 +214,11 @@ app.post('/quick_reg', function(req, res) {
           if (err && err.code === 1062) {
             res.send({code: CODE.REGIST.ERR_DUPLICATED});
           } else {
-            res.send({code: 500});
+            res.send({code: CODE.FAIL});
           }
         } else {
-          console.log('A new user was created! --' + msg.name + user.id);
-          res.send({code: 200, token: Token.create(user.id, Date.now(), secret), uid: user.id});
+          console.log('A new user was created! --' + msg.name + user.uid);
+          res.send({code: CODE.OK, token: Token.create(user.uid, Date.now(), tokenSecret), uid: user.uid});
         }
       });
     }
@@ -155,7 +246,7 @@ app.post('/regist', function(req, res) {
   // check deviceInfo exists or not
   loginDao.getLoginDataByLoginName(mysql_m, msg.name, function (err, user) {
     if (user) { // exists
-      console.log(' Got exists ' + user.id);
+      console.log(' Got exists ' + user.uid);
       res.send({code: CODE.REGIST.ERR_DUPLICATED});
       return;
     }
@@ -168,11 +259,11 @@ app.post('/regist', function(req, res) {
           if (err && err.code === 1062) {
             res.send({code: CODE.REGIST.ERR_DUPLICATED});
           } else {
-            res.send({code: 500});
+            res.send({code: CODE.FAIL});
           }
         } else {
           console.log('A new user was created! --' + msg.name);
-          res.send({code: 200, token: Token.create(user.id, Date.now(), secret), uid: user.id});
+          res.send({code: CODE.OK, token: Token.create(user.uid, Date.now(), tokenSecret), uid: user.uid});
         }
       });
     }

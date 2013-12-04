@@ -55,3 +55,18 @@ module.exports.cryptPass = function(token) {
   var res = md5.digest('hex');
   return res;
 }
+
+/**
+ * Check the token whether expire.
+ *
+ * @param  {Object} {uid: number, timestamp: number}
+ * @param  {Number} expire expire time
+ * @return {Boolean} true for unexpired else false
+ */
+module.exports.checkExpire = function(data, expire) {
+	if(expire < 0) {
+		// negative expire means never expire
+		return true;
+	}
+	return (Date.now() - data.timestamp) < expire;
+};

@@ -20,7 +20,7 @@ var gdb = require('util');
  * @param {String} password_hash 
  * @param {Number} created_on registed datetime
  */
-loginDao.createUser = function (mysqlc, deviceInfo, loginName, passwordHash, cb) {
+loginDao.createUser = function(mysqlc, deviceInfo, loginName, passwordHash, cb) {
   var insertSQL = 
     'insert into login_data(device_info, login_name, password_hash, created_on) values (?,?,?,?)';
   var createdOn   = Math.round(new Date().getTime()/1000); // unixtime
@@ -28,11 +28,10 @@ loginDao.createUser = function (mysqlc, deviceInfo, loginName, passwordHash, cb)
   console.log(deviceInfo + loginName + passwordHash + createdOn);
   mysqlc.insert(insertSQL, args, function(err, res) {
     if (err !== null) {
-      console.log(err);
       cb({code: err.number, msg: err.message}, null);
     }
     else {
-      var user = {id:res.insertId, name:loginName, lastLoginTime:createdOn};
+      var user = {uid:res.insertId, login_name:loginName, lastLoginTime:createdOn};
       cb(null, user);
     }
   });
@@ -45,19 +44,18 @@ loginDao.createUser = function (mysqlc, deviceInfo, loginName, passwordHash, cb)
  * @param {function} cb
  * @returns {Object} loginData or null
  */
-loginDao.getLoginDataByDeviceInfo = function (mysqlc, deviceInfo, cb) {
+loginDao.getLoginDataByDeviceInfo = function(mysqlc, deviceInfo, cb) {
   var selectSQL = 'select * from login_data where device_info = ?'; 
   var args = [deviceInfo];
-  console.log(deviceInfo);
 
   mysqlc.query(selectSQL, args, function(err, res) {
     if (err !== null) {
-      cb(err.message, null);
+      cb(err, null);
     }
     else {
       if (!!res && res.length === 1) {
         var rs = res[0];
-        var user = {id:rs.uid, name:rs.login_name};
+        var user = {uid:rs.uid, login_name:rs.login_name};
         cb(null, user);
       }
       else {
@@ -74,19 +72,45 @@ loginDao.getLoginDataByDeviceInfo = function (mysqlc, deviceInfo, cb) {
  * @param {function} cb
  * @returns {Object} loginData or null
  */
-loginDao.getLoginDataByLoginName = function (mysqlc, loginName, cb) {
+loginDao.getLoginDataByLoginName = function(mysqlc, loginName, cb) {
   var selectSQL = 'select * from login_data where login_name = ?'; 
   var args = [loginName];
 
   mysqlc.query(selectSQL, args, function(err, res) {
     if (err !== null) {
-      cb(err.message, null);
+      cb(err, null);
     }
     else {
       if (!!res && res.length === 1) {
         var rs = res[0];
-        var user = {id:rs.uid, name:rs.login_name, psw:rs.password_hash};
+        var user = {uid:rs.uid, login_name:rs.login_name, psw:rs.password_hash};
         cb(null, user);
+      }
+      else {
+        cb(null, null);
+      }
+    }
+  });
+};
+
+/**
+ * Get login_data by uid
+ * @param {String} mysqlc mysql client for Master DB or Slave DB
+ * @param {Number} uid
+ * @returns {Object} loginData or null
+ */
+loginDao.getLoginDataByUid = function(mysqlc, uid, cb) {
+  var selectSQL = 'select * from login_data where uid = ?';
+  var args = [uid];
+  mysqlc.query(selectSQL, args, function(err, res) {
+    if (err !== null) {
+      cb(err, null);
+    }
+    else {
+      if (!!res && res.length === 1) {
+        var rs = res[0];
+        var loginData = {uid:rs.uid, login_name:rs.login_name};
+        cb(null, loginData);
       }
       else {
         cb(null, null);
@@ -100,13 +124,13 @@ loginDao.getLoginDataByLoginName = function (mysqlc, loginName, cb) {
  * @param {String} passwordHash
  * @param {Number} userId
  */
-loginDao.updatePassword = function (mysqlc, passwordHash, userId, cb) {
+loginDao.updatePassword = function(mysqlc, passwordHash, userId, cb) {
   var updateSQL = 'update login_data set password_hash=? where uid=?'; 
   var args = [passwordHash, userId];
 
   mysqlc.query(updateSQL, args, function(err, res) {
     if (err !== null) {
-      cb(err.message, null);
+      cb(err, null);
     }
     else {
       if (!!res && res.affectedRows > 0) {

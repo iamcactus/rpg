@@ -34,7 +34,7 @@ remote.auth = function(token, cb) {
 		return;
 	}
 
-	if(!checkExpire(res, this.expire)) {
+	if(!tokenService.checkExpire(res, this.expire)) {
 		cb(null, CODE.ENTRY.FA_TOKEN_EXPIRE);
 		return;
 	}
@@ -55,20 +55,4 @@ remote.auth = function(token, cb) {
 
 		cb(null, CODE.OK, user);
 	});
-};
-
-/**
- * Check the token whether expire.
- *
- * @param  {Object} token  token info
- * @param  {Number} expire expire time
- * @return {Boolean}        true for not expire and false for expire
- */
-var checkExpire = function(token, expire) {
-	if(expire < 0) {
-		// negative expire means never expire
-		return true;
-	}
-
-	return (Date.now() - token.timestamp) < expire;
 };
