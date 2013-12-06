@@ -7,6 +7,7 @@ var tokenSecret = require('../shared/config/token').DEFAULT_SECRET;
 var tokenExpire = require('../shared/config/token').DEFAULT_EXPIRE;
 var loginDao = require('./lib/dao/loginDao');
 var worldDao = require('./lib/dao/worldDao');
+var worldPlayerDao = require('./lib/dao/worldPlayerDao');
 
 /*
 var log4js = require('log4js');
@@ -100,8 +101,6 @@ app.post('/login', function(req, res) {
     }
 
     var passwordHash = Token.cryptPass(msg.password);
-    console.log(passwordHash);
-    console.log(user.psw);
     if (user.psw != passwordHash) {
       res.send({code: CODE.LOGIN.ERR_WRONG_PASSWORD}); // code: 5003
       return;
@@ -128,16 +127,11 @@ app.post('/entry', function(req, res) {
     },
     loginData: function(callback) {
       if (!!token && regEng.test(token)) {
-        console.log('--111---');
-        console.log(token);
         var rHash = Token.parse(token, tokenSecret);
-        console.log(rHash);
         if (!!rHash && !!rHash.uid && rHash.uid === uid && Token.checkExpire(rHash, tokenExpire)) {
-          console.log('----222----');
           loginDao.getLoginDataByUid(mysql_s, rHash.uid, callback);
         }
         else {
-          console.log('token failed' + token);
           callback(null);
         }
       }
@@ -145,23 +139,37 @@ app.post('/entry', function(req, res) {
         loginDao.getLoginDataByDeviceInfo(mysql_s, deviceInfo, callback);
       }
       else {
-        console.log('114');
         callback(null);
       }
-    }
+    },
+    worldPlayer: ['loginData', function(callback, arg) {
+      if (!!arg.loginData) {
+        worldPlayerDao.getWorldPlayerByUid(mysql_s, uid, callback);
+      }
+      else {
+        callback(null);
+      }
+    }]
   }, function(err, results) {
-    console.log('---in entry----');
-    console.log(err);
-    console.log(results);
     if (err) {
       res.send({code: CODE.FAIL});
       return;
     }
     else {
       if (!!results.loginData) {
-        results.loginData['token'] = Token.create(results.loginData.uid, Date.now(), tokenSecret);
+        // for security issues, stop publish token here
+        // results.loginData['token'] = Token.create(results.loginData.uid, Date.now(), tokenSecret);
+        /*
+        worldPlayerDao.getWorldPlayerByUid(mysql_s, uid, function(err, res1) {
+          if (err) {
+
+          }
+          else if 
+        };
+        */
       }
-      console.log('115');
+
+      console.log('before res for /entry');
       console.log(results);
       res.send({code: CODE.OK,
                 res: results});

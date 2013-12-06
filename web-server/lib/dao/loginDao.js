@@ -1,4 +1,4 @@
-var mysql = require('./mysql/mysql');
+//var mysql = require('./mysql/mysql');
 
 /*
 var mysqlc_m = 'game_master_m';
