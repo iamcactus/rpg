@@ -62,7 +62,7 @@ playerMissionLog.insert = function(mysqlc, playerId, missionDataId, clearNum, cb
   var insertSQL = 'insert into player_mission_log(player_id, mission_data_id, clear_num, created_on, updated_on) values(?,?,?, ?,?)';
   var createdOn = Math.round(new Date().getTime()/1000); //unixtime
   var updatedOn = createdOn;
-  var args = [playerId, missionDataId, clearNum, createdOn, updateOn]; 
+  var args = [playerId, missionDataId, clearNum, createdOn, updatedOn]; 
   console.log('playerMissionLog.add:' +playerId + ':' + missionDataId + ':' + clearNum);
   mysqlc.insert(insertSQL, args, function(err, res) {
     if (err !== null) {

@@ -1,28 +1,28 @@
 {
 	"development": {
     "game_master_m": {
-      "host" : "127.0.0.1",
+      "host" : "192.168.1.104",
 	  	"port" : "3306",
 		  "database" : "game_master",
 		  "user" : "onemore",
 		  "password" : "onemore01"
     },
     "game_master_s": {
-      "host" : "127.0.0.1",
+      "host" : "192.168.1.104",
 	  	"port" : "3306",
 		  "database" : "game_master",
 		  "user" : "onemore",
 		  "password" : "onemore01"
     },
     "game_world_1001_m": {
-      "host" : "127.0.0.1",
+      "host" : "192.168.1.104",
 	  	"port" : "3306",
 		  "database" : "game_world_1001",
 		  "user" : "onemore",
 		  "password" : "onemore01"
     },
     "game_world_1001_s": {
-      "host" : "127.0.0.1",
+      "host" : "192.168.1.104",
 	  	"port" : "3306",
 		  "database" : "game_world_1001",
 		  "user" : "onemore",
@@ -31,28 +31,28 @@
 	},
 	"production": {
     "game_master_m": {
-      "host" : "127.0.0.1",
+      "host" : "192.168.1.104",
 	  	"port" : "3306",
 		  "database" : "game_master",
 		  "user" : "onemore",
 		  "password" : "onemore01"
     },
     "game_master_s": {
-      "host" : "127.0.0.1",
+      "host" : "192.168.1.104",
 	  	"port" : "3306",
 		  "database" : "game_master",
 		  "user" : "onemore",
 		  "password" : "onemore01"
     },
     "game_world_1001_m": {
-      "host" : "127.0.0.1",
+      "host" : "192.168.1.104",
 	  	"port" : "3306",
 		  "database" : "game_world_1001",
 		  "user" : "onemore",
 		  "password" : "onemore01"
     },
     "game_world_1001_s": {
-      "host" : "127.0.0.1",
+      "host" : "192.168.1.104",
 	  	"port" : "3306",
 		  "database" : "game_world_1001",
 		  "user" : "onemore",
