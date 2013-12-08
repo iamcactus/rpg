@@ -2,6 +2,7 @@
 //var task = require('../../config/data/task');
 var mission = require('../../config/data/mission');
 var map = require('../../config/data/map');
+var NGWord = require('../../config/data/NGWord');
 //var role = require('../../config/data/role');
 /**
  * Data model `new Data()`
@@ -122,5 +123,6 @@ module.exports = {
 	//task: new Data(task),
 	//role: new Data(role)
 	mission: new Data(mission),
-	map: new Data(map)
+	map: new Data(map),
+  NGWord: new Data(NGWord)
 };

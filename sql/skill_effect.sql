@@ -1,8 +1,8 @@
 USE game_master;
 
-#DROP TABLE IF EXISTS skill_effect;
+DROP TABLE IF EXISTS skill_effect;
 CREATE TABLE skill_effect (
-  id          int(10) unsigned NOT NULL, # serial number
+  id          int(10) unsigned NOT NULL AUTO_INCREMENT, # serial number
   skill_id    int(10) unsigned NOT NULL, # skill_id in skill_data
   level       tinyint(3) unsigned NOT NULL, # 技能等级
   success     tinyint(3) unsigned NOT NULL, # 发动几率

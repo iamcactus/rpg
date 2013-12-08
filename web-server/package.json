@@ -8,6 +8,7 @@
     "generic-pool": "~2.0.4",
     "pomelo-logger": "~0.1.1",
     "mysql-simple": "~1.0.3",
-    "iz": "~0.3.0"
+    "iz": "~0.3.0",
+    "log4js": "~0.6.9"
   }
 }

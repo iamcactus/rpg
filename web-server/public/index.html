@@ -106,16 +106,14 @@
                     </tr>
                     <tr>
                         <td>
-                            <input name="token" type="text" id="token" placeholder="enter your token" />
+                            <input name="token2" type="text" id="token2" placeholder="enter your token" />
                         </td>
                     </tr>
-                    <!--
                     <tr>
                         <td>
                             <input name="worldId" type="text" id="worldId" placeholder="enter your worldId" />
                         </td>
                     </tr>
-                    -->
                         <tr>
                             <td>
                                 <input id="login" type='button' value="join" />
@@ -136,6 +134,42 @@
 <hr>
 <hr>
 <hr>
+
+            <div id="chkNickNameDebugView">
+                <div id="quickLoginTitle">
+                chkNickNameDebugView
+                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <input id="worldId" name="worldId" type="text" placeholder="enter your worldId" />
+                            enter your worldId
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="userId" type="text" placeholder="enter your uid" />
+                            enter your uid, this uid must be same as the uid you used in "join" above. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="nickname" type="text" placeholder="enter your nickname" />
+                            enter your nickname
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="chkNickName" type='button' value="join" />
+                        </td>
+                    </tr>
+                </table>
+                <hr>
+                uid为用户ID<br>
+                Only worked after your "join" succeed. (Cauz u need got session)
+                <hr>
+            </div>
+
 
             <div id="createPlayerDebugView">
                 <div id="quickLoginTitle">

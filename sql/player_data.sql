@@ -7,5 +7,5 @@ CREATE TABLE player_data (
   sex_type    tinyint NOT NULL DEFAULT 0 COMMENT '1, male; 0, female',
   created_on  int(10) unsigned NOT NULL COMMENT '注册日期, unixtime',
   PRIMARY KEY (player_id),
-  KEY `on_name` (name)
+  UNIQUE KEY `on_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

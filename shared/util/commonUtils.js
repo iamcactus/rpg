@@ -1,8 +1,12 @@
 var commonUtils = module.exports;
 var DBCONF = require('../dbconf');
 var PARAMRULES = require('../paramRules');
+var dataApi = require('../../game-server/app/util/dataApi');
 var iz = require('iz');
+var _ = require('underscore');
 var are = iz.are;
+var nameEngChn = /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/;
+var nameEng = /^[a-zA-Z0-9_]+$/;
 
 /**
  * Velidate World ID
@@ -104,4 +108,50 @@ commonUtils.validate = function(key, param) {
  */ 
 commonUtils.parseNumber = function(val) {
   return isNaN(parseInt(val)) ? 0 : parseInt(val);
+};
+
+
+/** 
+ * parse value into Int
+ * @param {Number} val should be number, '' or String or float is parsed as 0
+ * @returns {Number} val or 0
+ */ 
+commonUtils.chkNickName = function(name) {
+  if (!name) {
+    console.log(112);
+    return false;
+  }
+  var t = name.toString();
+  if (t.length > 12) {
+    return false;
+  }
+  if (t.length === 1 && nameEng.test(t)) {
+    return false;
+  }
+
+  return nameEngChn.test(t);
+};
+
+/** 
+ * check a word is NGWord or not
+ * @param {String} word 
+ * @returns {Boolean} true if is NGWord
+ */ 
+commonUtils.isNGWord = function(word) {
+  if (!word || false == word) {
+    return true;
+  }
+  var tmp = word.toString();
+  var list = dataApi.NGWord.all();
+
+  var res = _.find(list, function(v) {
+    return (tmp.toString().indexOf(v) >= 0);
+  });
+
+  if (res) {
+    return true;
+  }
+  else {
+    return false;
+  }
 };

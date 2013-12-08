@@ -8,8 +8,6 @@ CREATE TABLE player_card (
   exp         int(10) unsigned NOT NULL,
   level       int(10) unsigned NOT NULL,
   evolved_cnt tinyint(3) unsigned NOT NULL, # 进化次数
-  stdskill1_id  int(10) unsigned DEFAULT NULL, # id in skill_effect
-  stdskill2_id  int(10) unsigned DEFAULT NULL, # id in skill_effect
   max_level   int(10) unsigned NOT NULL,
   created_on  int(10) unsigned NOT NULL,
   updated_on  int(10) unsigned NOT NULL,

@@ -159,14 +159,6 @@ app.post('/entry', function(req, res) {
       if (!!results.loginData) {
         // for security issues, stop publish token here
         // results.loginData['token'] = Token.create(results.loginData.uid, Date.now(), tokenSecret);
-        /*
-        worldPlayerDao.getWorldPlayerByUid(mysql_s, uid, function(err, res1) {
-          if (err) {
-
-          }
-          else if 
-        };
-        */
       }
 
       console.log('before res for /entry');
@@ -255,7 +247,7 @@ app.post('/regist', function(req, res) {
   loginDao.getLoginDataByLoginName(mysql_m, msg.name, function (err, user) {
     if (user) { // exists
       console.log(' Got exists ' + user.uid);
-      res.send({code: CODE.REGIST.ERR_DUPLICATED});
+      res.send({code: CODE.REGIST.ERR_EXIST});
       return;
     }
     else {

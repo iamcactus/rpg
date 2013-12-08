@@ -32,6 +32,7 @@ module.exports = {
   PLAYER: {
     ERR_WRONG_NAME: 6001,
     ERR_NAME_EXIST: 6002,
+    ERR_NG_NAME: 6003,
   },
 
   MISSION: {
