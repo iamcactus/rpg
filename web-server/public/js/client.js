@@ -282,7 +282,7 @@ $(document).ready(function() {
 	//deal with login button click.
 	$("#login").click(function() {
 		userId = $("#userId").attr("value");
-		token = $('#token').val();
+		token = $('#token2').val();
     worldId = $("#worldId").attr("value");
     rid = 1234;
     /*
@@ -328,6 +328,43 @@ $(document).ready(function() {
 		});
 	});
 
+	//deal with chkNickName button click.
+	$("#chkNickName").click(function() {
+		userId = $("#userId").attr("value");
+		username = $("#nickname").attr("value");
+		worldId = $('#worldId').val();
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "connector.roleHandler.chkNickName";
+				pomelo.request(route, {
+          name: username,
+          worldId: worldId,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          //userName = ;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
 	//deal with createPlayer button click.
 	$("#createPlayer").click(function() {
 		userId = $("#userId").attr("value");
@@ -337,9 +374,6 @@ $(document).ready(function() {
 		//worldId = $("#worldId").attr("value");
 		worldId = $('#worldId').val();
     rid = 1234;
-    alert(userId);
-    alert(username);
-    alert(worldId);
 		//query entry of connection
 		queryEntry(userId, function(host, port) {
 			pomelo.init({
@@ -382,9 +416,6 @@ $(document).ready(function() {
 		//worldId = $("#worldId").attr("value");
 		//worldId = $('#worldId').val();
     rid = 1234;
-    alert(userId);
-    alert(playerId);
-    alert(mapId);
     //alert(missionDataId);
 		//query entry of connection
 		queryEntry(userId, function(host, port) {
