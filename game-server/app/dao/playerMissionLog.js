@@ -1,28 +1,9 @@
 var logger = require('pomelo-logger').getLogger(__filename);
-//var pomelo = require('pomelo');
-var DBCONF = require('../../../shared/dbconf');
 var LEVELCONF = require('../../../shared/levelConf');
-/*
-var dataApi = require('../util/dataApi');
-var User = require('../domain/user');
-var consts = require('../consts/consts');
-var equipmentsDao = require('./equipmentsDao');
-var bagDao = require('./bagDao');
-var fightskillDao = require('./fightskillDao');
-var taskDao = require('./taskDao');
-var async = require('async');
-*/
-
 var util = require('util');
-
-//var Player = require('../domain/entity/player');
 var utils = require('../util/utils');
-//var consts = require('../consts/consts');
 
 var playerMissionLog = module.exports;
-
-//var mysqlc_w = pomelo.app.get(DBCONF.GAME_MASTER_W);
-//var mysqlc_r = pomelo.app.get(DBCONF.GAME_MASTER_R);
 
 /**
  * Get player's mission history by playerId
@@ -64,7 +45,7 @@ playerMissionLog.insert = function(mysqlc, playerId, missionDataId, clearNum, cb
   var updatedOn = createdOn;
   var args = [playerId, missionDataId, clearNum, createdOn, updatedOn]; 
   console.log('playerMissionLog.add:' +playerId + ':' + missionDataId + ':' + clearNum);
-  mysqlc.insert(insertSQL, args, function(err, res) {
+  mysqlc.query(insertSQL, args, function(err, res) {
     if (err !== null) {
 			utils.invokeCallback(cb, err.message, null);
     }
@@ -95,8 +76,8 @@ playerMissionLog.update = function(mysqlc, playerId, missionDataId, clearNum, cb
   var updatedOn = Math.round(new Date().getTime()/1000); //unixtime
   var updateSQL = 'update player_mission_log set clear_num=clear_num+?, updated_on=? where player_id=? and mission_data_id=?';
   var args = [clearNum, updateOn, playerId, missionDataId]; 
-  console.log('playerMissionLog.add:' +playerId + ':' + missionDataId + ':' + clearNum);
-  mysqlc.update(updateSQL, args, function(err, res) {
+  console.log('playerMissionLog.update:' +playerId + ':' + missionDataId + ':' + clearNum);
+  mysqlc.query(updateSQL, args, function(err, res) {
     if (err !== null) {
 			utils.invokeCallback(cb, err.message, null);
     }

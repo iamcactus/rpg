@@ -9,6 +9,8 @@ CREATE TABLE player_unit (
   defender_id int(10) unsigned DEFAULT NULL, # equip_id in player_equip
   shoe_id     int(10) unsigned DEFAULT NULL, # equip_id in player_equip
   jewelry_id  int(10) unsigned DEFAULT NULL, # equip_id in player_equip
+  stdskill1_id  int(10) unsigned DEFAULT NULL, # id in skill_effect
+  stdskill2_id  int(10) unsigned DEFAULT NULL, # id in skill_effect
   created_on  int(10) unsigned NOT NULL,
   updated_on  int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (player_id, position_id)

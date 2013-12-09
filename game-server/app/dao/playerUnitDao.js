@@ -1,26 +1,7 @@
 var logger = require('pomelo-logger').getLogger(__filename);
-//var pomelo = require('pomelo');
-var DBCONF = require('../../../shared/dbconf');
-//var LEVELCONF = require('../../../shared/levelConf');
-
-/*
-var dataApi = require('../util/dataApi');
-var User = require('../domain/user');
-var consts = require('../consts/consts');
-var equipmentsDao = require('./equipmentsDao');
-var bagDao = require('./bagDao');
-var fightskillDao = require('./fightskillDao');
-var taskDao = require('./taskDao');
-var async = require('async');
-*/
-
 var utils = require('../util/utils');
-//var consts = require('../consts/consts');
 
 var playerUnitDao = module.exports;
-
-//var mysqlc_w = pomelo.app.get(DBCONF.GAME_MASTER_W);
-//var mysqlc_r = pomelo.app.get(DBCONF.GAME_MASTER_R);
 
 /**
  * Get an user's all players by userId
@@ -33,9 +14,6 @@ playerUnitDao.get = function(mysqlc, playerId, cb) {
 	var args = [playerId];
 
 	mysqlc.query(selectSQL, args, function(err, res) {
-    console.log('in playerUnitDao.getAll');
-    console.log(err);
-    console.log(res);
 		if(err) {
 			utils.invokeCallback(cb, err.message, null);
 			return;
@@ -57,15 +35,12 @@ playerUnitDao.add = function(mysqlc, playerId, positionId, playerCardId, cb) {
   var args = [playerId, positionId, playerCardId, createdOn, createdOn];
   console.log(playerId, positionId, playerCardId, createdOn, createdOn);
 
-  mysqlc.insert(insertSQL, args, function(err, res) {
+  mysqlc.query(insertSQL, args, function(err, res) {
     if (err !== null) {
-      console.log(err);
       cb({code: err.number, msg: err.message}, null);
     }
     else {
       if (!!res && res.affectedRows > 0) {
-        console.log('in playerUnitDao.add');
-        console.log(res);
         utils.invokeCallback(cb, null, res);
       }
       else {
@@ -79,17 +54,13 @@ playerUnitDao.add = function(mysqlc, playerId, positionId, playerCardId, cb) {
 playerUnitDao.delete = function(mysqlc, id, cb) {
   var deleteSQL = 'delete from player_unit where id=?';
   var args = [id];
-  console.log(id);
 
-  mysqlc.delete(deleteSQL, args, function(err, res) {
+  mysqlc.query(deleteSQL, args, function(err, res) {
     if (err !== null) {
-      console.log(err);
       cb({code: err.number, msg: err.message}, null);
     }
     else {
       if (!!res && res.affectedRows > 0) {
-        console.log('in playerUnitDao.delete');
-        console.log(res);
         utils.invokeCallback(cb, null, true);
       }
       else {

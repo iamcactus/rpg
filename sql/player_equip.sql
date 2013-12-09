@@ -1,6 +1,6 @@
 USE game_world_1001;
 
-#DROP TABLE IF EXISTS player_equip;
+DROP TABLE IF EXISTS player_equip;
 CREATE TABLE player_equip (
   id          int(20) unsigned NOT NULL, # serial number
   player_id   int(10) unsigned NOT NULL, # player_id in player_data
@@ -12,5 +12,5 @@ CREATE TABLE player_equip (
   created_on  int(10) unsigned NOT NULL,
   updated_on  int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
-  KEY on_player_id (player_id)
+  KEY on_player_id_and_is_onarm (player_id, is_onarm)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

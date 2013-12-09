@@ -182,21 +182,6 @@ app.post('/quick_reg', function(req, res) {
     return;
   }
 
-  // check duplicated request
-  /*
-  var memcached = self.app.get('memcached');
-  memcached.get(chkKey, function(err, res) {
-    if (err) {
-      //nothing
-    }
-    if (res) {
-      next(new Error('alreay process this request'),
-          {code: 501});
-      return;
-    }
-  });
-  */
-
   // check deviceInfo exists or not
   loginDao.getLoginDataByDeviceInfo(mysql_m, deviceInfo, function (err, user) {
     if (user) { // exists
@@ -209,17 +194,40 @@ app.post('/quick_reg', function(req, res) {
       // regist
       var loginName   = quickRegUtil.getName(deviceInfo);
       var passwordHash = Token.cryptPass(quickRegUtil.getPasswordHash(deviceInfo));
-      loginDao.createUser(mysql_m, deviceInfo, loginName, passwordHash, function(err, user) {
-        if (err || !user) {
-          if (err && err.code === 1062) {
-            res.send({code: CODE.REGIST.ERR_DUPLICATED});
-          } else {
-            res.send({code: CODE.FAIL});
-          }
-        } else {
-          console.log('A new user was created! --' + msg.name + user.uid);
-          res.send({code: CODE.OK, token: Token.create(user.uid, Date.now(), tokenSecret), uid: user.uid});
+      mysql_m.query('BEGIN', function(err, rows) {  // start TRANSACTION
+        if (err) {
+          console.log('[register] transaction begin failed' + err.stack);
+          res.send({code: CODE.FAIL});
+          //mysql_m.end(); // need here??
         }
+
+        loginDao.createUser(mysql_m, deviceInfo, loginName, passwordHash, function(err, user) {
+          var q; // query
+          if (err || !user) {
+            q = 'ROLLBACK';
+            console.log('[register] transaction query failed ' + err.message);
+          }
+          else {
+            q = 'COMMIT';
+          }
+          mysql_m.query(q, function(err, res1) {
+            if (err) {
+              if (err.code === 1062) {
+                res.send({code: CODE.REGIST.ERR_DUPLICATED});
+                //mysql_m.end();
+              }
+              else {
+                res.send({code: CODE.FAIL});
+                //mysql_m.end();
+              }
+            }
+            else {
+              console.log('A new user was created! --' + msg.name + user.uid);
+              res.send({code: CODE.OK, token: Token.create(user.uid, Date.now(), tokenSecret), uid: user.uid});
+              //mysql_m.end();
+            }
+          });
+        });
       });
     }
   });
@@ -253,18 +261,38 @@ app.post('/regist', function(req, res) {
     else {
       // regist
       var passwordHash = Token.cryptPass(msg.password);
-      loginDao.createUser(mysql_m, deviceInfo, msg.name, passwordHash, function(err, user) {
-        if (err || !user) {
-          console.error(err);
-          if (err && err.code === 1062) {
-            res.send({code: CODE.REGIST.ERR_DUPLICATED});
-          } else {
-            res.send({code: CODE.FAIL});
-          }
-        } else {
-          console.log('A new user was created! --' + msg.name);
-          res.send({code: CODE.OK, token: Token.create(user.uid, Date.now(), tokenSecret), uid: user.uid});
+      mysql_m.query('BEGIN', function(err, rows) {  // start TRANSACTION
+        if (err) {
+          console.log('[register] transaction begin failed' + err.stack);
+          res.send({code: CODE.FAIL});
+          //mysql_m.end(); // need here??
         }
+
+        loginDao.createUser(mysql_m, deviceInfo, msg.name, passwordHash, function(err, user) {
+          var q; // query
+          if (err || !user) {
+            q = 'ROLLBACK';
+            console.log('[register] transaction query failed ' + err.message);
+          }
+          else {
+            q = 'COMMIT';
+          }
+          mysql_m.query(q, function(err, res1) {
+            if (err) {
+              if (err.code === 1062) {
+                res.send({code: CODE.REGIST.ERR_DUPLICATED});
+              }
+              else {
+                res.send({code: CODE.FAIL});
+              }
+            }
+            else {
+              console.log('A new user was created! --' + msg.name + user.uid);
+              res.send({code: CODE.OK, token: Token.create(user.uid, Date.now(), tokenSecret), uid: user.uid});
+              //mysql_m.end();
+            }
+          });
+        });
       });
     }
   });

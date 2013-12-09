@@ -369,10 +369,17 @@ $(document).ready(function() {
 	$("#createPlayer").click(function() {
 		userId = $("#userId").attr("value");
 		cardId = $("#cardId").attr("value");
-		username = $("#nickname").attr("value");
+		username = $("#nickname1").attr("value");
 		sexType = $("#sexType").attr("value");
 		//worldId = $("#worldId").attr("value");
 		worldId = $('#worldId').val();
+
+    alert(userId);
+    alert(cardId);
+    alert(username);
+    alert(sexType);
+    alert(worldId);
+
     rid = 1234;
 		//query entry of connection
 		queryEntry(userId, function(host, port) {

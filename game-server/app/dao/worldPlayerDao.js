@@ -3,6 +3,32 @@ var utils = require('../util/utils');
 var worldPlayerDao = module.exports;
 
 /**
+ * Get world_player by uid
+ * @param {String} mysqlc mysql client for Master DB or Slave DB
+ * @param {Number} uid
+ * @param {Number} worldId
+ * @returns {Object} world_player data
+ */
+worldPlayerDao.getWorldPlayerByUid = function (mysqlc, uid, cb) {
+  var selectSQL = 'select * from world_player where uid=?';
+  var args = [uid];
+
+  mysqlc.query(selectSQL, args, function(err, res) {
+    if (err !== null) {
+      utils.invokeCallback(cb, err.message, null);
+      return;
+    }
+
+    if (!!res && res.length === 1) {
+      utils.invokeCallback(cb, null, res[0]);
+    }
+    else {
+      utils.invokeCallback(cb, null, []);
+    }
+  });
+}
+
+/**
  * Get world_player by uid_and_world_id
  * @param {String} mysqlc mysql client for Master DB or Slave DB
  * @param {Number} uid
@@ -45,7 +71,6 @@ worldPlayerDao.createWorldPlayer = function (mysqlc, uid, worldId, playerId, cb)
     }
     else {
       if (!!res && res.affectedRows > 0) {
-        console.log(res);
         utils.invokeCallback(cb, null, res);
       }
       else {
