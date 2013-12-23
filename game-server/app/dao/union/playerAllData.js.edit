@@ -1,0 +1,83 @@
+var logger = require('pomelo-logger').getLogger(__filename);
+//var LEVELCONF = require('../../../shared/levelConf');
+var assert = require('assert');
+var async = require('async');
+
+var dataApi = require('../../util/dataApi');
+var utils = require('../../util/utils');
+var Player = require('../../domain/player');
+var playerDao = require('../playerDao');
+var playerParamDao = require('../playerParamDao');
+var playerCardDao = require('../playerDao');
+var playerUnitDao = require('../playerDao');
+var playerEquipDao = require('../playerDao');
+var unitMeridianDao = require('../unitMeridianDao');
+
+var playerAllData = module.exports;
+
+playerAllData.getAllData = function(mysqlc, playerId, cb) {
+  async.auto({
+    player: function(callback) {
+      playerDao.getPlayerByPlayerId(mysqlc, playerId, function(err, res) {
+        if (!err || !res) {
+          logger.error('Get playerData failed! ' + err);
+        }
+        callback(err, res);
+      });
+    },
+    playerParam: function(callback) {
+      playerParamDao.get(mysqlc, playerId, function(err, res) {
+        if(!!err || !res) {
+          logger.error('Get playerParam failed! ' + err);
+        }
+        callback(err, res);
+      });
+    },
+    playerUnit: function(callback) {
+      playerUnitDao.get(mysqlc, playerId, functioin(err, res) {
+        if(!!err || !res) {
+          logger.error('Get playerUnit failed! ' + err);
+        }
+        callback(err, res);
+      });
+    },
+    playerCard: ['playerUnit', function(callback, units) {
+      console.log(units);
+      var params = units;
+      playerCardDao.get(mysqlc, params, functioin(err, res) {
+        if(!!err || !res) {
+          logger.error('Get playerParam failed! ' + err);
+        }
+        callback(err, res);
+      });     
+    }],
+    playerEquip: ['playerUnit', function(callback, units) {
+      console.log(units);
+      var params = units;
+      playerEquipDao.get(mysqlc, params, functioin(err, res) {
+        if(!!err || !res) {
+          logger.error('Get playerParam failed! ' + err);
+        }
+        callback(err, res);
+      });
+    }],
+    playerMeridian: ['playerUnit', function(callback) {
+      console.log(units);
+      var params = units;
+      unitMeridianDao.get(mysqlc, params, functioin(err, res) {
+        if(!!err || !res) {
+          logger.error('Get playerParam failed! ' + err);
+        }
+        callback(err, res);
+      });
+    }]
+  }, function(err, results) {
+    console.log(results);
+     if (err) {
+        utils.invokeCallback(cb, err);
+     }
+     else {
+        utils.invokeCallback(cb, results);
+     }
+  });
+};

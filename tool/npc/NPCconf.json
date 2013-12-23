@@ -1,0 +1,497 @@
+{
+  "comment":            "comment: JSON:相同key的多个定义中，只有最后一个有效",
+  "mission_data_id":    "comment: 所有关卡的序列号",
+  "mission_data_id":    15,
+  "player_unit": [
+    { 
+      "position":       "comment: 关卡NPC位置，范围为1-8",
+      "position":       1,
+      "card": [{
+        "id":           "comment: card_id in card_data",
+        "id":           1229, 
+        "level":        "comment: card level",
+        "level":        5,
+        "brnskill":     "comment: THIS IS NOT OPENED! skill_id in skill_data",
+        "brnskill":     3010,
+        "evolved_cnt":  "comment: evolution count",
+        "evolved_cnt":  0,
+        "unit_meridian":"comment: Jing Mai",
+        "unit_meridian": [
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 1,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8001
+          },
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 2,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8002
+          }
+        ]
+      }],
+      "weapon": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           5101,
+        "level":        "comment: weapon level",
+        "level":        5
+      }],
+      "defender": [{
+        "id":           5104,
+        "level":        5
+      }],    
+      "shoe": [{
+        "id":           5107,
+        "level":        5
+      }],    
+      "jewelry": [{
+        "id":           5109,
+        "level":        5
+      }],    
+      "stdskill1": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3005,
+        "level":        "comment: skill level",
+        "level":        5
+      }],    
+      "stdskill2": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3009,
+        "level":        "comment: skill level",
+        "level":        5
+      }]
+    },
+    { 
+      "position":       "comment: 关卡NPC位置，范围为1-8",
+      "position":       2,
+      "card": [{
+        "id":           "comment: card_id in card_data",
+        "id":           1235, 
+        "level":        "comment: card level",
+        "level":        5,
+        "brnskill":     "comment: THIS IS NOT OPENED! skill_id in skill_data",
+        "brnskill":     3010,
+        "evolved_cnt":  "comment: evolution count",
+        "evolved_cnt":  0,
+        "unit_meridian":"comment: Jing Mai",
+        "unit_meridian": [
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 1,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8001
+          },
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 2,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8002
+          }
+        ]
+      }],
+      "weapon": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           5101,
+        "level":        "comment: weapon level",
+        "level":        5
+      }],
+      "defender": [{
+        "id":           5104,
+        "level":        5
+      }],    
+      "shoe": [{
+        "id":           5107,
+        "level":        5
+      }],    
+      "jewelry": [{
+        "id":           5109,
+        "level":        5
+      }],    
+      "stdskill1": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3005,
+        "level":        "comment: skill level",
+        "level":        5
+      }],    
+      "stdskill2": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3009,
+        "level":        "comment: skill level",
+        "level":        5
+      }]
+    },
+    { 
+      "position":       "comment: 关卡NPC位置，范围为1-8",
+      "position":       3,
+      "card": [{
+        "id":           "comment: card_id in card_data",
+        "id":           1235, 
+        "level":        "comment: card level",
+        "level":        5,
+        "brnskill":     "comment: THIS IS NOT OPENED! skill_id in skill_data",
+        "brnskill":     3010,
+        "evolved_cnt":  "comment: evolution count",
+        "evolved_cnt":  0,
+        "unit_meridian":"comment: Jing Mai",
+        "unit_meridian": [
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 1,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8001
+          },
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 2,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8002
+          }
+        ]
+      }],
+      "weapon": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           5101,
+        "level":        "comment: weapon level",
+        "level":        5
+      }],
+      "defender": [{
+        "id":           5104,
+        "level":        5
+      }],    
+      "shoe": [{
+        "id":           5107,
+        "level":        5
+      }],    
+      "jewelry": [{
+        "id":           5109,
+        "level":        5
+      }],    
+      "stdskill1": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3005,
+        "level":        "comment: skill level",
+        "level":        5
+      }],    
+      "stdskill2": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3009,
+        "level":        "comment: skill level",
+        "level":        5
+      }]
+    },
+    { 
+      "position":       "comment: 关卡NPC位置，范围为1-8",
+      "position":       4,
+      "card": [{
+        "id":           "comment: card_id in card_data",
+        "id":           1235, 
+        "level":        "comment: card level",
+        "level":        5,
+        "brnskill":     "comment: THIS IS NOT OPENED! skill_id in skill_data",
+        "brnskill":     3010,
+        "evolved_cnt":  "comment: evolution count",
+        "evolved_cnt":  0,
+        "unit_meridian":"comment: Jing Mai",
+        "unit_meridian": [
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 1,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8001
+          },
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 2,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8002
+          }
+        ]
+      }],
+      "weapon": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           5101,
+        "level":        "comment: weapon level",
+        "level":        5
+      }],
+      "defender": [{
+        "id":           5104,
+        "level":        5
+      }],    
+      "shoe": [{
+        "id":           5107,
+        "level":        5
+      }],    
+      "jewelry": [{
+        "id":           5109,
+        "level":        5
+      }],    
+      "stdskill1": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3005,
+        "level":        "comment: skill level",
+        "level":        5
+      }],    
+      "stdskill2": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3009,
+        "level":        "comment: skill level",
+        "level":        5
+      }]
+    },
+    { 
+      "position":       "comment: 关卡NPC位置，范围为1-8",
+      "position":       5,
+      "card": [{
+        "id":           "comment: card_id in card_data",
+        "id":           1235, 
+        "level":        "comment: card level",
+        "level":        5,
+        "brnskill":     "comment: THIS IS NOT OPENED! skill_id in skill_data",
+        "brnskill":     3010,
+        "evolved_cnt":  "comment: evolution count",
+        "evolved_cnt":  0,
+        "unit_meridian":"comment: Jing Mai",
+        "unit_meridian": [
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 1,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8001
+          },
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 2,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8002
+          }
+        ]
+      }],
+      "weapon": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           5101,
+        "level":        "comment: weapon level",
+        "level":        5
+      }],
+      "defender": [{
+        "id":           5104,
+        "level":        5
+      }],    
+      "shoe": [{
+        "id":           5107,
+        "level":        5
+      }],    
+      "jewelry": [{
+        "id":           5109,
+        "level":        5
+      }],    
+      "stdskill1": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3005,
+        "level":        "comment: skill level",
+        "level":        5
+      }],    
+      "stdskill2": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3009,
+        "level":        "comment: skill level",
+        "level":        5
+      }]
+    },
+    { 
+      "position":       "comment: 关卡NPC位置，范围为1-8",
+      "position":       6,
+      "card": [{
+        "id":           "comment: card_id in card_data",
+        "id":           1235, 
+        "level":        "comment: card level",
+        "level":        5,
+        "brnskill":     "comment: THIS IS NOT OPENED! skill_id in skill_data",
+        "brnskill":     3010,
+        "evolved_cnt":  "comment: evolution count",
+        "evolved_cnt":  0,
+        "unit_meridian":"comment: Jing Mai",
+        "unit_meridian": [
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 1,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8001
+          },
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 2,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8002
+          }
+        ]
+      }],
+      "weapon": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           5101,
+        "level":        "comment: weapon level",
+        "level":        5
+      }],
+      "defender": [{
+        "id":           5104,
+        "level":        5
+      }],    
+      "shoe": [{
+        "id":           5107,
+        "level":        5
+      }],    
+      "jewelry": [{
+        "id":           5109,
+        "level":        5
+      }],    
+      "stdskill1": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3005,
+        "level":        "comment: skill level",
+        "level":        5
+      }],    
+      "stdskill2": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3009,
+        "level":        "comment: skill level",
+        "level":        5
+      }]
+    },
+    { 
+      "position":       "comment: 关卡NPC位置，范围为1-8",
+      "position":       7,
+      "card": [{
+        "id":           "comment: card_id in card_data",
+        "id":           1235, 
+        "level":        "comment: card level",
+        "level":        5,
+        "brnskill":     "comment: THIS IS NOT OPENED! skill_id in skill_data",
+        "brnskill":     3010,
+        "evolved_cnt":  "comment: evolution count",
+        "evolved_cnt":  0,
+        "unit_meridian":"comment: Jing Mai",
+        "unit_meridian": [
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 1,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8001
+          },
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 2,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8002
+          }
+        ]
+      }],
+      "weapon": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           5101,
+        "level":        "comment: weapon level",
+        "level":        5
+      }],
+      "defender": [{
+        "id":           5104,
+        "level":        5
+      }],    
+      "shoe": [{
+        "id":           5107,
+        "level":        5
+      }],    
+      "jewelry": [{
+        "id":           5109,
+        "level":        5
+      }],    
+      "stdskill1": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3005,
+        "level":        "comment: skill level",
+        "level":        5
+      }],    
+      "stdskill2": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3009,
+        "level":        "comment: skill level",
+        "level":        5
+      }]
+    },
+    { 
+      "position":       "comment: 关卡NPC位置，范围为1-8",
+      "position":       8,
+      "card": [{
+        "id":           "comment: card_id in card_data",
+        "id":           1235, 
+        "level":        "comment: card level",
+        "level":        5,
+        "brnskill":     "comment: THIS IS NOT OPENED! skill_id in skill_data",
+        "brnskill":     3010,
+        "evolved_cnt":  "comment: evolution count",
+        "evolved_cnt":  0,
+        "unit_meridian":"comment: Jing Mai",
+        "unit_meridian": [
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 1,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8001
+          },
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 2,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    8002
+          }
+        ]
+      }],
+      "weapon": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           5101,
+        "level":        "comment: weapon level",
+        "level":        5
+      }],
+      "defender": [{
+        "id":           5104,
+        "level":        5
+      }],    
+      "shoe": [{
+        "id":           5107,
+        "level":        5
+      }],    
+      "jewelry": [{
+        "id":           5109,
+        "level":        5
+      }],    
+      "stdskill1": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3005,
+        "level":        "comment: skill level",
+        "level":        5
+      }],    
+      "stdskill2": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           3009,
+        "level":        "comment: skill level",
+        "level":        5
+      }]
+    }
+  ],
+  "player_pet":[
+    {
+      "id":             "comment: pet_id in pet_data",
+      "id":             2401,
+      "level":          "comment: pet level",
+      "level":          10,
+      "evolved_cnt":    "comment: evolution count",
+      "evolved_cnt":    0,
+      "posi_skill1_id": "comment: positive skill at position 1",
+      "posi_skill1_id": 4614,
+      "posi_skill2_id": 4603,
+      "posi_skill3_id": 4602,
+      "nega_skill1_id": "comment: negative skill at position 1",
+      "nega_skill1_id": 4626,
+      "nega_skill2_id": 4636,
+      "nega_skill3_id": 0
+    }
+  ]
+}

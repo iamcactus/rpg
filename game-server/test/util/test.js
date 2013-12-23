@@ -3,14 +3,9 @@ var api = require('../../../game-server/app/util/dataApi');
 
 var name = 'test';
 
-describe('Name', function() {
-  it('The name should be test', function () {
-    name.should.eql('test');
-  });
-});
-
 describe('JSON data api test', function() {
   var mission = api.mission;
+  var NGWord = api.NGWord;
   //console.log(mission);
   it('can findBy a attribute', function(){
     var item = mission.findBy("id", "28");
@@ -31,13 +26,11 @@ describe('JSON data api test', function() {
   });
 */
 
-/*
-  it('can list all item', function() {
-     var list = role.all();
+  it('can list all item of NGWord', function() {
+     var list = NGWord.all();
      //list.should.be.an.instanceof(Array);
-     list.length.should.equal(12);
+     // list.length.should.equal(12);
 
-     list[0].name.should.equal('神天兵');
+     list[0].should.equal('18禁');
   });
-*/
 });

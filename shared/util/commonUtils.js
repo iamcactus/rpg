@@ -155,3 +155,18 @@ commonUtils.isNGWord = function(word) {
     return false;
   }
 };
+
+/** 
+ * get array from an object
+ * @param {Object} obj
+ * @param {String} key4k key for key, ex 'position_id'
+ * @param {String} key4v key for value ex 'player_card_id'
+ * @returns {Array} Array or []
+ */ 
+commonUtils.makeArray = function(obj, key4k, key4v, cb) {
+  var ids = [];
+  _.map(obj, function(o) {
+    ids[o[key4k] - 1] = o[key4v];
+  });
+  cb(null, ids);
+};

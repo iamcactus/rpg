@@ -1,0 +1,263 @@
+var fs      = require('fs');
+var mysql   = require('mysql');
+var async   = require('async');
+var util    = require('util');
+var NPCconf = require('./NPCconf');
+
+var playerCardDao   = require('../../game-server/app/dao/playerCardDao');
+var playerUnitDao   = require('../../game-server/app/dao/playerUnitDao');
+var playerPetDao    = require('../../game-server/app/dao/playerPetDao');
+var playerEquipDao  = require('../../game-server/app/dao/playerEquipDao');
+var unitMeridianDao = require('../../game-server/app/dao/unitMeridianDao');
+var dataApi         = require('../../game-server/app/util/dataApi');
+
+var connecMaster = mysql.createConnection(
+  {
+    host      : '127.0.0.1',
+    user      : 'onemore',
+    password  : 'onemore01',
+    database  : 'game_master',
+    insecureAuth: true
+  }
+);
+
+var connecWorld = mysql.createConnection(
+  {
+    host      : '127.0.0.1',
+    user      : 'onemore',
+    password  : 'onemore01',
+    database  : 'game_world_1001',
+    insecureAuth: true
+  }
+);
+
+// obj: array for unit_meridian
+var insertMeridian = function(mysqlc, obj, playerCardId, cb) {
+  var insertSQL =
+      'insert into unit_meridian(player_card_id, position_id, stone_id, created_on, updated_on) values (?,?,?, ?,?)';
+  var createdOn = Math.round(new Date().getTime()/1000); //unixtime
+  var updatedOn = createdOn;
+  async.map(obj, function(item, callback) {
+    console.log(item);
+    var args = [playerCardId, item.position, item.stone, createdOn, updatedOn];
+    mysqlc.query(insertSQL, args, function(err, res) {
+      if (err) {
+        callback(err, null);
+      }
+      else {
+        callback(null, res);
+      }
+    });
+  }, function(err, res) {
+    if (err) {
+      cb(err, null);
+    }
+    else {
+      cb(null, res);
+    }
+  });
+};
+
+connecMaster.connect();
+connecWorld.connect();
+
+var BASEID      = 2000;   // all id is using this one, dont edit it
+var UNIT_LENGTH  = 8;     // all id is using this one, dont edit it
+var EQUIP_LENGTH = 4;     // all id is using this one, dont edit it
+var SKILL_LENGTH = 2;     // all id is using this one, dont edit it
+var STONE_LENGTH = 5;     // all id is using this one, dont edit it
+// parametor initiation
+
+var TYPE_HP  = 1; // jewelry
+var TYPE_ATK = 2; // weapon
+var TYPE_DEF = 3; // defender
+var TYPE_AGI = 4; // shoe
+
+var missionId = NPCconf.mission_data_id;
+var playerId  = BASEID + missionId;
+
+var unit = NPCconf.player_unit;
+//var objLength = Object.keys(unit).length; 
+
+
+// unit: Array of player_unit
+var makeUnit = function(mysqlc, unit, playerId, cb) {
+  async.map(unit, function(item, callback) {
+    var positionId    = item.position; // current position in the unit
+    var playerCardId  = BASEID + positionId + ((missionId - 1) * UNIT_LENGTH);
+
+    console.log("playerCardId : " + playerCardId);
+    console.log("positionId : " + positionId);
+
+    var card  = item.card;
+    var unitMeridian = card[0].unit_meridian; // Jing Mai
+
+    async.auto({
+      um: function(callback) {
+        insertMeridian(mysqlc, unitMeridian, playerCardId, callback);
+      }
+    }, function(err, res) {
+      if (err) {
+        console.log('unitMeridianDao.init failed' + err);
+        callback(err, null);
+      }
+      else {
+        callback(null, res);
+      }
+    });
+  }, function(err, res) {
+    if (err) {
+      console.log(err);
+      cb(err, null);
+    }
+    else {
+      cb(null, res);
+    }
+  });
+};
+
+connecWorld.query('BEGIN', function(err, rows) {
+  if (err) {
+    console.log('start trans failed' + err);
+  }
+
+  makeUnit(connecWorld, unit, playerId, function(err, res) {
+    var q; // query
+    if (err) {
+      q = 'ROLLBACK';
+      console.log('unitMeridianDao.init failed' + err);
+    }
+    else {
+      q = 'COMMIT';
+    }
+    connecWorld.query(q, function(err, rows) {
+      console.log("after:");
+      if (err) {
+        console.log('commit error' + err);
+      }
+      connecWorld.end();
+      connecMaster.end();
+    });
+  });
+});
+    //console.log(unitMeridian);
+    //var unitMeridianId = BASEID + stonePositionId + ((missionId - 1) * STONE_LENGTH * UNIT_LENGTH) + i * STONE_LENGTH;
+    //console.log("unitMeridianId : " + unitMeridianId);
+    //console.log("before:");
+    //console.log("playerCardId : " + playerCardId);
+    //console.log(stonePositionId);
+
+    /*
+    for (var j in unitMeridian) { // for start
+      var stone = unitMeridian[j];
+      var stonePositionId = stone.position;
+      console.log("before:");
+      console.log("playerCardId : " + playerCardId);
+      console.log(stonePositionId);
+      unitMeridianDao.init(connecWorld, playerCardId, stonePositionId, function(err, res) {
+        var q; // query
+        if (err) {
+          q = 'ROLLBACK';
+          console.log('unitMeridianDao.init failed' + err);
+        }
+        else {
+          q = 'COMMIT';
+        }
+        connecWorld.query(q, function(err, rows) {
+          console.log("after:");
+          if (err) {
+            console.log('commit error' + err);
+          }
+          //connecWorld.end();
+          //connecMaster.end();
+        });
+      });
+    }// for end
+    */
+    /*
+    var weapon = unit[i].weapon;
+    if (weapon[0].id > 0) {
+      // set weapon
+      var playerEquipId = BASEID + ((missionId - 1) * EQUIP_LENGTH * UNIT_LENGTH) + i * EQUIP_LENGTH + TYPE_ATK;
+      //console.log("weapon playerEquipId : " + playerEquipId);
+    }
+  
+    var defender = unit[i].defender;
+    if (defender[0].id > 0) {
+      // set defender
+      var playerEquipId = BASEID + ((missionId - 1) * EQUIP_LENGTH * UNIT_LENGTH) + i * EQUIP_LENGTH + TYPE_DEF;
+      //console.log("defender playerEquipId : " + playerEquipId);
+    }
+  
+    var shoe = unit[i].shoe;
+    if (shoe[0].id > 0) {
+      // set shoe
+      var playerEquipId = BASEID + ((missionId - 1) * EQUIP_LENGTH * UNIT_LENGTH) + i * EQUIP_LENGTH + TYPE_AGI;
+      //console.log("shoe playerEquipId : " + playerEquipId);
+    }
+  
+    var jewelry = unit[i].jewelry;
+    if (jewelry[0].id > 0) {
+      // set jewelry
+      var playerEquipId = BASEID + ((missionId - 1) * EQUIP_LENGTH * UNIT_LENGTH) + i * EQUIP_LENGTH + TYPE_HP;
+      //console.log("jewelry playerEquipId : " + playerEquipId);
+    }
+  
+    var stdskill1 = unit[i].stdskill1;
+    if (stdskill1[0].id > 0) {
+      // set studied skill1
+      var playerSkillId = BASEID + ((missionId - 1) * SKILL_LENGTH * UNIT_LENGTH) + i * SKILL_LENGTH + 1;
+      //console.log("skill1 Id : " + playerSkillId);
+    }
+  
+    var stdskill2 = unit[i].stdskill2;
+    if (stdskill2[0].id > 0) {
+      // set studied skill2
+      var playerSkillId = BASEID + ((missionId - 1) * SKILL_LENGTH * UNIT_LENGTH) + i * SKILL_LENGTH + 2;
+      //console.log("skill2 Id : " + playerSkillId);
+    }
+  }
+});
+*/
+
+/*
+async.auto({
+  playerCard: function (callback) {
+    
+    connection.query(selectMDSQL, function (err, res1) {
+      callback(err, res1);
+    });
+  },
+  playerUnit: function (callback) {
+    connection.query(selectMASQL, function (err, res2) {
+      callback(err, res2);
+    });
+  },
+  playerEquip: function (callback) {
+    connection.query(selectMNSQL, function (err, res3) {
+      callback(err, res3);
+    });
+  },
+  unitMeridian: function (callback) {
+    connection.query(selectMNSQL, function (err, res3) {
+      callback(err, res3);
+    });
+  },
+
+}, function (err, res) {
+  if (err) throw err;
+  //console.log(res);
+
+  //console.log(JSON.stringify(md));
+  fs.writeFile(output, JSON.stringify(md), function(err) {
+    if (err) {
+      throw err;
+    }
+    else {
+      console.log('output into ' + output);
+      //console.log(md);
+    }
+  });
+});
+*/
+

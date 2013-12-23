@@ -1,0 +1,44 @@
+{
+  "appenders": [
+    {
+      "type": "dateFile",
+      "filename": "./logs/node-log.log",
+      "fileSize": 1048576,
+      "layout": {
+        "type": "basic"
+      }, 
+      "backups": 5,
+      "pattern": "-yyyy-MM-dd",
+      "category":"node-log"
+    },
+    {
+      "type": "dateFile",
+      "filename": "./logs/crash.log",
+      "fileSize": 1048576,
+      "layout": {
+          "type": "basic"
+        }
+      ,"backups": 5,
+      "pattern": "-yyyy-MM-dd",
+      "category":"crash-log"
+    },
+    {
+      "type": "dateFile",
+      "filename": "./logs/admin.log",
+      "fileSize": 1048576,
+      "layout": {
+          "type": "basic"
+        }
+      ,"backups": 5,
+      "pattern": "-yyyy-MM-dd",
+      "category":"admin-log"
+    }
+  ],
+
+  "levels": {
+  	"node-log" : "DEBUG",
+  	"crash-log" : "DEBUG"
+  }, 
+
+  "replaceConsole": true
+}

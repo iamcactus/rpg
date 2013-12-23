@@ -1,21 +1,21 @@
 var logger = require('pomelo-logger').getLogger(__filename);
-var pomelo = require('pomelo');
 var LEVELCONF = require('../../../shared/levelConf');
 var assert = require('assert');
 var utils = require('../util/utils');
+var Player = require('../domain/player');
 
 var playerDao = module.exports;
 
 /**
  * Get player data by uid (userId)
  * @param {String} mysqlc mysql client for Master DB or Slave DB
- * @param {Number} uid.
+ * @param {Number} playerId.
  * @param {function} cb Callback function.
  * @returns {object} playerData or null
  */
-playerDao.getPlayersByUId = function(mysqlc, uid, cb) {
-	var selectSQL = 'select * from player_data where uid=?';
-	var args = [uid];
+playerDao.getPlayerByPlayerId = function(mysqlc, playerId, cb) {
+	var selectSQL = 'select * from player_data where player_id=?';
+	var args = [playerId];
 
 	mysqlc.query(selectSQL,args,function(err, res) {
 		if(err) {
@@ -24,7 +24,7 @@ playerDao.getPlayersByUId = function(mysqlc, uid, cb) {
 		}
 
 		if(!!res && res.length > 0) { //exists
-			utils.invokeCallback(cb, null, res[0]);
+			utils.invokeCallback(cb, null, new Player(res[0]));
 		} else {
 			utils.invokeCallback(cb, null, []);
 		}
@@ -49,7 +49,7 @@ playerDao.getPlayerByName = function(mysqlc, name, cb) {
 		}
 
 		if(!!res && res.length > 0) { //exists
-			utils.invokeCallback(cb, null, res[0]);
+			utils.invokeCallback(cb, null, new Player(res[0]));
 		} else {
 			utils.invokeCallback(cb, null, null); // the last "null" make sure "if(player)" be failed
 		}

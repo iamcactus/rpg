@@ -13,7 +13,8 @@ worldPlayerTrans.createWorldPlayer = function(mysqlc, uid, worldId, playerId, cb
       var q; // query cmd
       if (err) {
         q = 'ROLLBACK';
-        console.log('[createWorldPlayer] transaction query failed ' + err.message);
+        console.log('[createWorldPlayer] transaction query failed ');
+        console.log(err);
       }
       else {
         q = 'COMMIT';
@@ -24,6 +25,9 @@ worldPlayerTrans.createWorldPlayer = function(mysqlc, uid, worldId, playerId, cb
           return;
         }
         else {
+          console.log('[createWorldPlayer] transaction finished ');
+          console.log(res);
+          mysqlc.end(); // TODO: test
           utils.invokeCallback(cb, null, res);
           return;
         }

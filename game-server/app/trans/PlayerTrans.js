@@ -2,12 +2,13 @@ var logger = require('pomelo-logger').getLogger(__filename);
 var utils = require('../util/utils');
 var worldPlayerDao = require('../dao/worldPlayerDao');
 var playerDao = require('../dao/playerDao');
-var playerParam = require('../dao/playerParam');
+var playerParamDao = require('../dao/playerParamDao');
 var playerMissionLog = require('../dao/playerMissionLog');
 var playerCardDao = require('../dao/playerCardDao');
 var playerUnitDao = require('../dao/playerUnitDao');
 var async = require('async');
-var EVOLVECONF = require('../../../shared/evolveConf');
+var cardAlpha = require('../../../shared/cardAlpha');
+var dataApi = require('../util/dataApi');
 
 var playerTrans = module.exports;
 
@@ -27,7 +28,7 @@ playerTrans.initPlayer = function(mysqlc, params, cb) {
       // init PlayerParam like exp, lv, etc
       initPlayerParam: function(callback) {
         console.log('in initPlayerParam:' + ' ' + params.playerId + ' ' + params.lead);
-        playerParam.init(mysqlc, params.playerId, params.lead, callback);
+        playerParamDao.init(mysqlc, params.playerId, params.lead, callback);
       },
       // init PlayerMissionLog
       initPlayerMissionLog: function(callback) {
@@ -37,7 +38,9 @@ playerTrans.initPlayer = function(mysqlc, params, cb) {
       },
       // init playerCardData
       initPlayerCard: function(callback) {
-        playerCardDao.add(mysqlc, params.serialId, params.playerId, params.cardId, 0, 1, 0, EVOLVECONF.THREE.INITIAL_LV, callback);
+        var cardData = dataApi.card.findBy('card_id', params.cardId);
+        var alpha = cardAlpha.getAlpha(cardData.star);
+        playerCardDao.add(mysqlc, params.serialId, params.playerId, params.cardId, 0, 1, alpha.INITIAL_LV, callback);
       },
       // init playerUnitData
       initPlayerUnit: ['initPlayerCard', function(callback) {
@@ -48,7 +51,8 @@ playerTrans.initPlayer = function(mysqlc, params, cb) {
       var q; // query cmd
       if (err || !res) {
         q = 'ROLLBACK';
-        console.log('[initPlayer] transaction query failed ' + err.message);
+        console.log('[initPlayer] transaction query failed ');
+        console.log(err);
       }
       else {
         q = 'COMMIT';
@@ -59,6 +63,9 @@ playerTrans.initPlayer = function(mysqlc, params, cb) {
           return;
         }
         else {
+          console.log('[initPlayer] transaction query finished');
+          console.log(res);
+          mysqlc.end(); // TODO: test
           utils.invokeCallback(cb, null, res);
           return;
         }

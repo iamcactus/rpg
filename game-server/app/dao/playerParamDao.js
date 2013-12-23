@@ -7,7 +7,7 @@ var LEVELCONF = require('../../../shared/levelConf');
 var utils = require('../util/utils');
 //var consts = require('../consts/consts');
 
-var playerParam = module.exports;
+var playerParamDao = module.exports;
 
 /**
  * Get player param by playerId
@@ -16,13 +16,13 @@ var playerParam = module.exports;
  * @param {function} cb Callback function.
  * @returns {object} playerData or null
  */
-playerParam.get = function(mysqlc, playerId, cb) {
-	var selectSQL = 'select * from player_param where playerId=?';
+playerParamDao.get = function(mysqlc, playerId, cb) {
+	var selectSQL = 'select * from player_param where player_id=?';
 	var args = [playerId];
 
 	mysqlc.query(selectSQL,args,function(err, res) {
 		if(err) {
-			utils.invokeCallback(cb, err.message, null);
+			utils.invokeCallback(cb, err, null);
 			return;
 		}
 
@@ -42,7 +42,7 @@ playerParam.get = function(mysqlc, playerId, cb) {
  * @param {function} cb Callback function.
  * @returns {object} playerParam or null
  */
-playerParam.init = function(mysqlc, playerId, lead, cb) {
+playerParamDao.init = function(mysqlc, playerId, lead, cb) {
   var insertSQL = 
     'insert into player_param(player_id, max_power, max_energy, lead, power, energy) values (?,?,?, ?,?,?)';
   var updatedOn = Math.round(new Date().getTime()/1000); //unixtime
@@ -53,7 +53,7 @@ playerParam.init = function(mysqlc, playerId, lead, cb) {
               LEVELCONF.ONE.POWER,
               LEVELCONF.ONE.ENERGY
               ];
-  console.log('playerParam.initPlayerParam:' +playerId + lead + updatedOn);
+  console.log('playerParamDao.initPlayerParam:' +playerId + lead + updatedOn);
   mysqlc.query(insertSQL, args, function(err, res) {
     if (err !== null) {
 			utils.invokeCallback(cb, err, null);
@@ -78,7 +78,7 @@ playerParam.init = function(mysqlc, playerId, lead, cb) {
  * @param {function} cb Callback function.
  * @returns {object} true or false
  */
-playerParam.update = function(mysqlc, params, cb) {
+playerParamDao.update = function(mysqlc, params, cb) {
   if ( params === 'undefined' || params.length < 1 ) {
     utils.invokeCallback(cb, null, null);
   }

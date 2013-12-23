@@ -1,4 +1,18 @@
 module.exports = {
+  battle: {
+    'playerId': [
+      {
+        'rule': 'number',
+        'error': 'playerId must be an int'
+      }
+    ],
+    'attackeeId': [
+      {
+        'rule': 'number',
+        'error': 'attackeeId must be an int'
+      }
+    ]
+  },
   getMissionList: {
     'playerId': [
       {

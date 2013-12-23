@@ -10,7 +10,7 @@ var logger = require('pomelo-logger').getLogger(__filename);
 //var pomelo = require('pomelo');
 //var underscore = require('underscore');
 
-var playerParam = require('../../../dao/playerParam');
+var playerParamDao = require('../../../dao/playerParamDao');
 var playerMissionLog = require('../../../dao/playerMissionLog');
 var playerParamCached = require('../../../cache/playerParamCached');
 
@@ -52,16 +52,8 @@ pro.getMissionList = function(msg, session, next) {
   // playerId should be checked with session
 	var playerId = msg.playerId; // just for debug, playerId should be got from session
   var worldId = 1001; // just for debug, worldId shoule be got from session
-
-  // there is id, mapId, missionId for one mission
-  // id is the serial number for all mission
-  // mapId is the chapter id for one chapter
-  // missionId is the id for one mission in one chapter
-  // Ex: 6-10, 6 is mapId, 10 is missionId. (its id is defined in mission.json)
-  //var missionDataId = msg.missionDataId; // just for debug, missionDataId should be set as id in
   var mapId = msg.mapId; // same as chapter id 
 
-  console.log(mapId);
   if(!commonUtils.parseNumber(mapId)) {
     console.log('parseNumber fail');
 		next(null, {code: CODE.ERR_WRONG_PARAM});
@@ -106,6 +98,7 @@ pro.getMissionList = function(msg, session, next) {
       }
     }
   });
+};
 
   /*
     // first get playerParam from memcached
@@ -139,22 +132,54 @@ pro.getMissionList = function(msg, session, next) {
       // return mission list/hist
     }
   */
-};
-
 
 /**
- * Handover task and give reward to the player.
+ * Battle one time ( there is another api means battleMulti/ShaoDang )
  * Handle the request from client, and response result to client
  *
- * @param {Object} msg
+ * @param {Object} msg including:mapId, missionId
  * @param {Object} session
  * @param {Function} next
  * @api public
  */
+pro.battleOnce = function(msg, session, next) {
+	var playerId = msg.playerId; // just for debug, should be got from session
+	//var player = session.area.getPlayer(playerId);
+  var mapId = msg.mapId;
+  var missionId = msg.missionId;
 
-pro.handoverTask = function(msg, session, next) {
-	var playerId = msg.playerId;
-	var player = session.area.getPlayer(playerId);
+  var resValidation = commonUtils.validate('battleOnce', msg);
+	if(!resValidation) {
+    console.log('resValidation fail in battleOnce');
+		next(null, {code: CODE.ERR_WRONG_PARAM});
+		return;
+	}
+  console.log('enter battleOnce');
+
+  // check start
+  // 1. check if have energy
+  // 2. check if is next mission
+  // 3. check if reached max battle times in one day
+  // check end
+
+  // battle start
+
+  // Collect user data
+  // 1. get info for player_unit
+  // 2. get info for player_card
+  // 3. get info for player_equi
+  // 4. get info for player_skill
+  // 5. get info for player skill_effect
+
+  // 6. get info for player_pet
+  // 7. get info for pet_skill_data
+  // 8. get info for pet_skill_effect
+
+  // 6. get info for npc unit
+  // 7. get info for npc skill
+  // 8. get info for npc skill_effect
+
+
 	var tasks = player.curTasks;
 	var taskIds = [];
 	for (var id in tasks) {

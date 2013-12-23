@@ -14,14 +14,14 @@ var connection = mysql.createConnection(
   }
 );
 
-var uid = 1011;
+var uid = 1013;
 var worldId = 1011;
 var playerId = uid;
 var name = uid+'de';
 var lead = 10;
 var sexType = 0;
 var serialId = uid;
-var cardId = uid;
+var cardId = 1311;
 
 var params = {
   serialId: serialId,

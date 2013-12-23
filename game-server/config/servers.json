@@ -13,6 +13,9 @@
     "mission": [
       {"id":"mission-server-1", "host":"127.0.0.1", "port":3750}
     ],
+    "arena": [
+      {"id":"arena-server-1", "host":"127.0.0.1", "port":3770}
+    ],
     "gate":[
 	    {"id":"gate-server-1", "host":"127.0.0.1", "clientPort": 3014, "frontend": true}
 	  ]
@@ -28,6 +31,9 @@
     ],
     "mission": [
       {"id":"mission-server-1", "host":"127.0.0.1", "port":3750}
+    ],
+    "arena": [
+      {"id":"arena-server-1", "host":"127.0.0.1", "port":3770}
     ],
     "chat":[
       {"id":"chat-server-1", "host":"127.0.0.1", "port":6050},

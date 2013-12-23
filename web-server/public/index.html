@@ -191,7 +191,7 @@
                     <tr>
                         <td>
                             <input id="cardId" type="text" placeholder="enter your cardId" />
-                            enter your cardId
+                            enter your cardId in (1311, 1325, 1308)
                         </td>
                     </tr>
                     <tr>
@@ -251,6 +251,72 @@
                     <tr>
                         <td>
                             <input id="getMissionList" type='button' value="get" />
+                        </td>
+                    </tr>
+                </table>
+                <hr>
+                Only worked after your "join" succeed. (Cauz u need got session)
+                <hr>
+            </div>
+
+            <div id="battleDemoView">
+                <div id="quickLoginTitle">
+                battleDemoView
+                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <input id="userId1" type="text" placeholder="enter your uid" />
+                            enter your uid, this uid must be same as the uid you used in "join" above. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="attackerId" name="attackerId" type="text" placeholder="enter your playerId" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="attackeeId" type="text" placeholder="enter another playerId" />
+                 the player who you are battling with
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="battleDemo" type='button' value="battle" />
+                        </td>
+                    </tr>
+                </table>
+                <hr>
+                Only worked after your "join" succeed. (Cauz u need got session)
+                <hr>
+            </div>
+
+            <div id="battleEndDemoView">
+                <div id="quickLoginTitle">
+                battleEndDemoView
+                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <input id="userId2" type="text" placeholder="enter your uid" />
+                            enter your uid, this uid must be same as the uid you used in "join" above. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="attackerId2" name="attackerId2" type="text" placeholder="enter your playerId" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="bid" type="text" placeholder="enter the battleId" />
+                 this will be issued by arena.arenaHandler.battleBegin
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="battleEndDemo" type='button' value="battleEnd" />
                         </td>
                     </tr>
                 </table>

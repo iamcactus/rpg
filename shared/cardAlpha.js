@@ -1,5 +1,9 @@
-module.exports = {
-  ONE: {
+// evolution has an addon on card's original force
+// see formula.evolveAddon
+
+var alpha = {
+  "1": "comment: evolved star one",
+  "1":  {
     INITIAL_LV:15,
     LVADD:0,
     ATK:0,
@@ -10,7 +14,8 @@ module.exports = {
     PULSEADD:0,
     MAX_STAGE:0
   },
-  TWO: {
+  "2": "comment: evolved star two",
+  "2":  {
     INITIAL_LV:20,
     LVADD:0,
     ATK:0,
@@ -21,7 +26,8 @@ module.exports = {
     PULSEADD:0,
     MAX_STAGE:0
   },
-  THREE: {
+  "3": "comment: evolved star three",
+  "3":  {
     INITIAL_LV:25,
     LVADD:6,
     ATK:44,
@@ -32,7 +38,8 @@ module.exports = {
     PULSEADD:3,
     MAX_STAGE:13
   },
-  FOUR: {
+  "4": "comment: evolved star four",
+  "4":  {
     INITIAL_LV:30,
     LVADD:8,
     ATK:85,
@@ -43,7 +50,8 @@ module.exports = {
     PULSEADD:2,
     MAX_STAGE:9
   },
-  FIVE: {
+  "5": "comment: evolved star five",
+  "5":  {
     INITIAL_LV:35,
     LVADD:10,
     ATK:136,
@@ -54,4 +62,8 @@ module.exports = {
     PULSEADD:1,
     MAX_STAGE:7
   }
+};
+
+module.exports.getAlpha = function(star) {
+  return alpha[star];
 };

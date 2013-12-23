@@ -1,0 +1,76 @@
+{
+  "comment":            "comment: JSON:相同key的多个定义中，只有最后一个有效",
+  "mission_data_id":    "comment: 所有关卡的序列号",
+  "mission_data_id":    1,
+  "player_unit": [
+    { 
+      "position":       "comment: 关卡NPC位置，范围为1-8",
+      "position":       1,
+      "card": [{
+        "id":           "comment: card_id in card_data",
+        "id":           1235, 
+        "level":        "comment: card level",
+        "level":        1,
+        "brnskill":     "comment: skill_id in skill_data",
+        "brnskill":     3010,
+        "evolved_cnt":  "comment: evolution count",
+        "evolved_cnt":  0,
+        "unit_meridian":"comment: Jing Mai",
+        "unit_meridian": [
+          {
+            "position": "comment: 石头位置，范围为1-5",
+            "position": 1,
+            "stone":    "comment: stone_id in stone_data",
+            "stone":    0,
+            "level":    "comment: stone level",
+            "level":    0
+          }
+        ]
+      }],
+      "weapon": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           0,
+        "level":        "comment: weapon level",
+        "level":        0
+      }],
+      "defender": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "shoe": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "jewelry": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "stdskill1": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           0
+      }],    
+      "stdskill2": [{
+        "id":           "comment: equip_id in equip_data",
+        "id":           0
+      }]
+    }
+  ],
+  "player_pet":[
+    {
+      "id":             "comment: pet_id in pet_data",
+      "id":             0,
+      "level":          "comment: pet level",
+      "level":          0,
+      "evolved_cnt":    "comment: evolution count",
+      "evolved_cnt":    0,
+      "posi_skill1_id": "comment: positive skill at position 1",
+      "posi_skill1_id": 0,
+      "posi_skill2_id": 0,
+      "posi_skill3_id": 0,
+      "nega_skill1_id": "comment: negative skill at position 1",
+      "nega_skill1_id": 0,
+      "nega_skill2_id": 0,
+      "nega_skill3_id": 0
+    }
+  ]
+}

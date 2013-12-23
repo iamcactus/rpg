@@ -1,6 +1,6 @@
 var logger = require('pomelo-logger').getLogger(__filename);
 var pomelo = require('pomelo');
-var playerParam = require('../dao/playerParam');
+var playerParamDao = require('../dao/playerParamDao');
 var MEMCONSTS = require('../../../shared/memConsts');
 
 var util = require('util');

@@ -1,6 +1,6 @@
 USE game_world_1001;
 
-#DROP TABLE IF EXISTS player_unit;
+DROP TABLE IF EXISTS player_unit;
 CREATE TABLE player_unit (
   player_id  int(10) unsigned NOT NULL, # player_id in player_data
   position_id     tinyint(3) unsigned NOT NULL, # 队伍位置 1-8
@@ -13,5 +13,5 @@ CREATE TABLE player_unit (
   stdskill2_id  int(10) unsigned DEFAULT NULL, # id in skill_effect
   created_on  int(10) unsigned NOT NULL,
   updated_on  int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (player_id, position_id)
+  PRIMARY KEY on_player_id_and_position_id (player_id, position_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

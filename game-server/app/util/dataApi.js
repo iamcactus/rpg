@@ -1,8 +1,16 @@
 // require json files
 //var task = require('../../config/data/task');
-var mission = require('../../config/data/mission');
-var map = require('../../config/data/map');
-var NGWord = require('../../config/data/NGWord');
+
+var card      = require('../../config/data/card');
+var equip     = require('../../config/data/equip');
+var mission   = require('../../config/data/mission');
+var map       = require('../../config/data/map');
+var nature    = require('../../config/data/nature'); // hero's zuhe
+var natureCondition = require('../../config/data/natureCondition'); // hero's ZuHe TiaoJian
+var NGWord    = require('../../config/data/NGWord');
+var pet       = require('../../config/data/pet');
+var petSkill  = require('../../config/data/petSkill');
+var skill     = require('../../config/data/skill');
 //var role = require('../../config/data/role');
 /**
  * Data model `new Data()`
@@ -57,16 +65,45 @@ var mapData = function(fields, item) {
  * @return {Array} result
  * @api public
  */
+/*
 Data.prototype.findBy = function(attr, value) {
   var result = [];
   var i, item;
   for (i in this.data) {
     item = this.data[i];
+    //console.log(item);
+    //console.log(attr);
+    //console.log(item[attr]);
+    //console.log(value);
     if (item[attr] == value) {
       result.push(item);
     }
   }
   return result;
+};
+*/
+
+/**
+ * find items by attribute
+ *
+ * @param {String} attribute name
+ * @param {String|Number} the value of the attribute
+ * @return {Array} result
+ * @api public
+ */
+Data.prototype.findBy = function(attr, value) {
+  var i, item;
+  for (i in this.data) {
+    item = this.data[i];
+    //console.log(item);
+    //console.log(attr);
+    //console.log(item[attr]);
+    //console.log(value);
+    if (item[attr] == value) {
+      return item;
+    }
+  }
+  return null;
 };
 
 Data.prototype.findBigger = function(attr, value) {
@@ -122,7 +159,14 @@ Data.prototype.all = function() {
 module.exports = {
 	//task: new Data(task),
 	//role: new Data(role)
-	mission: new Data(mission),
-	map: new Data(map),
-  NGWord: new Data(NGWord)
+	card:     new Data(card),
+	equip:    new Data(equip),
+	mission:  new Data(mission),
+	map:      new Data(map),
+	nature:   new Data(nature),
+	natureCondition:   new Data(natureCondition),
+  NGWord:   new Data(NGWord),
+	pet:      new Data(pet),
+	petSkill: new Data(petSkill),
+	skill:    new Data(skill)
 };

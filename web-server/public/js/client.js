@@ -456,6 +456,91 @@ $(document).ready(function() {
 		});
 	});
 
+	//deal with battleDemo button click.
+	$("#battleDemo").click(function() {
+		userId = $("#userId1").attr("value");
+    alert(userId);
+		attackerId = $("#attackerId").attr("value");
+		attackeeId = $("#attackeeId").attr("value");
+    alert(attackerId);
+    alert(attackeeId);
+
+    rid = 1234;
+    //alert(missionDataId);
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "arena.arenaHandler.battleBegin";
+				pomelo.request(route, {
+          attackerId:attackerId,
+          attackeeId:attackeeId,
+          //missionDataId:missionDataId,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
+	//deal with battleEndDemo button click.
+	$("#battleEndDemo").click(function() {
+		userId = $("#userId2").attr("value");
+		attackerId2 = $("#attackerId2").attr("value");
+		battleId = $("#bid").attr("value");
+    alert(attackerId2);
+    alert(battleId);
+
+    rid = 1234;
+    //alert(missionDataId);
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "arena.arenaHandler.battleEnd";
+				pomelo.request(route, {
+          attackerId:attackerId2,
+          battleId:battleId,
+          //missionDataId:missionDataId,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
 	//deal with chat mode.
 	$("#entry").keypress(function(e) {
 		var route = "chat.chatHandler.send";

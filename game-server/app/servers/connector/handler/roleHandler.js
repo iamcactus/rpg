@@ -1,8 +1,9 @@
 var pomelo = require('pomelo');
 var logger = require('pomelo-logger').getLogger(__filename);
+var mysql = require('mysql');
 
 var playerDao = require('../../../dao/playerDao');
-var playerParam = require('../../../dao/playerParam');
+var playerParamDao = require('../../../dao/playerParamDao');
 var playerCardDao = require('../../../dao/playerCardDao');
 var playerUnitDao = require('../../../dao/playerUnitDao');
 var worldPlayerDao = require('../../../dao/worldPlayerDao');
@@ -62,8 +63,34 @@ pro.createPlayer = function(msg, session, next) {
 
   var dbhandle_m = commonUtils.worldDBW(worldId);
   // get master DB handle of worldID
-  var mysqlc = this.app.get(dbhandle_m);
-  var mysqlc_master = this.app.get('game_master_m');
+  //var mysqlc = this.app.get(dbhandle_m);
+  //var mysqlc_master = this.app.get('game_master_m');
+
+// test for transaction
+// there are also xxx.end() called in xxxTrans.js
+
+var mysqlc = mysql.createConnection(
+  {
+    host      : '127.0.0.1',
+    user      : 'onemore',
+    password  : 'onemore01',
+    database  : 'game_world_1001',
+    insecureAuth: true
+  }                      
+);
+
+var mysqlc_master = mysql.createConnection(
+  {
+    host      : '127.0.0.1',
+    user      : 'onemore',
+    password  : 'onemore01',
+    database  : 'game_master',
+    insecureAuth: true
+  }                      
+);
+
+mysqlc.connect();
+mysqlc_master.connect();
 
   console.log(name);
   // check name exists or not
@@ -135,7 +162,8 @@ pro.createPlayer = function(msg, session, next) {
     }, function(err, results) {
       console.log('-----160------');
       if (err) {
-        logger.error('error with player creation: '  + ' err: ' + err.message);
+        logger.error('error with player creation: ');
+        console.log(err);
         next(null, {code: CODE.FAIL, error:err}); 
         return;
       }

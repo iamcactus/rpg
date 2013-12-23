@@ -7,8 +7,9 @@ CREATE TABLE player_card (
   card_id     int(10) unsigned NOT NULL, # card_id in card_data
   exp         int(10) unsigned NOT NULL,
   level       int(10) unsigned NOT NULL,
-  evolved_cnt tinyint(3) unsigned NOT NULL, # 进化次数
+  evolved_cnt tinyint(3) unsigned NOT NULL DEFAULT 0, # 进化次数
   max_level   int(10) unsigned NOT NULL,
+  is_onarm    tinyint(3) unsigned NOT NULL DEFAULT 0, # 上阵
   created_on  int(10) unsigned NOT NULL,
   updated_on  int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
