@@ -37,3 +37,20 @@ var notNG = {
       }
     });
   });
+
+
+// test for getObj
+var playerEquip = [
+  { id: 2609, player_id: 2020, equip_id: 5109, level: 10 },
+  { id: 2610, player_id: 2020, equip_id: 5101, level: 10 }
+];
+
+  describe('getObj test', function() {
+    it(' should get', function() {
+      var key = 'id';
+      for (var k in playerEquip) {
+        var res = commonUtils.getObj(playerEquip, key, playerEquip[k][key]);
+        res.should.eql(playerEquip[k]);
+      }
+    });
+  });

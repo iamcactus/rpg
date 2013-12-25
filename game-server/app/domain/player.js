@@ -23,6 +23,7 @@ var Player = function(opts) {
   this.playerEquip    = opts.playerEquip;   // equip_data for the equips in player unit
   this.playerMeridian = opts.playerMeridian;  // stones in player unit
   this.playerPet      = opts.playerPet;     // pet_data in player unit
+  this.playerSkill    = opts.playerSkill;     // skill_data in player unit
   this.playerUnit     = opts.playerUnit;    // unit_data 
   //this.from = opts.from || '';
 	//this.lastLoginTime = opts.lastLoginTime;

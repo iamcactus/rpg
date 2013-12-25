@@ -170,3 +170,30 @@ commonUtils.makeArray = function(obj, key4k, key4v, cb) {
   });
   cb(null, ids);
 };
+
+/**
+ * get small obj from array
+ * @param {Array} array
+ * @param {String} key
+ * @param {Number} value
+ * @returns {Object} the obj with the key
+ * ex: array:
+ * playerEquip:
+ *  [ { id: 2609, player_id: 2020, equip_id: 5109, level: 10 },
+ *    { id: 2610, player_id: 2020, equip_id: 5101, level: 10 }
+ *  ]
+ * key: id
+ * value: 2609
+ * get obj: 
+ *   { id: 2609, player_id: 2020, equip_id: 5109, level: 10 }
+ */
+commonUtils.getObj = function(array, key, value) {
+  if (!!array) {
+    for (var i in array) {
+      if (array[i][key] == value) {
+        return array[i];
+      }
+    }
+  }
+  return null;
+}

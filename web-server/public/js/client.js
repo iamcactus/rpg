@@ -456,6 +456,43 @@ $(document).ready(function() {
 		});
 	});
 
+	//deal with getMissionList button click.
+	$("#getBag").click(function() {
+		userId = $("#userIdBag").attr("value");
+		playerId = $("#playerIdBag").attr("value");
+    alert(playerId);
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "connector.bagHandler.getBag";
+				pomelo.request(route, {
+          playerId:playerId,
+          //missionDataId:missionDataId,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
 	//deal with battleDemo button click.
 	$("#battleDemo").click(function() {
 		userId = $("#userId1").attr("value");
