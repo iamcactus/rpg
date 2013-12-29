@@ -14,6 +14,7 @@ var playerCardDao = require('../playerCardDao');
 var playerUnitDao = require('../playerUnitDao');
 var playerEquipDao = require('../playerEquipDao');
 var playerPetDao = require('../playerPetDao');
+var playerSkillDao = require('../playerSkillDao');
 var unitMeridianDao = require('../unitMeridianDao');
 
 var playerUnitAllData = module.exports;
@@ -80,6 +81,14 @@ playerUnitAllData.get = function(mysqlc, playerId, cb) {
         callback(err, res);
       });
     },
+    playerSkill: function(callback, res) {
+      playerSkillDao.get(mysqlc, playerId, 1, function(err, res) { // 1 for onArm
+        if(!!err || !res) {
+          logger.error('Get playerSkill failed! ' + err);
+        }
+        callback(err, res);
+      });
+    },
     playerMeridian: ['playerCardIds', function(callback) {
       unitMeridianDao.getMulti(mysqlc, ids, function(err, res) {
         if(!!err || !res) {
@@ -89,7 +98,7 @@ playerUnitAllData.get = function(mysqlc, playerId, cb) {
       });
     }]
   }, function(err, results) {
-    console.log(results);
+    //console.log(results);
      if (err) {
         utils.invokeCallback(cb, err, null);
      }

@@ -1,6 +1,6 @@
 var should = require('should');
 var api = require('../../app/util/dataApi');
-var alpha = require('../../../shared/cardAlpha');
+var alpha = require('../../../shared/cardConf');
 
 describe('JSON data api test', function() {
   var map = api.map;
@@ -69,7 +69,7 @@ describe('JSON data api test', function() {
     s.should.eql(t);
     //should.strictEqual(undefined, item);
 
-    //console.log(alpha.cardAlpha(item.star));
+    //console.log(alpha.cardConf(item.star));
   });
 
 

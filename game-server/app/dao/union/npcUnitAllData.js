@@ -65,6 +65,14 @@ npcUnitAllData.get = function(mysqlc, playerId, cb) {
         callback(err, res);
       });
     },
+    playerSkill: function(callback, res) {
+      playerSkillDao.get(mysqlc, playerId, 1, function(err, res) { // 1 for onArm
+        if(!!err || !res) {
+          logger.error('Get playerSkill failed! ' + err);
+        }
+        callback(err, res);
+      });
+    },
     playerMeridian: ['playerCardIds', function(callback) {
       unitMeridianDao.getMulti(mysqlc, ids, function(err, res) {
         if(!!err || !res) {

@@ -7,7 +7,7 @@ var playerMissionLog = require('../dao/playerMissionLog');
 var playerCardDao = require('../dao/playerCardDao');
 var playerUnitDao = require('../dao/playerUnitDao');
 var async = require('async');
-var cardAlpha = require('../../../shared/cardAlpha');
+var cardConf = require('../../../shared/cardConf');
 var dataApi = require('../util/dataApi');
 
 var playerTrans = module.exports;
@@ -39,7 +39,7 @@ playerTrans.initPlayer = function(mysqlc, params, cb) {
       // init playerCardData
       initPlayerCard: function(callback) {
         var cardData = dataApi.card.findBy('card_id', params.cardId);
-        var alpha = cardAlpha.getAlpha(cardData.star);
+        var alpha = cardConf.getAlpha(cardData.star);
         playerCardDao.add(mysqlc, params.serialId, params.playerId, params.cardId, 0, 1, alpha.INITIAL_LV, callback);
       },
       // init playerUnitData

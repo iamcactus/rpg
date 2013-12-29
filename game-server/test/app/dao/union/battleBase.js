@@ -1,10 +1,10 @@
-// test for playerAllData.js
+// test for battleAllData.js
 
 var async = require('async');
 var mysql = require('mysql');
 var util = require('util');
-var npcUnitAllData = require('../../../../app/dao/union/npcUnitAllData');
-var Player = require('../../../../app/domain/player');
+var utils = require('../../../../app/util/utils');
+var battleAllData = require('../../../../app/dao/union/battleAllData');
 
 var connection = mysql.createConnection(
   {
@@ -17,11 +17,10 @@ var connection = mysql.createConnection(
 );
 
 // pre set
-var worldId = 1001;
-var playerId = 2020;
+var playerId    = 2015;
+var attackeeId  = 2020;
 
 connection.connect();
-
   // begin transcation
   connection.query('BEGIN', function(err, rows) {
     if (err) {
@@ -32,7 +31,7 @@ connection.connect();
  
     async.series([
       function(callback) {
-        npcUnitAllData.get(connection, playerId, callback);
+        battleAllData.calc(connection, playerId, attackeeId, callback);
       }
     ],
     function(err, res) {
@@ -45,14 +44,13 @@ connection.connect();
       else {
         q = 'COMMIT';
       }
-      connection.query(q, function(err, res1) {
+      connection.query(q, function(err, report) {
         if (err) {
           console.log(err);
           console.log('---114---');
         }
         else { 
-          var p2 = new Player(res[0]);
-          console.log(p2);
+          //console.log(util.inspect(report, { showHidden: true, depth: null })); 
           connection.end();
         }
       });

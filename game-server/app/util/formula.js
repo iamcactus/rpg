@@ -12,7 +12,7 @@ var petSkill  = require('../../config/data/petSkill');
 var skill     = require('../../config/data/skill');
 var dataApi   = require('../../app/util/dataApi');
 var calcParam = require('../../../shared/forceConf');
-var cardAlpha = require('../../../shared/cardAlpha');
+var cardConf = require('../../../shared/cardConf');
 var equipConf = require('../../../shared/equipConf');
 var _ = require('underscore');
 
@@ -22,6 +22,19 @@ var basicKeys = {
   "2":  "atk_o",
   "3":  "def_o",
   "4":  "agi_o"
+};
+
+// ids is [weaponId, defenderId, shoeId, jewelryId]
+// return 0 in case of [0, 0, 0, 0]
+var hasEquip = function(ids) {
+  if (!!ids) {
+    for (var i in ids) {
+      if (ids[i] > 0) {
+        return 1;
+      }
+    }
+  }
+  return 0;
 };
 
 /*
@@ -56,15 +69,25 @@ return {
  * @returns {object} card addon force with the evolved_cnt
  */ 
 formula.evolveAddon = function(cardId, cnt) {
-  var cardObj   = dataApi.card.findBy('card_id', cardId);
-  var evolveParam  = cardAlpha.getAlpha(cardObj.star);
+  var hp = 0;
+  var atk = 0;
+  var def = 0;
+  var agi = 0;
 
-  var hp  = evolveParam.HP * cnt;
-  var atk = evolveParam.ATK * cnt;
-  var def = evolveParam.DEF * cnt;
-  var agi = evolveParam.AGI * cnt;
+  if (!!cnt && cnt > 0) { 
+    var cardObj   = dataApi.card.findBy('card_id', cardId);
+    var evolveParam  = cardConf.getAlpha(cardObj.star);
 
-return {
+    // up limit check for cnt
+    if (cnt <= evolveParam.MAX_STAGE) {
+      hp  = evolveParam.HP * cnt;
+      atk = evolveParam.ATK * cnt;
+      def = evolveParam.DEF * cnt;
+      agi = evolveParam.AGI * cnt;
+    }
+  }
+
+  return {
     "hp_o":   hp,
     "atk_o":  atk,
     "def_o":  def,
@@ -185,11 +208,13 @@ formula.natureAddon = function(cards, equips, cardId, level) {
         };
       }
       else if (natureObj.type == 2) { // equip zuhe
-        if (checkNature(natureObj.condition, equips, cardId)) {
-          var key = basicKeys[natureObj.property]; // hp_o or atk_o or def_o or agi_o
-          natureAddon[key] = addon[key]; // copy value from addon for the "key"
-          natureAddon = natureAddonCalc(natureAddon, natureObj.property, natureObj.effect);
-        };
+        if (hasEquip(equips)) { // reject case of [0,0,0,0]
+          if (checkNature(natureObj.condition, equips, cardId)) {
+            var key = basicKeys[natureObj.property]; // hp_o or atk_o or def_o or agi_o
+            natureAddon[key] = addon[key]; // copy value from addon for the "key"
+            natureAddon = natureAddonCalc(natureAddon, natureObj.property, natureObj.effect);
+          };
+        }
       }
     }
   }
@@ -208,8 +233,6 @@ formula.skillLevel = function(level) {
 // temp
 formula.stoneType = function(itemId) {
   var type = '';
-  console.log('-----152-------');
-  console.log(itemId);
   switch(itemId) {
     case 8001:
       type = 'crit';
@@ -253,20 +276,12 @@ formula.unitGroupId = function(unitPositionId) {
   }
 }
 
-var getTargetIndex = function(tempArray, positionId, playerForce) {
-  console.log('-------120-----');
-  console.log(playerForce);
-  console.log(positionId);
-  console.log('-------121-----');
-  // atk
+var getTargetIndex = function(tempArray, teamIndex, teamObj) {
+  // for type "atk"
   for (var i in tempArray) {
     var k = tempArray[i];
-    for (var j in playerForce) {
-  console.log('-------122-----');
-  console.log(playerForce[j]._index);
-  console.log(k);
-  console.log('-------123-----');
-      if ((playerForce[j]._index == k) && !!playerForce[j].card_id) {
+    for (var j in teamObj) {
+      if ((teamObj[j]._index == k) && !!teamObj[j].card_id) {
         return k;
       }
     }
@@ -274,23 +289,30 @@ var getTargetIndex = function(tempArray, positionId, playerForce) {
   return -1;
 }
 
-formula.getTarget = function(positionId, playerForce, skillId) {
-  var targetArrays = {
+/*
+ * @param {Number} teamIndex
+ * @param {Object} teamObj
+ * @param {Number} skillId
+ * @returns {Array}
+ */
+formula.getTarget = function(teamIndex, teamObj, skillId) {
+  var indexArrays = {
     0:  ["0","1","2","3"],
-    1:  ["1","2","3","4"],
-    2:  ["2","3","4","1"],
-    3:  ["3","4","1","2"]
+    1:  ["1","2","3","0"],
+    2:  ["2","3","0","1"],
+    3:  ["3","0","1","2"]
   };
 
-  var target = {};
+  var target = [];
   if (!skillId) {
-    var t = getTargetIndex(targetArrays[positionId], positionId, playerForce);
+  // type "atk"
+  console.log('-------301--------');
+  console.log(teamIndex);
+  console.log(indexArrays[teamIndex]);
+    var t = getTargetIndex(indexArrays[teamIndex], teamIndex, teamObj);
     if (t > -1) {
-    //console.log('-------124-----');
-    //console.log(t);
-      target["targetOneIndex"] = t;
+      target.push(t);
     }
-    //console.log(target);
     return target;
   }
   
@@ -299,51 +321,55 @@ formula.getTarget = function(positionId, playerForce, skillId) {
   var skillObj   = dataApi.skill.findBy('skill_id', skillId);
 
   if (skillObj.target == 1) { // skill on one target
-    var t = getTargetIndex(targetArrays[positionId], positionId, playerForce);
-    if (t > 0) {
-      target["targetOneIndex"] = t;
+    var t = getTargetIndex(indexArrays[teamIndex], teamIndex, teamObj);
+    if (t > -1) {
+      target.push(t);
     }
   }
   else if (skillObj.target == 2) { // skill on two target
-    var t1 = getTargetIndex(targetArrays[positionId], positionId, playerForce);
-    if (t1 > 0) {
-      target["targetOneIndex"] = t1;
+    var t1 = getTargetIndex(indexArrays[teamIndex], teamIndex, teamObj);
+    if (t1 > -1) {
+      target.push(t1);
     }
-    var tempArray = _.without(targetArrays[positionId], t1);
-    var t2 = getTargetIndex(tempArray, positionId, playerForce);
-    if (t2 > 0) {
-      target["targetTwoIndex"] = t2;
+    var tempArray = _.without(indexArrays[teamIndex], t1);
+    var t2 = getTargetIndex(tempArray, teamIndex, teamObj);
+    if (t2 > -1) {
       target.push(t2);
     }
   }
   else if (skillObj.target == 4) { // skill on all
-    var t1 = getTargetIndex(targetArrays[positionId], positionId, playerForce);
-    if (t1 > 0) {
-      target["targetOneIndex"] = t1;
+    var t1 = getTargetIndex(indexArrays[teamIndex], teamIndex, teamObj);
+    if (t1 > -1) {
+      target.push(t1);
     }
-    var tempArray = _.without(targetArrays[positionId], t1);
-    var t2 = getTargetIndex(tempArray, positionId, playerForce);
-    if (t2 > 0) {
-      target["targetTwoIndex"] = t2;
+    var tempArray = _.without(indexArrays[teamIndex], t1);
+    var t2 = getTargetIndex(tempArray, teamIndex, teamObj);
+    if (t2 > -1) {
       target.push(t2);
     }
-    tempArray = _.without(targetArrays[positionId], t2);
-    var t3 = getTargetIndex(tempArray, positionId, playerForce);
-    if (t3 > 0) {
-      target["targetThreeIndex"] = t3;
+    tempArray = _.without(indexArrays[teamIndex], t2);
+    var t3 = getTargetIndex(teamArray, teamIndex, teamObj);
+    if (t3 > -1) {
       target.push(t3);
     }
-    tempArray = _.without(targetArrays[positionId], t3);
-    var t4 = getTargetIndex(tempArray, positionId, playerForce);
-    if (t4 > 0) {
-      target["targetFourIndex"] = t4;
+    tempArray = _.without(indexArrays[teamIndex], t3);
+    var t4 = getTargetIndex(teamArray, teamIndex, teamObj);
+    if (t4 > -1) {
       target.push(t4);
     }
   }
+
+  console.log('-------302--------');
+  console.log(teamIndex);
+  console.log(indexArrays[teamIndex]);
+
   return target;
 };
 
-// temp
+// attack type for "atk_skill"
+// make random if skill attack or not
+// if skill attack, return the skillObj
+// if not, return null
 formula.atkSkill = function(skillObj) {
   if (!skillObj) {
     return null;

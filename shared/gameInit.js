@@ -11,6 +11,7 @@ module.exports = {
   BATTLE_INIT: {
     MAX_TURN:     3,
     MAX_ROUND:    10,
+    MAX_STEP:     8,
     ROUND_IN_TURN:5,  // 5 rounds in 1 turn
     TEAM_PEOPLE:  4,
     SKILL_CNT:    25
