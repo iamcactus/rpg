@@ -15,12 +15,12 @@ worldPlayerDao.getWorldPlayerByUid = function (mysqlc, uid, cb) {
 
   mysqlc.query(selectSQL, args, function(err, res) {
     if (err !== null) {
-      utils.invokeCallback(cb, err.message, null);
+      utils.invokeCallback(cb, err, null);
       return;
     }
 
     if (!!res && res.length === 1) {
-      utils.invokeCallback(cb, null, res[0]);
+      utils.invokeCallback(cb, null, res);
     }
     else {
       utils.invokeCallback(cb, null, []);
@@ -46,7 +46,7 @@ worldPlayerDao.getWorldPlayerByUidAndWorldId = function (mysqlc, uid, worldId, c
     }
 
     if (!!res && res.length === 1) {
-      utils.invokeCallback(cb, null, res[0]);
+      utils.invokeCallback(cb, null, res);
     }
     else {
       utils.invokeCallback(cb, null, []);

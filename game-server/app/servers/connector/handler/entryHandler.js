@@ -8,6 +8,7 @@ var logger = require('pomelo-logger').getLogger(__filename);
 var loginDao = require('../../../dao/loginDao.js');
 var playerDao = require('../../../dao/playerDao.js');
 var worldPlayerDao = require('../../../dao/worldPlayerDao.js');
+var playerUnitAllData = require('../../../dao/union/playerUnitAllData');
 
 module.exports = function(app) {
 	return new Handler(app);
@@ -40,6 +41,11 @@ pro.entry = function(msg, session, next) {
 	var token = msg.token, self = this;
   var uid, player, playerId;
   var worldId = commonUtils.normalizeWorldId(msg.worldId);
+  var dbhandle_master_s = 'game_master_s';
+  var mysqlc_master = this.app.get(dbhandle_master_s);
+  
+  var dbhandle_s = commonUtils.worldDBR(worldId);
+  var mysqlc = this.app.get(dbhandle_s);
 
   console.log('enter connector.entry');
   console.log(msg);
@@ -71,20 +77,12 @@ pro.entry = function(msg, session, next) {
 			session.bind(uid, cb);
     }, function(cb) {
 			// query player info by user id
-      var dbhandle_s = 'game_master_s';
-      var mysqlc = self.app.get(dbhandle_s);
-      //var dbhandle_s = commonUtils.worldDBR(msg.worldId);
-      //var mysqlc = self.app.get(dbhandle_s);
-			if(!mysqlc) {
-				next(null, {code: CODE.FAIL});
-				return;
-			}
-
       // check if exists player in the world of the uid
-      worldPlayerDao.getWorldPlayerByUidAndWorldId(mysqlc, uid, worldId, cb);
+      worldPlayerDao.getWorldPlayerByUidAndWorldId(mysqlc_master, uid, worldId, cb);
 		}, function(res, cb) {
       console.log('After worldPlayerDao.getWorldPlayerByUidAndWorldId');
-      console.log('res:' + res);
+      console.log('res:');
+      console.log(res);
       console.log(session);
 
       // TODO if there is no further process,
@@ -99,6 +97,10 @@ pro.entry = function(msg, session, next) {
 			}
 
       playerId = player.player_id;
+      playerUnitAllData.get(mysqlc, playerId, cb);
+    }
+/*
+    }, function(playerAllData, cb) {
       console.log('Got player: ' + playerId);
       // TODO add world ID
 			//session.set('serverId', self.app.get('areaIdMap')[player.areaId]);
@@ -107,6 +109,7 @@ pro.entry = function(msg, session, next) {
 			session.on('closed', onUserLeave.bind(null, self.app));
 			session.pushAll(cb);
 		}
+*/
     /*
     , function(cb) {
 			self.app.rpc.chat.chatRemote.add(session, player.userId, player.name,
@@ -114,11 +117,12 @@ pro.entry = function(msg, session, next) {
 		}
     */
 	], function(err, result) {
-		if(err) {
+		if (err) {
 			next(err, {code: CODE.FAIL});
 			return;
 		}
-		next(null, {code: CODE.OK, player: playerId ? playersId : null});
+    console.log(result);
+		next(null, {code: CODE.OK, playerAllData: result});
 	});
 };
 

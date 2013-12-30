@@ -99,7 +99,7 @@ mysqlc_master.connect();
 			next(null, {code: CODE.FAIL, error:err});
 			return;
     }
-		if (player) {
+		if (!!player) {
 			next(null, {code: CODE.PLAYER.ERR_NAME_EXIST});
 			return;
 		}
@@ -217,7 +217,7 @@ pro.chkNickName = function(msg, session, next) {
 			next(null, {code: CODE.FAIL, error:err});
 			return;
     }
-		if (player) {
+		if (!!player) {
 			next(null, {code: CODE.PLAYER.ERR_NAME_EXIST});
 			return;
     }

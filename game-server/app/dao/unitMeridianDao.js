@@ -24,7 +24,7 @@ unitMeridianDao.get = function(mysqlc, playerCardId, cb) {
 		if(!!res && res.length > 0) { //exists
 			utils.invokeCallback(cb, null, res);
 		} else {
-			utils.invokeCallback(cb, null, null); // the last "null" make sure "if(player)" be failed
+			utils.invokeCallback(cb, null, []);
 		}
 	});
 };
@@ -49,7 +49,7 @@ unitMeridianDao.getMulti = function(mysqlc, ids, cb) {
 		if(!!res && res.length > 0) { //exists
 			utils.invokeCallback(cb, null, res);
 		} else {
-			utils.invokeCallback(cb, null, null);
+			utils.invokeCallback(cb, null, []);
 		}
 	});
 };

@@ -16,7 +16,7 @@ var connection = mysql.createConnection(
 );
 
 // pre set
-var uid = 1011;
+var uid = 10016;
 var id = uid;
 var equipId = 5203;
 var level = 1;
@@ -42,7 +42,7 @@ connection.connect();
       },
 */
       function(callback) {
-        playerEquipDao.get(connection, playerId, callback);
+        playerEquipDao.get(connection, playerId, 0, callback);
       },
       function(callback) {
         playerEquipDao.getMulti(connection, ids, callback);
@@ -68,7 +68,6 @@ connection.connect();
           console.log(res1);
           connection.end();
         }
-        return 1;
       });
     });
   });

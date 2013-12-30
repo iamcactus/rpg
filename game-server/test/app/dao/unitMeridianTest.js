@@ -1,4 +1,4 @@
-// test for worldPlayerDao.js
+// test for unitMeridianDao.js
 
 var async = require('async');
 var mysql = require('mysql');
@@ -16,12 +16,8 @@ var connection = mysql.createConnection(
 );
 
 // pre set
-var uid = 1009;
-var worldId = 1001;
-var playerId = uid;
-var playerCardId = uid;
-var positionId = 1;
-var stoneId = 8001;
+var playerId = 10035;
+var ids = [10020];
 
 connection.connect();
 
@@ -35,14 +31,16 @@ connection.connect();
     async.series([
 /*
       function(callback) {
-        unitMeridianDao.init(connection, playerCardId, positionId, callback);
+        unitMeridianDao.add(connection, id, playerId, equipId, level, isOnarm, callback);
+      },
+*/
+/*
+      function(callback) {
+        unitMeridianDao.get(connection, playerId, callback);
       },
 */
       function(callback) {
-        unitMeridianDao.get(connection, playerCardId, callback);
-      },
-      function(callback) {
-        unitMeridianDao.update(connection, playerCardId, positionId, stoneId, callback);
+        unitMeridianDao.getMulti(connection, ids, callback);
       }
     ],
     function(err, res) {
@@ -54,15 +52,17 @@ connection.connect();
       else {
         q = 'COMMIT';
       }
-      connection.query(q, function(err, res) {
-        if (err) {
+      connection.query(q, function(err1, res1) {
+        if (err1) {
           console.log('---114---');
         }
         else {
           console.log(res);
+          if (!!err || !res) {
+            console.log('Get playerMeridian failed!');
+          }
           connection.end();
         }
-        return 1;
       });
     });
   });

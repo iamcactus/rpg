@@ -17,7 +17,7 @@ var connection = mysql.createConnection(
 
 // pre set
 var worldId = 1001;
-var playerId = 1011;
+var playerId = 10035;
 
 connection.connect();
 

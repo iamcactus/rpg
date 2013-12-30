@@ -2,7 +2,7 @@ var logger = require('pomelo-logger').getLogger(__filename);
 //var LEVELCONF = require('../../../shared/levelConf');
 var assert = require('assert');
 var async = require('async');
-//var _ = require('underscore');
+var _ = require('underscore');
 var commonUtils = require('../../../../shared/util/commonUtils');
 
 var dataApi = require('../../util/dataApi');
@@ -24,26 +24,32 @@ playerUnitAllData.get = function(mysqlc, playerId, cb) {
   async.auto({
     player: function(callback) {
       playerDao.getPlayerByPlayerId(mysqlc, playerId, function(err, res) {
-        if (!!err || !res) {
+        if (!!err) {
           logger.error('Get playerData failed! ' + err);
         }
-        callback(err, res);
+        else {
+          callback(err, res); // TODO: check res, shold not be null
+        }
       });
     },
     playerParam: function(callback) {
       playerParamDao.get(mysqlc, playerId, function(err, res) {
-        if(!!err || !res) {
+        if (!!err) {
           logger.error('Get playerParam failed! ' + err);
         }
-        callback(err, res);
+        else {
+          callback(err, res); // TODO: check res, shold not be null
+        }
       });
     },
     playerUnit: function(callback) {
       playerUnitDao.get(mysqlc, playerId, function(err, res) {
-        if(!!err || !res) {
+        if (!!res && res.length > 0) {
+          callback(err, res); // res cant be []
+        }
+        else {
           logger.error('Get playerUnit failed! ' + err);
         }
-        callback(err, res);
       });
     },
     playerCardIds: ['playerUnit', function(callback, res) {
@@ -59,42 +65,44 @@ playerUnitAllData.get = function(mysqlc, playerId, cb) {
       //var ids = res.playerCardIds;
       console.log(ids);
       playerCardDao.getMulti(mysqlc, ids, function(err, res) {
-        if(!!err || !res) {
+        if (!!res && res.length > 0) {
+          callback(err, res); // res cant be []
+        }
+        else {
           logger.error('Get playerCard failed! ' + err);
         }
-        callback(err, res);
       });
     }],
     playerEquip: function(callback, res) {
       playerEquipDao.get(mysqlc, playerId, 1, function(err, res) { // 1 for onArm
-        if(!!err || !res) {
+        if(!!err) {
           logger.error('Get playerEquip failed! ' + err);
         }
-        callback(err, res);
+        callback(err, res); // res is [] if empty
       });
     },
     playerPet: function(callback, res) {
       playerPetDao.get(mysqlc, playerId, 1, function(err, res) { // 1 for onArm
-        if(!!err || !res) {
+        if(!!err) {
           logger.error('Get playerPet failed! ' + err);
         }
-        callback(err, res);
+        callback(err, res); // res is [] if empty
       });
     },
     playerSkill: function(callback, res) {
       playerSkillDao.get(mysqlc, playerId, 1, function(err, res) { // 1 for onArm
-        if(!!err || !res) {
+        if(!!err) {
           logger.error('Get playerSkill failed! ' + err);
         }
-        callback(err, res);
+        callback(err, res); // res is [] if empty
       });
     },
     playerMeridian: ['playerCardIds', function(callback) {
       unitMeridianDao.getMulti(mysqlc, ids, function(err, res) {
-        if(!!err || !res) {
+        if(!!err) {
           logger.error('Get playerMeridian failed! ' + err);
         }
-        callback(err, res);
+        callback(err, res); // res is [] if empty
       });
     }]
   }, function(err, results) {

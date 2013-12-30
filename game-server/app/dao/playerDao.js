@@ -26,7 +26,7 @@ playerDao.getPlayerByPlayerId = function(mysqlc, playerId, cb) {
 		if(!!res && res.length > 0) { //exists
 			utils.invokeCallback(cb, null, new Player(res[0]));
 		} else {
-			utils.invokeCallback(cb, null, []);
+			utils.invokeCallback(cb, null, null); // the last "null" make sure "if(player)" be failed
 		}
 	});
 };
