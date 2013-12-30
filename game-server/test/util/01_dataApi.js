@@ -61,6 +61,26 @@ describe('JSON data api test', function() {
     //should.strictEqual(undefined, item);
   });
 
+  it('should get skill id', function() {
+    var skillId = '3007';
+    var item = api.skill.findBy('skill_id', skillId);
+    var s = item["2"].effect;
+    console.log(item["2"]);
+    var t = 18; // game_master.skill_data.effect with skill_id = 3005
+    s.should.eql(t);
+    //should.strictEqual(undefined, item);
+  });
+
+  it('should get skill id', function() {
+    var skillId = '3010';
+    var item = api.skill.findBy('skill_id', skillId);
+    var s = item["2"].effect;
+    console.log(item["2"]);
+    var t = 18; // game_master.skill_data.effect with skill_id = 3005
+    s.should.eql(t);
+    //should.strictEqual(undefined, item);
+  });
+
   it('should get card id', function() {
     var cardId = '1311';
     var item = api.card.findBy('card_id', cardId);

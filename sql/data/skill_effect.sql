@@ -32,3 +32,15 @@ insert into skill_effect (skill_id, level, success, effect, property, scale, ope
 insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3010, 8, 15, 28, 1, 1, 1385708157); 
 insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3010, 9, 15, 30, 1, 1, 1385708157); 
 insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3010, 10, 15, 32, 1, 1, 1385708157); 
+
+insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3007, 1, 22, 25, 1, 1, 1385708157); 
+insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3007, 2, 22, 28, 1, 1, 1385708157); 
+insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3007, 3, 22, 31, 1, 1, 1385708157); 
+insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3007, 4, 22, 34, 1, 1, 1385708157); 
+insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3007, 5, 22, 37, 1, 1, 1385708157); 
+insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3007, 6, 22, 40, 1, 1, 1385708157); 
+insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3007, 7, 22, 43, 1, 1, 1385708157); 
+insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3007, 8, 22, 46, 1, 1, 1385708157); 
+insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3007, 9, 22, 49, 1, 1, 1385708157); 
+insert into skill_effect (skill_id, level, success, effect, property, scale, opened_on) values (3007, 10, 22, 52, 1, 1, 1385708157); 
+commit;

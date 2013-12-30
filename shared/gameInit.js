@@ -9,6 +9,8 @@ module.exports = {
     ID: 8000, // 无属性石头，代表该穴位开放 
   },
   BATTLE_INIT: {
+    RESTRAINT_PARAM:  1.4, // restraint effect is 40%
+    DAMAGE:       -1, // default damage
     MAX_TURN:     3,
     MAX_ROUND:    10,
     MAX_STEP:     8,

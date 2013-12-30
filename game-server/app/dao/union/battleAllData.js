@@ -115,6 +115,10 @@ battleAllData.calc = function(mysqlc, playerId, attackeeId, cb) {
     var curTurn  = 1;
     var isSetTurn = 0;
     var curSortIndex = 0;
+
+    var p1_sp = 0; // player's pet skill point
+    var p2_sp = 0; // atkee's pet skill point
+
     for (var i = 0; i < battleProcess.length; i++) {
       var j = battleProcess[i].turn;
       if (j > curTurn) { // init flag
@@ -150,11 +154,35 @@ battleAllData.calc = function(mysqlc, playerId, attackeeId, cb) {
         }
         for (var m = 0; m < battleProcess[i].data.length; m++) {
           var temp = battleProcess[i].data;
-          report[j].push({
-            "type":       temp[m].atkType,
-            "sort_index": temp[m].sortIndex,
-            "data":       temp[m].data
-          });
+          var data = temp[m].data;
+          if (temp[m].atkeeGroup == 1) {
+            p1_sp = temp[m].atkeeSp;
+          }
+          else if (temp[m].atkeeGroup == 2) {
+            p2_sp = temp[m].atkeeSp;
+          }
+          data["p1_sp"] = p1_sp; 
+          data["p2_sp"] = p2_sp;
+
+          // type "atk_skill"
+          if (!_.isEmpty(temp[m].skill)) {
+            var d = temp[m].data;
+            d["skill_id"] = temp[m].skill.skill_id;
+            d["skill_lv"] = temp[m].skill.skill_lv;
+            report[j].push({
+              "type":       temp[m].atkType,
+              "sort_index": temp[m].sortIndex,
+              "data":       data
+            });
+          }
+          else {
+          // type "atk"
+            report[j].push({
+              "type":       temp[m].atkType,
+              "sort_index": temp[m].sortIndex,
+              "data":       data
+            });
+          }
         }
       } // end of if (!!battleProcess[i].round)
       if (!!battleProcess[i].battleOver) {
@@ -177,7 +205,7 @@ battleAllData.calc = function(mysqlc, playerId, attackeeId, cb) {
       }
     });
 
-    console.log(util.inspect(report, { showHidden: true, depth: null }));
+    //console.log(util.inspect(report, { showHidden: true, depth: null }));
     utils.invokeCallback(cb, null, report);
     return;
   });

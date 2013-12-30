@@ -34,7 +34,7 @@ connection.connect();
         battleAllData.calc(connection, playerId, attackeeId, callback);
       }
     ],
-    function(err, res) {
+    function(err, res1) {
       var q; // query
       if (err) {
         q = 'ROLLBACK';
@@ -44,13 +44,13 @@ connection.connect();
       else {
         q = 'COMMIT';
       }
-      connection.query(q, function(err, report) {
+      connection.query(q, function(err, res2) {
         if (err) {
           console.log(err);
           console.log('---114---');
         }
         else { 
-          console.log(util.inspect(report, { showHidden: true, depth: null })); 
+          console.log(util.inspect(res1, { showHidden: true, depth: null })); 
           connection.end();
         }
       });

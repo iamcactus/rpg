@@ -162,6 +162,20 @@ var gammar = {
   }
 };
 
+// role restraint
+var restraint = {
+  "1":  "comment: role 1 is RenJie",
+  "1":  3,
+  "2":  "comment: role 2 is GuiXiong",
+  "2":  1,
+  "3":  "comment: role 3 is YingHao",
+  "3":  2,
+};
+
+module.exports.roleRestraint = function(role) {
+  return restraint[role];
+};
+
 module.exports.cardBeta = function(star) {
   return beta[star];
 };

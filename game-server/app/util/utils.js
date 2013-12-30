@@ -21,10 +21,10 @@ utils.clone = function(origin) {
     return;
   }
 
-  var obj = {};
-  for(var f in origin) {
-    if(origin.hasOwnProperty(f)) {
-      obj[f] = origin[f];
+  var obj = origin.constructor === Array ? [] : {};
+  for(var i in origin) {
+    if(origin.hasOwnProperty(i)) {
+      obj[i] = typeof origin[i] === 'object' ? utils.clone(origin[i]) : origin[i];
     }
   }
   return obj;

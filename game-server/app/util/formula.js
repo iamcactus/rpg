@@ -14,6 +14,8 @@ var dataApi   = require('../../app/util/dataApi');
 var calcParam = require('../../../shared/forceConf');
 var cardConf = require('../../../shared/cardConf');
 var equipConf = require('../../../shared/equipConf');
+var gameInit  = require('../../../shared/gameInit');
+
 var _ = require('underscore');
 
 // default names of key
@@ -292,6 +294,22 @@ var getTargetIndex = function(tempArray, teamIndex, teamObj) {
 /*
  * @param {Number} teamIndex
  * @param {Object} teamObj
+ * @returns {Number} idx
+ */
+formula.getNexter = function(teamIndex, teamObj) {
+  var indexArrays = {
+    0:  ["1","2","3","0"],
+    1:  ["2","3","0","1"],
+    2:  ["3","0","1","2"],
+    3:  ["0","1","2","3"]
+  };
+
+  return getTargetIndex(indexArrays[teamIndex], teamIndex, teamObj);
+}
+
+/*
+ * @param {Number} teamIndex
+ * @param {Object} teamObj
  * @param {Number} skillId
  * @returns {Array}
  */
@@ -306,9 +324,6 @@ formula.getTarget = function(teamIndex, teamObj, skillId) {
   var target = [];
   if (!skillId) {
   // type "atk"
-  console.log('-------301--------');
-  console.log(teamIndex);
-  console.log(indexArrays[teamIndex]);
     var t = getTargetIndex(indexArrays[teamIndex], teamIndex, teamObj);
     if (t > -1) {
       target.push(t);
@@ -317,7 +332,6 @@ formula.getTarget = function(teamIndex, teamObj, skillId) {
   }
   
   //console.log(skillId);
-  skillId = 3009;
   var skillObj   = dataApi.skill.findBy('skill_id', skillId);
 
   if (skillObj.target == 1) { // skill on one target
@@ -359,28 +373,47 @@ formula.getTarget = function(teamIndex, teamObj, skillId) {
     }
   }
 
-  console.log('-------302--------');
-  console.log(teamIndex);
-  console.log(indexArrays[teamIndex]);
-
   return target;
 };
 
 // attack type for "atk_skill"
 // make random if skill attack or not
 // if skill attack, return the skillObj
-// if not, return null
+// if not, return empty object
 formula.atkSkill = function(skillObj) {
   if (!skillObj) {
-    return null;
+    return {};
   }
 
-  if(Math.random() > 0.5) {
-    return skillObj.s1;
+  var tLimit = 0.1; // test parameter
+
+  // 0.4 < t <= 1.0 s1
+  // 0.2 < t <= 0.4 s2
+  // 0.0 < t <= 0.2 s3
+  var t = Math.random();
+  if(t > 0.4) {
+    var skillData = dataApi.skill.findBy('skill_id', skillObj.s1.skill_id);
+    if (t * skillData[skillObj.s1.skill_lv].success / 100 > tLimit) {
+      return skillObj.s1;
+    }
   }
-  else {
-    return null;
+  else if (t > 0.2) {
+    if (!!skillObj.s2) {
+      var skillData = dataApi.skill.findBy('skill_id', skillObj.s2.skill_id);
+      if (t * skillData[skillObj.s2.skill_lv].success / 100 > tLimit) {
+        return skillObj.s2;
+      }
+    }
   }
+  else if (t > 0) {
+    if (!!skillObj.s3) {
+      var skillData = dataApi.skill.findBy('skill_id', skillObj.s3.skill_id);
+      if (t * skillData[skillObj.s3.skill_lv].success / 100 > tLimit) {
+        return skillObj.s3;
+      }
+    }
+  }
+  return {};
 };
 
 // team: array
@@ -394,10 +427,24 @@ formula.replaceIndex = function(team) {
   return -1;
 };
 
-formula.damage = function(atk, def) {
-  var damage = -1;
-  if (atk > def) {
-    damage = def - atk;
+formula.damage = function(atkerObj, atkeeObj, atkSkillObj) {
+  var damage = gameInit.BATTLE_INIT.DAMAGE; // default damage
+
+  var param = 1; // battle parameter
+  if (atkerObj.atk > atkeeObj.def) {
+    if (calcParam.roleRestraint(atkerObj.role) === atkeeObj.role) {
+      param = gameInit.BATTLE_INIT.RESTRAINT_PARAM;
+    }
+    // type: "atk", also is normal attack
+    damage = Math.ceil( param * (atkeeObj.def - atkerObj.atk));
   }
+
+  // type "atk_skill"
+  if (!_.isEmpty(atkSkillObj)) {
+    var skillObj   = dataApi.skill.findBy('skill_id', atkSkillObj.skill_id);
+    // damage = Math.ceil(damage * (skillObj[atkSkillObj.skill_lv].effect / skillObj.target));
+    damage = Math.ceil(damage * (skillObj[atkSkillObj.skill_lv].effect / 100)); // effect is in 1-100
+  }
+
   return damage;
 };

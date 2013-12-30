@@ -43,8 +43,6 @@ battleBase.unitForce = function(unitAllData) {
       cardIds.push(c);
     }
   }
-  console.log('-----151------');
-  console.log(cardIds);
 
   for (var i in playerUnit) {
     var card_sid    = playerUnit[i].player_card_id; // sid is short for serial id
@@ -312,14 +310,17 @@ var battleQueue = function(firstForce, secondForce) {
   var report = {};
 
   if (HPp1 > 0 && HPp2 > 0) {
+    var p1 = utils.clone(firstForce.mainTeam);        // deep copy
+    var p1_back = utils.clone(firstForce.subTeam);    // deep copy
+    var p2 = utils.clone(secondForce.mainTeam);       // deep copy
+    var p2_back = utils.clone(secondForce.subTeam);   // deep copy
     report["type"] = "queue";
     report["sort_index"] = -1;
-
     report["data"] = {
-      "p1":       firstForce.mainTeam,
-      "p1_back":  firstForce.subTeam,
-      "p2":       secondForce.mainTeam,
-      "p2_back":  secondForce.subTeam,
+      "p1":       p1,
+      "p1_back":  p1_back,
+      "p2":       p2,
+      "p2_back":  p2_back
     };
   }
   return report;
@@ -472,10 +473,9 @@ var battleRound = function(firstForce, secondForce, turn, round) {
     for (var j = 0; j < atkeeIdxArray.length; j++ ) {
       var k = atkeeIdxArray[j];
 
-      console.log('-----204after----');
-      console.log(atkeeForce.mainTeam[k]);
+      //var damage = formula.damage(battlerObj.atk, atkeeForce.mainTeam[k].def); // k must be same with atkeeTeam[k]._index !!!!!
+      var damage = formula.damage(battlerObj, atkeeForce.mainTeam[k], atkSkillObj); // k must be same with atkeeTeam[k]._index !!!!!
 
-      var damage = formula.damage(battlerObj.atk, atkeeForce.mainTeam[k].def); // k must be same with atkeeTeam[k]._index !!!!!
       atkeeForce.mainTeam[k].hp += damage;  // damage is minus
       atkeeForce.unitLeftHP     += damage;  // damage is minus
 
@@ -506,9 +506,9 @@ var battleRound = function(firstForce, secondForce, turn, round) {
         "round":    round,
         "turn":     turn,
         "sortIndex":sortIndex,
-        //"attacker": atkerForce,
-        //"attackee": atkeeForce,
-        "atkerGroup": battlerObj._group,
+        "attacker": utils.clone(atkerForce),
+        "attackee": utils.clone(atkeeForce),
+        "atkeeGroup": atkeeForce.groupIndex,
         "atkeeSp":  atkeeForce.skillCnt,   
         "atkType":  atkType,
         "skill":    atkSkillObj,
@@ -516,20 +516,12 @@ var battleRound = function(firstForce, secondForce, turn, round) {
       }
     );
 
-    //console.log('-----205----');
-    //console.log(util.inspect(roundResArray, { showHidden: true, depth: null }));
-
     var replaceResArray = [];
     for (var m = 0; m < atkeeIdxArray.length; m++ ) {
       var n = atkeeIdxArray[m];
       if (atkeeForce.mainTeam[n].hp == 0) {
         if (!_.isEmpty(atkeeForce.subTeam)) { //subTeam may be [] if empty
-          console.log('-----221, before replace----');
-          console.log(util.inspect(atkeeForce, { showHidden: true, depth: null }));
           var idx = battleReplace(atkeeForce.mainTeam[n]._index, atkeeForce.mainTeam, atkeeForce.subTeam);
-          console.log('-----222, after replace-----');
-          console.log(util.inspect(atkeeForce, { showHidden: true, depth: null }));
-          console.log(idx);
           if (idx > 0) {
             replaceResArray.push(
               {
@@ -552,8 +544,8 @@ var battleRound = function(firstForce, secondForce, turn, round) {
           "round":    round,
           "turn":     turn,
           "sortIndex":sortIndex,
-          //"attacker": atkerForce,
-          //"attackee": atkeeForce,
+          "attacker": utils.clone(atkerForce),
+          "attackee": utils.clone(atkeeForce),
           "atkType":  atkType,
           "data":     replaceResArray
         }
@@ -567,18 +559,34 @@ var battleRound = function(firstForce, secondForce, turn, round) {
       over = 1;
     }
     else {
-      var idx = i;
+      var nextIdxArray;
+      var idx;
+      /*
       if ( i >= gameInit.BATTLE_INIT.TEAM_PEOPLE) {
         idx -= gameInit.BATTLE_INIT.TEAM_PEOPLE;
       }
-      
+      */
+
       // _group is in [1, 2]
       if (battlerObj._group == firstForce.groupIndex) {
         // first attacks second
-        battlerObj = secondForce.mainTeam[idx]; // set next battlerObj, can this work??
+        nextIdxArray = formula.getTarget(battlerObj._index, secondForce.mainTeam, 0);
+        if (!!nextIdxArray && nextIdxArray.length == 0) {
+        // no atkTarget means battle is over, then break;
+          over = 1; // setup flag for battle over
+          break; // stop loop
+        }
+        idx = nextIdxArray[0];
+        battlerObj = secondForce.mainTeam[idx];
       }
       else if (battlerObj._group == secondForce.groupIndex) {
         // second attacks first
+        idx = formula.getNexter(battlerObj._index, firstForce.mainTeam);
+        if (idx < 0) {
+        // no atkTarget means battle is over, then break;
+          over = 1; // setup flag for battle over
+          break; // stop loop
+        }
         battlerObj = firstForce.mainTeam[idx]; // set next battlerObj, can this work??
       }
       sortIndex++;
@@ -599,14 +607,15 @@ battleBase.calc = function(attackerData, attackeeData) {
 
   var isPlayerFirst = 0; // player first attack or not, 1: is, 0: not
   // copy from reformed data
+
   if (attackerData.unitAGI >= attackeeData.unitAGI) {
     firstForce  = battlerInit(attackerData, 1);     // _group for p1, p1 is fixed for player, _group is fixed in client side
     secondForce = battlerInit(attackeeData, 2);     // _group for p2, p2 is fixed for attackee in client side
     isPlayerFirst = 1; // is player first attack
   }
   else {
-    firstForce  = battlerInit(attackeeData, 1);
-    secondForce = battlerInit(attackerData, 2);
+    secondForce = battlerInit(attackerData, 1);     
+    firstForce  = battlerInit(attackeeData, 2);
   }
 
   var turn  = 1;
@@ -647,8 +656,8 @@ battleBase.calc = function(attackerData, attackeeData) {
         battleProcess.push({
           "round":  round,
           "turn":   turn,
-          //"attacker": firstForce,
-          //"attackee": secondForce,
+          //"attacker": utils.clone(firstForce),
+          //"attackee": utils.clone(secondForce),
           "data":     btlDetail
         });
       } 
@@ -656,8 +665,8 @@ battleBase.calc = function(attackerData, attackeeData) {
         battleProcess.push({
           "round":  round,
           "turn":   turn,
-          //"attacker": secondForce,
-          //"attackee": firstForce,
+          //"attacker": utils.clone(secondForce),
+          //"attackee": utils.clone(firstForce),
           "data":     btlDetail
         });
       }
