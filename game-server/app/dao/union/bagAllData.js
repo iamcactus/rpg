@@ -5,6 +5,7 @@ var assert = require('assert');
 var async = require('async');
 //var _ = require('underscore');
 var commonUtils = require('../../../../shared/util/commonUtils');
+var gameInit = require('../../../../shared/gameInit');
 
 var dataApi = require('../../util/dataApi');
 var utils = require('../../util/utils');
@@ -79,11 +80,95 @@ bagAllData.get = function(mysqlc, playerId, cb) {
       utils.invokeCallback(cb, err, null);
     }
     else {
-      console.log(playerId);
       result["playerId"] = playerId;
-
-      console.log(result);
       utils.invokeCallback(cb, null, new Bag(result));
     }
   });
+};
+
+bagAllData.getByType = function(mysqlc, playerId, typeId, cb) {
+  if (typeId === gameInit.BAG.CARD.id) {
+    playerCardDao.get(mysqlc, playerId, function(err, result) {
+      if (!!err) {
+        logger.error('Get playerCard failed! ');
+        logger.error(err);
+        utils.invokeCallback(cb, err, null);
+      }
+      else if (!!result && result.length > 0) {
+        result["playerId"]    = playerId;
+        result["playerCard"]  = result;
+        utils.invokeCallback(cb, null, new Bag(result));
+      }
+      else {
+        utils.invokeCallback(cb, null, null);
+      }
+    });
+  }
+  else if (typeId === gameInit.BAG.EQUIP.id) {
+    playerEquipDao.get(mysqlc, playerId, 0, function(err, result) { // 0 for all equips
+      if(!!err) {
+        logger.error('Get playerEquip failed! ');
+        logger.error(err);
+      }
+      else if (!!result && result.length > 0) {
+        result["playerId"] = playerId;
+        result["playerEquip"]  = result;
+        utils.invokeCallback(cb, null, new Bag(result));
+      }
+      else {
+        utils.invokeCallback(cb, null, null);
+      }
+    });
+  }
+  else if (typeId === gameInit.BAG.PET.id) {
+    playerPetDao.get(mysqlc, playerId, 0, function(err, result) { // 0 for all pets
+      if(!!err) {
+        logger.error('Get playerPet failed! ');
+        logger.error(err);
+      }
+      else if (!!result && result.length > 0) {
+        result["playerId"] = playerId;
+        result["playerPet"]  = result;
+        utils.invokeCallback(cb, null, new Bag(result));
+      }
+      else {
+        utils.invokeCallback(cb, null, null);
+      }
+    });
+  }
+  else if (typeId === gameInit.BAG.SKILL.id) {
+    playerSkillDao.get(mysqlc, playerId, 0, function(err, result) { // 0 for all skills
+      if(!!err) {
+        logger.error('Get playerPet failed! ');
+        logger.error(err);
+      }
+      else if (!!result && result.length > 0) {
+        result["playerId"] = playerId;
+        result["playerSkill"]  = result;
+        utils.invokeCallback(cb, null, new Bag(result));
+      }
+      else {
+        utils.invokeCallback(cb, null, null);
+      }
+    });
+  }
+  else if (typeId === gameInit.BAG.ITEM.id) {
+    playerItemDao.get(mysqlc, playerId, function(err, result) {
+      if(!!err) {
+        logger.error('Get playerItem failed! ');
+        logger.error(err);
+      }
+      else if (!!result && result.length > 0) {
+        result["playerId"] = playerId;
+        result["playerItem"]  = result;
+        utils.invokeCallback(cb, null, new Bag(result));
+      }
+      else {
+        utils.invokeCallback(cb, null, null);
+      }
+    });
+  }
+  else {
+    utils.invokeCallback(cb, null, null);
+  }
 };

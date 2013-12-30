@@ -1,5 +1,6 @@
 var should = require('should');
 var commonUtils = require('../../../shared/util/commonUtils');
+var gameInit = require('../../../shared/gameInit');
 
 var a = {
   1       : 1,
@@ -22,3 +23,16 @@ var a = {
       }
     });
   });
+
+var obj = {
+  "type": "general",
+  "id":   101
+};
+  describe('getInitID test', function() {
+    it('should get id', function() {
+      var res = commonUtils.getInitID(gameInit.BAG, obj.type);
+      res.should.equal(obj.id);
+    });
+  });
+
+

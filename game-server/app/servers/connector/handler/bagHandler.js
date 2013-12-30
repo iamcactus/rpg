@@ -17,6 +17,7 @@ var playerPetDao = require('../playerPetDao');
 var playerSkillDao = require('../playerSkillDao');
 var unitMeridianDao = require('../unitMeridianDao');
 */
+var gameInit = require('../../../../../shared/gameInit');
 var CODE = require('../../../../../shared/code');
 var commonUtils = require('../../../../../shared/util/commonUtils');
 
@@ -43,9 +44,9 @@ var pro = Handler.prototype;
  * @api public
  */
 pro.getBag = function(msg, session, next) {
-  var resValidation = commonUtils.validate('getBag', msg);
+  var resValidation = commonUtils.validate('bag', msg);
 	if(!resValidation) {
-    console.log('getBag resValidation fail');
+    console.log('bag resValidation fail');
 		next(null, {code: CODE.ERR_WRONG_PARAM});
 		return;
 	}
@@ -55,6 +56,11 @@ pro.getBag = function(msg, session, next) {
 	var playerId = msg.playerId; // just for debug, playerId should be got from session
   var worldId = 1001; // just for debug, worldId shoule be got from session
 
+  var typeId = commonUtils.getInitID(gameInit.BAG, msg.type);
+  if (!typeId) {
+	  next(null, {code: CODE.FAIL, error:err});
+  }
+
   //var memcached = this.app.get('memcached');
   //var missionLog = {};
 
@@ -62,10 +68,10 @@ pro.getBag = function(msg, session, next) {
   var mysqlc = this.app.get(dbhandle_s);
 
   // first get data from Slave DB
-  bagAllData.get(mysqlc, playerId, function(err, res) {
+  bagAllData.getByType(mysqlc, playerId, typeId, function(err, res) {
     if (err) {
-      logger.error('error with playerMissionLog: '  + ' err: ' + err.message);
-	    next(null, {code: CODE.MESSAGE.ERR, error:err});
+      logger.error('error with bagAllData.getByType: '  + ' err: ' + err);
+	    next(null, {code: CODE.FAIL, error:err});
   	  return;
     }
     else {

@@ -196,4 +196,18 @@ commonUtils.getObj = function(array, key, value) {
     }
   }
   return null;
-}
+};
+
+/* @param {object} obj like gameInit.BAG
+ * @returns {number} id in gameInit for the type
+ */
+commonUtils.getInitID = function(obj, type) {
+  if (!!obj) {
+    for (var i in obj) {
+      if (obj[i].type == type) {
+        return obj[i].id;
+      }
+    }
+  }
+  return 0;
+};

@@ -17,5 +17,27 @@ module.exports = {
     ROUND_IN_TURN:5,  // 5 rounds in 1 turn
     TEAM_PEOPLE:  4,
     SKILL_CNT:    25
+  },
+  BAG: {
+    CARD: {
+      "type": "general",
+      "id":   101
+    },
+    EQUIP: {
+      "type": "equip",
+      "id":   102
+    },
+    PET:  {
+      "type": "pet",
+      "id":   103
+    },
+    SKILL: {
+      "type": "skill",
+      "id":   104
+    },
+    ITEM: {
+      "type": "item",
+      "id":   105
+    },
   }
 };

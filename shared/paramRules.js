@@ -1,4 +1,18 @@
 module.exports = {
+  bag: {
+    'playerId': [
+      {
+        'rule': 'number',
+        'error': 'playerId must be an int'
+      }
+    ],
+    'type': [
+      {
+        'rule': 'alphaNumeric',
+        'error': 'type must be names and numbers'
+      }
+    ]
+  },
   battle: {
     'playerId': [
       {

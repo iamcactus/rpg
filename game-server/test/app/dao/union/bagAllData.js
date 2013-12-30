@@ -19,6 +19,11 @@ var connection = mysql.createConnection(
 // pre set
 var worldId = 1001;
 var playerId = 2020;
+// 101: general
+// 102: equip
+// 103: pet
+// 104: skill
+// 105: item
 
 connection.connect();
 
@@ -32,7 +37,8 @@ connection.connect();
  
     async.series([
       function(callback) {
-        bagAllData.get(connection, playerId, callback);
+        //bagAllData.get(connection, playerId, callback);
+        bagAllData.getByType(connection, playerId, 101, callback);
       }
     ],
     function(err, res) {
@@ -51,7 +57,7 @@ connection.connect();
           console.log('---114---');
         }
         else { 
-          console.log(res);
+        console.log(util.inspect(res, { showHidden: true, depth: null }));
           connection.end();
         }
       });
