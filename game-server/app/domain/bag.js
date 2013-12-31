@@ -13,6 +13,7 @@ var util = require('util');
 
 var Bag = function(opts) {
 	this.playerId = Number(opts.playerId);
+  this.bagType        = opts.bagType;       // bagType
   this.playerCard     = opts.playerCard;    // card_data
   this.playerEquip    = opts.playerEquip;   // equip_data
   this.playerPet      = opts.playerPet;     // pet_data

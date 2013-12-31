@@ -36,7 +36,7 @@ module.exports = {
       "id":   104
     },
     ITEM: {
-      "type": "item",
+      "type": "prop",
       "id":   105
     },
   }

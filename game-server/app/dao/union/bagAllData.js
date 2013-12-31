@@ -86,7 +86,9 @@ bagAllData.get = function(mysqlc, playerId, cb) {
   });
 };
 
-bagAllData.getByType = function(mysqlc, playerId, typeId, cb) {
+bagAllData.getByType = function(mysqlc, playerId, type, cb) {
+  var typeId = commonUtils.getInitID(gameInit.BAG, type);
+
   if (typeId === gameInit.BAG.CARD.id) {
     playerCardDao.get(mysqlc, playerId, function(err, result) {
       if (!!err) {
@@ -96,11 +98,12 @@ bagAllData.getByType = function(mysqlc, playerId, typeId, cb) {
       }
       else if (!!result && result.length > 0) {
         result["playerId"]    = playerId;
+        result["bagType"]     = type;
         result["playerCard"]  = result;
         utils.invokeCallback(cb, null, new Bag(result));
       }
       else {
-        utils.invokeCallback(cb, null, null);
+        utils.invokeCallback(cb, null, []);
       }
     });
   }
@@ -112,11 +115,12 @@ bagAllData.getByType = function(mysqlc, playerId, typeId, cb) {
       }
       else if (!!result && result.length > 0) {
         result["playerId"] = playerId;
+        result["bagType"]     = type;
         result["playerEquip"]  = result;
         utils.invokeCallback(cb, null, new Bag(result));
       }
       else {
-        utils.invokeCallback(cb, null, null);
+        utils.invokeCallback(cb, null, []);
       }
     });
   }
@@ -128,11 +132,12 @@ bagAllData.getByType = function(mysqlc, playerId, typeId, cb) {
       }
       else if (!!result && result.length > 0) {
         result["playerId"] = playerId;
+        result["bagType"]     = type;
         result["playerPet"]  = result;
         utils.invokeCallback(cb, null, new Bag(result));
       }
       else {
-        utils.invokeCallback(cb, null, null);
+        utils.invokeCallback(cb, null, []);
       }
     });
   }
@@ -144,11 +149,12 @@ bagAllData.getByType = function(mysqlc, playerId, typeId, cb) {
       }
       else if (!!result && result.length > 0) {
         result["playerId"] = playerId;
+        result["bagType"]     = type;
         result["playerSkill"]  = result;
         utils.invokeCallback(cb, null, new Bag(result));
       }
       else {
-        utils.invokeCallback(cb, null, null);
+        utils.invokeCallback(cb, null, []);
       }
     });
   }
@@ -160,11 +166,12 @@ bagAllData.getByType = function(mysqlc, playerId, typeId, cb) {
       }
       else if (!!result && result.length > 0) {
         result["playerId"] = playerId;
+        result["bagType"]     = type;
         result["playerItem"]  = result;
         utils.invokeCallback(cb, null, new Bag(result));
       }
       else {
-        utils.invokeCallback(cb, null, null);
+        utils.invokeCallback(cb, null, []);
       }
     });
   }
