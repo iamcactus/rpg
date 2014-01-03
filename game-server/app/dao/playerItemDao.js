@@ -72,24 +72,70 @@ playerItemDao.add = function(mysqlc, id, playerId, itemId, num, cb) {
   });
 };
 
-playerItemDao.delete = function(mysqlc, id, cb) {
-  var deleteSQL = 'delete from play_item where id=?';
-  var args = [id];
-  console.log(id);
+playerItemDao.update = function(mysqlc, id, num, cb) {
+  var updateSQL = 
+    'update play_item set num=?, updated_on=? where id=?';
+  var updatedOn = Math.round(new Date().getTime()/1000); //unixtime
+  var args = [num, updatedOn, id];
 
-  mysqlc.delete(deleteSQL, args, function(err, res) {
+  mysqlc.query(updateSQL, args, function(err, res) {
     if (err !== null) {
-      console.log(err);
-      cb({code: err.number, msg: err.message}, null);
+      utils.invokeCallback(cb, err, null);
     }
     else {
       if (!!res && res.affectedRows > 0) {
-        console.log('in playerItemDao.delete');
-        console.log(res);
+        utils.invokeCallback(cb, null, true);
+      }
+      else {
+        logger.error('add player_equip Failed!');
+        utils.invokeCallback(cb, null, false);
+      }
+    }
+  });
+};
+
+playerItemDao.delete = function(mysqlc, id, cb) {
+  var deleteSQL = 'delete from player_item where id=?';
+  var args = [id];
+
+  mysqlc.delete(deleteSQL, args, function(err, res) {
+    if (err !== null) {
+      utils.invokeCallback(cb, err, null);
+    }
+    else {
+      if (!!res && res.affectedRows > 0) {
         utils.invokeCallback(cb, null, true);
       }
       else {
         logger.error('delete player_item Failed!' + id);
+        utils.invokeCallback(cb, null, false);
+      }
+    }
+  });
+};
+
+/**
+ * delete multi items
+ * @param {String} mysqlc mysqlc client for Master DB or Slave DB
+ * @param {Array} ids id in player_item
+ * @param {function} cb Callback function.
+ * @returns {object} true or false
+ */
+playerItemDao.delMulti = function(mysqlc, ids, cb) {
+  var deleteSQL = 'delete from player_item where id in (?)';
+  var args = [ids];
+
+  mysqlc.query(deleteSQL, args, function(err, res) {
+    if (err !== null) {
+      console.log(err);
+      utils.invokeCallback(cb, err, null);
+    }
+    else {
+      if (!!res && res.affectedRows > 0) {
+        utils.invokeCallback(cb, null, true);
+      }
+      else {
+        logger.error('delMulti player_item Failed!' + id);
         utils.invokeCallback(cb, null, false);
       }
     }

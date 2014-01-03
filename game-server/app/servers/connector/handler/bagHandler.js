@@ -61,18 +61,28 @@ pro.getBag = function(msg, session, next) {
 
   var dbhandle_s = commonUtils.worldDBR(worldId);
   var mysqlc = this.app.get(dbhandle_s);
+  var privateTop, publicTop;
 
-  // first get data from Slave DB
-  bagAllData.getByType(mysqlc, playerId, msg.bagType, function(err, res) {
+  mysqlc.acquire(function(err, client) {
     if (err) {
-      logger.error('error with bagAllData.getByType: '  + ' err: ' + err);
-	    next(null, {code: CODE.FAIL, error:err});
-  	  return;
+      console.log('----11111------');
     }
     else {
-      if (!!res) { // gets
-        next(null, {code: 200, bag:res}); 
-      }
+      console.log('----11112------');
+      bagAllData.getByType(client, playerId, msg.bagType, function(err, res) {
+        if (err) {
+          logger.error('error with bagAllData.getByType: '  + ' err: ' + err);
+    	    next(null, {code: CODE.FAIL, error:err});
+          mysqlc.release(client);
+      	  return;
+        }
+        else {
+          if (!!res) { // gets
+            next(null, {code: 200, bag:res}); 
+          }
+          mysqlc.release(client);
+        }
+      });
     }
   });
 };
@@ -110,19 +120,26 @@ pro.sell = function(msg, session, next) {
   //var missionLog = {};
 
   var dbhandle_s = commonUtils.worldDBR(worldId);
-  var mysqlc = this.app.get(dbhandle_s);
+  var mysqlPool = this.app.get(dbhandle_s);
 
-  // first get data from Slave DB
-  BagSellTrans.sell(mysqlc, msg.goods, playerId, typeId, function(err, res) {
-    if (err) {
-      logger.error('error with bagAllData.getByType: '  + ' err: ' + err);
-	    next(null, {code: CODE.FAIL, error:err});
-  	  return;
-    }
-    else {
-      if (!!res) { // gets
-        next(null, {code: 200}); 
+  mysqlPool.acquire(function(err, client) {
+    // first get data from Slave DB
+    BagSellTrans.sell(client, msg.goods, playerId, typeId, function(err, res) {
+      if (err) {
+        logger.error('error with bagAllData.getByType: '  + ' err: ' + err);
+  	    next(null, {code: CODE.FAIL});
+        mysqlPool.release(client);
+    	  return;
       }
-    }
+      else {
+        if (!!res) { // gets
+          next(null, {code: 200}); 
+        }
+        else {
+  	      next(null, {code: CODE.FAIL});
+        }
+        mysqlPool.release(client);
+      }
+    });
   });
 };

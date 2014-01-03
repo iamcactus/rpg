@@ -4,6 +4,7 @@ var userId;
 var cardId;
 var worldId;
 var sexType;
+var bagType;
 var token;
 var users;
 var rid;
@@ -456,10 +457,59 @@ $(document).ready(function() {
 		});
 	});
 
+	//deal with bagSell button click.
+	$("#bagSell").click(function() {
+		userId    = $("#userIdBagSell").attr("value");
+		playerId  = $("#playerIdBagSell").attr("value");
+		bagType   = $("#bagTypeSell").attr("value");
+		itemSID   = $("#itemSID").attr("value");
+		itemNum   = $("#itemNum").attr("value");
+
+    alert(userId);
+    alert(playerId);
+    alert(itemSID);
+    alert(itemNum);
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "connector.bagHandler.sell";
+				pomelo.request(route, {
+          playerId:playerId,
+          bagType:bagType,
+          goods: [{
+            "id": itemSID,
+            "num":itemNum
+          }],
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
 	//deal with getMissionList button click.
 	$("#getBag").click(function() {
 		userId = $("#userIdBag").attr("value");
 		playerId = $("#playerIdBag").attr("value");
+		bagType = $("#bagType").attr("value");
     alert(playerId);
     rid = 1234;
 		//query entry of connection
@@ -473,6 +523,7 @@ $(document).ready(function() {
 				pomelo.request(route, {
           playerId:playerId,
           //missionDataId:missionDataId,
+          bagType:bagType,
           uid:userId,
           rid: rid
 				}, function(data) {

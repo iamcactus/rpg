@@ -13,6 +13,26 @@ module.exports = {
       }
     ]
   },
+  bagSell: {
+    'playerId': [
+      {
+        'rule': 'number',
+        'error': 'playerId must be an int'
+      }
+    ],
+    'type': [
+      {
+        'rule': 'alphaNumeric',
+        'error': 'type must be names and numbers'
+      }
+    ],
+    'goods': [
+      {
+        'rule': 'required',
+        'error': 'you must set goods including name and number'
+      }
+    ]
+  },
   battle: {
     'playerId': [
       {

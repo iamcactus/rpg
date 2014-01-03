@@ -37,7 +37,7 @@ playerParamDao.get = function(mysqlc, playerId, cb) {
 /**
  * Initialize player param, ex. exp, level, etc
  * @param {String} mysqlc mysqlc client for Master DB or Slave DB
- * @param {String} playerID
+ * @param {Number} playerID
  * @param {String} lead player's lead by now
  * @param {function} cb Callback function.
  * @returns {object} playerParam or null
@@ -74,19 +74,20 @@ playerParamDao.init = function(mysqlc, playerId, lead, cb) {
 /**
  * update player param, ex. exp, level, etc
  * @param {String} mysqlc mysqlc client for Master DB or Slave DB
+ * @param {Number} playerID
  * @param {String} params, HASH for updated target colums
  * @param {function} cb Callback function.
  * @returns {object} true or false
  */
-playerParamDao.update = function(mysqlc, params, cb) {
-  if ( params === 'undefined' || params.length < 1 ) {
+playerParamDao.update = function(mysqlc, params, playerId, cb) {
+  if ( params === 'undefined') {
     utils.invokeCallback(cb, null, null);
   }
   
   var columns = ''; // updated target columns
   var args = [];    // the values for each column
   for (var key in params) {
-    columns += params[key] + '=?, ';
+    columns += key + '=?, ';
     args.push(params[key]);
   }
 
@@ -95,14 +96,14 @@ playerParamDao.update = function(mysqlc, params, cb) {
   args.push(playerId);
   var updateSQL = 'update player_param set ' + columns + 'updated_on=? where player_id=?';
 
-  console.log(updateSQL);
-  mysqlc.update(updateSQL, args, function(err, res) {
+  //console.log(updateSQL);
+  //console.log(args);
+  mysqlc.query(updateSQL, args, function(err, res) {
     if (err !== null) {
-			utils.invokeCallback(cb, err.message, null);
+			utils.invokeCallback(cb, err, null);
     }
     else {
       if (!!res && res.affectedRows > 0) {
-        console.log(res);
         utils.invokeCallback(cb, null, true);
       }
       else {
