@@ -89,18 +89,15 @@ pro.getFraction = function(msg, session, next) {
 
 var verifyMaterial = function(mArray, typeId, star) {
   var aLength = mArray.length;
+
   if (typeId === gameInit.BAG.CARD.id) {
-    console.log(aLength);
-    console.log('----121----');
     if (aLength !== gameInit.DECOMPO.CARD_NUM) {
       return false;
     }
-    console.log(mArray);
     for (var i=0; i<aLength; i++) {
       var confData = dataApi.card.findBy('card_id', mArray[i].card_id);
-      if (confData.star !== star) {
-        console.log(confData);
-        console.log('----122----');
+      if (confData.star != star) {
+        console.log('card star is wrond');
         return false;
       }
     }
@@ -112,6 +109,7 @@ var verifyMaterial = function(mArray, typeId, star) {
     for (var i=0; i<aLength; i++) {
       var confData = dataApi.equip.findBy('equip_id', mArray[i].equip_id);
       if (confData.star !== star) {
+        console.log('equip star is wrond');
         return false;
       }
     }
@@ -123,6 +121,7 @@ var verifyMaterial = function(mArray, typeId, star) {
     for (var i=0; i<aLength; i++) {
       var confData = dataApi.card.findBy('pet_id', mArray[i].pet_id);
       if (confData.star !== star) {
+        console.log('pet star is wrond');
         return false;
       }
     }
@@ -166,9 +165,10 @@ pro.decompo = function(msg, session, next) {
   }
 
   var ids = [];
-  for (var i=0, md=materialData ; i< md.length; i++) {
-    ids.push(Number(md[i].id));
+  for (var i=0; i< materialData.length; i++) {
+    ids.push(Number(materialData[i].id));
   }
+  console.log(ids);
   if (!ids || ids.length === 0) {
     console.log('decompo has not enough items');
 		next(null, {code: CODE.FACTORY.ERR_MATERIAL_NUM});
@@ -193,8 +193,10 @@ pro.decompo = function(msg, session, next) {
             if (verifyMaterial(res, typeId, star)) {
               callback(null, true);
             }
-            console.log('decompo has not enough items');
-            callback({code: CODE.FACTORY.ERR_MATERIAL_NUM}, null);
+            else {
+              console.log('decompo has not enough cards');
+              callback({code: CODE.FACTORY.ERR_MATERIAL_STAR}, null);
+            }
           }
           else if (!!err) {
             callback(err, null);
@@ -210,8 +212,10 @@ pro.decompo = function(msg, session, next) {
             if (verifyMaterial(res, typeId, star)) {
               callback(null, true);
             }
-            console.log('decompo has not enough items');
-            callback({code: CODE.FACTORY.ERR_MATERIAL_NUM}, null);
+            else {
+              console.log('decompo has not enough equips');
+              callback({code: CODE.FACTORY.ERR_MATERIAL_STAR}, null);
+            }
           }
           else if (!!err) {
             callback(err, null);
@@ -227,8 +231,10 @@ pro.decompo = function(msg, session, next) {
             if (verifyMaterial(res, typeId, star)) {
               callback(null, true);
             }
-            console.log('decompo has not enough items');
-            callback({code: CODE.FACTORY.ERR_MATERIAL_NUM}, null);
+            else {
+              console.log('decompo has not enough pets');
+              callback({code: CODE.FACTORY.ERR_MATERIAL_STAR}, null);
+            }
           }
           else if (!!err) {
             callback(err, null);

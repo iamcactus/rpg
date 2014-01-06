@@ -27,6 +27,7 @@ module.exports = {
 
   FACTORY: {
     ERR_MATERIAL_NUM: 7001,
+    ERR_MATERIAL_STAR: 7002,
   },
 
 	GATE: {
