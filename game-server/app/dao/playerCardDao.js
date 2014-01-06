@@ -128,3 +128,31 @@ playerCardDao.delete = function(mysqlc, id, cb) {
     }
   });
 };
+
+/**
+ * delete multi cards
+ * @param {String} mysqlc mysqlc client for Master DB or Slave DB
+ * @param {Array} ids id in player_card
+ * @param {function} cb Callback function.
+ * @returns {object} true or false
+ */
+playerCardDao.delMulti = function(mysqlc, ids, cb) {
+  var deleteSQL = 'delete from player_card where id in (?)';
+  var args = [ids];
+
+  mysqlc.query(deleteSQL, args, function(err, res) {
+    if (err !== null) {
+      console.log(err);
+      utils.invokeCallback(cb, err, null);
+    }
+    else {
+      if (!!res && res.affectedRows > 0) {
+        utils.invokeCallback(cb, null, true);
+      }
+      else {
+        logger.error('delMulti player_card Failed!' + ids);
+        utils.invokeCallback(cb, null, false);
+      }
+    }
+  });
+};

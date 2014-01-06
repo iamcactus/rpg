@@ -1,6 +1,7 @@
 var should = require('should');
 var commonUtils = require('../../../shared/util/commonUtils');
 var gameInit = require('../../../shared/gameInit');
+var DBCONF  = require('../../../shared/dbconf');
 
 var a = {
   1       : 1,
@@ -35,4 +36,24 @@ var obj = {
     });
   });
 
+  describe('masterDBW test', function() {
+    it('should get master dbhandle', function() {
+      var res = commonUtils.masterDBW();
+      res.should.equal(DBCONF.GAME_MASTER_W);
+    });
+  });
+
+  describe('masterDBR test', function() {
+    it('should get slave dbhandle', function() {
+      var res = commonUtils.masterDBR();
+      res.should.equal(DBCONF.GAME_MASTER_R);
+    });
+  });
+
+  describe('masterDBW test', function() {
+    it('should get backup dbhandle', function() {
+      var res = commonUtils.masterDBB();
+      res.should.equal(DBCONF.GAME_MASTER_B);
+    });
+  });
 

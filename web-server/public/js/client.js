@@ -5,6 +5,7 @@ var cardId;
 var worldId;
 var sexType;
 var bagType;
+var star;
 var token;
 var users;
 var rid;
@@ -485,6 +486,104 @@ $(document).ready(function() {
             "id": itemSID,
             "num":itemNum
           }],
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
+	//deal with bagSell button click.
+	$("#decompo").click(function() {
+		userId    = $("#userIdDecompo").attr("value");
+		playerId  = $("#playerIdDecompo").attr("value");
+		bagType   = $("#bagTypeDecompo").attr("value");
+		star      = $("#starDecompo").attr("value");
+		itemSID1  = $("#itemSIDDecompo1").attr("value");
+		itemNum1  = $("#itemNumDecompo1").attr("value");
+		itemSID2  = $("#itemSIDDecompo2").attr("value");
+		itemNum2  = $("#itemNumDecompo2").attr("value");
+		itemSID3  = $("#itemSIDDecompo3").attr("value");
+		itemNum3  = $("#itemNumDecompo3").attr("value");
+
+    alert(userId);
+    alert(playerId);
+    alert(itemSID1);
+    alert(itemNum1);
+    alert(itemSID2);
+    alert(itemNum2);
+    alert(itemSID3);
+    alert(itemNum3);
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "factory.factoryHandler.decompo";
+				pomelo.request(route, {
+          playerId:playerId,
+          bagType:bagType,
+          data: [
+            {"id": itemSID1, "num":itemNum1},
+            {"id": itemSID2, "num":itemNum2},
+            {"id": itemSID3, "num":itemNum3},
+          ],
+          star: star,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
+	//deal with getFraction button click.
+	$("#getFraction").click(function() {
+		userId = $("#userIdGetFraction").attr("value");
+		playerId = $("#playerIdGetFraction").attr("value");
+		bagType = $("#bagTypeGetFraction").attr("value");
+    alert(playerId);
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "factory.factoryHandler.getFraction";
+				pomelo.request(route, {
+          playerId:playerId,
+          //missionDataId:missionDataId,
+          bagType:bagType,
           uid:userId,
           rid: rid
 				}, function(data) {

@@ -12,3 +12,15 @@ describe('JSON data api test', function() {
     s.should.eql(t);
   });
 });
+
+describe('JSON data api test', function() {
+  var card = api.card;
+
+  it('should get card ids', function() {
+    var star = 6;
+    var data = api.card.findMultiBy('star', star);
+    console.log(data);
+    //s.should.eql(t);
+  });
+});
+

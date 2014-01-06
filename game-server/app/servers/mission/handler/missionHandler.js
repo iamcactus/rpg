@@ -84,7 +84,7 @@ pro.getMissionList = function(msg, session, next) {
   playerMissionLog.get(mysqlc, playerId, ids, function(err, res) {
     if (err) {
       logger.error('error with playerMissionLog: '  + ' err: ' + err.message);
-	    next(null, {code: CODE.MESSAGE.ERR, error:err});
+	    next(null, {code: CODE.FAIL});
   	  return;
     }
     else {
@@ -94,7 +94,7 @@ pro.getMissionList = function(msg, session, next) {
         next(null, {code: 200, missionLog:res}); 
       }
       else {
-        next (null, {code: 200});
+        next(null, {code: 200});
       }
     }
   });

@@ -83,6 +83,30 @@ commonUtils.worldDBB = function(worldId) {
 };
 
 /**
+ * get master dbhandle for game_master
+ * @returns {String} master dbhandle
+ */
+commonUtils.masterDBW = function() {
+  return DBCONF.GAME_MASTER_W;
+};
+
+/**
+ * get slave dbhandle for game_master
+ * @returns {String} slave dbhandle
+ */
+commonUtils.masterDBR = function() {
+  return DBCONF.GAME_MASTER_R;
+};
+
+/**
+ * get backup dbhandle for game_master
+ * @returns {String} backup dbhandle
+ */
+commonUtils.masterDBB = function() {
+  return DBCONF.GAME_MASTER_B;
+};
+
+/**
  * validate the request parameters by 'iz'
  * @param {String} key for target handler
  * @param {Object} request parameters

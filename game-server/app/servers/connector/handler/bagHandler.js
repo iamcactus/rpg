@@ -63,26 +63,19 @@ pro.getBag = function(msg, session, next) {
   var mysqlc = this.app.get(dbhandle_s);
   var privateTop, publicTop;
 
-  mysqlc.acquire(function(err, client) {
+  bagAllData.getByType(mysqlc, playerId, msg.bagType, function(err, res) {
     if (err) {
-      console.log('----11111------');
+      logger.error('error with bagAllData.getByType: '  + ' err: ' + err);
+	    next(null, {code: CODE.FAIL});
+  	  return;
     }
     else {
-      console.log('----11112------');
-      bagAllData.getByType(client, playerId, msg.bagType, function(err, res) {
-        if (err) {
-          logger.error('error with bagAllData.getByType: '  + ' err: ' + err);
-    	    next(null, {code: CODE.FAIL, error:err});
-          mysqlc.release(client);
-      	  return;
-        }
-        else {
-          if (!!res) { // gets
-            next(null, {code: 200, bag:res}); 
-          }
-          mysqlc.release(client);
-        }
-      });
+      if (!!res) { // gets
+        next(null, {code: 200, bag:res}); 
+      }
+      else {
+        next(null, {code: 200});
+      }
     }
   });
 };

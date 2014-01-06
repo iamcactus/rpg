@@ -1,11 +1,10 @@
 var logger = require('pomelo-logger').getLogger(__filename);
 var utils = require('../util/utils');
-var seqPlayerCard = module.exports;
+var seqPlayerPet = module.exports;
 
-seqPlayerCard.getSequenceID = function(mysqlc, cb) {
-  var sql = 'update seq_player_card set id=LAST_INSERT_ID(id+1)';
+seqPlayerPet.getSequenceID = function(mysqlc, cb) {
+  var sql = 'update seq_player_pet set id=LAST_INSERT_ID(id+1)';
 
-  // set mysql client with master
   mysqlc.query(sql, null, function(err, res) {
     if (err !== null) {
       utils.invokeCallback(cb, err, null);
@@ -15,7 +14,7 @@ seqPlayerCard.getSequenceID = function(mysqlc, cb) {
         utils.invokeCallback(cb, null, res.insertId);
       }
       else {
-        logger.error('getSequenceID of player_card FAILER!');
+        logger.error('getSequenceID of player_pet FAILER!');
         utils.invokeCallback(cb, null, null);
       }
     }

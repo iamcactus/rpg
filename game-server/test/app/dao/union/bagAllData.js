@@ -23,8 +23,9 @@ var playerId = 2020;
 // 102: equip
 // 103: pet
 // 104: skill
-// 105: item
-
+// 105: prop
+var type = 'general';
+var type = 'prop';
 connection.connect();
 
   // begin transcation
@@ -38,7 +39,7 @@ connection.connect();
     async.series([
       function(callback) {
         //bagAllData.get(connection, playerId, callback);
-        bagAllData.getByType(connection, playerId, 101, callback);
+        bagAllData.getByType(connection, playerId, type, callback);
       }
     ],
     function(err, res) {

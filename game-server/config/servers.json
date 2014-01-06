@@ -13,6 +13,9 @@
     "mission": [
       {"id":"mission-server-1", "host":"127.0.0.1", "port":3750}
     ],
+    "factory": [
+      {"id":"factory-server-1", "host":"127.0.0.1", "port":3760}
+    ],
     "arena": [
       {"id":"arena-server-1", "host":"127.0.0.1", "port":3770}
     ],
@@ -31,6 +34,9 @@
     ],
     "mission": [
       {"id":"mission-server-1", "host":"127.0.0.1", "port":3750}
+    ],
+    "factory": [
+      {"id":"factory-server-1", "host":"127.0.0.1", "port":3760}
     ],
     "arena": [
       {"id":"arena-server-1", "host":"127.0.0.1", "port":3770}

@@ -39,5 +39,15 @@ module.exports = {
       "type": "prop",
       "id":   105
     },
+  },
+  COMPO: {
+    CARD_NUM: 3,
+    PET_NUM:  3,
+    EQUIP_NUM:6
+  },
+  DECOMPO: {
+    CARD_NUM: 3,
+    PET_NUM:  3,
+    EQUIP_NUM:6
   }
 };

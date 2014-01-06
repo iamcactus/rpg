@@ -25,6 +25,10 @@ module.exports = {
     FA_TOKEN_ILLEGAL: 1004,
 	}, 
 
+  FACTORY: {
+    ERR_MATERIAL_NUM: 7001,
+  },
+
 	GATE: {
 		FA_NO_SERVER_AVAILABLE: 2001
 	}, 

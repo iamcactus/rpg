@@ -47,6 +47,52 @@ module.exports = {
       }
     ]
   },
+  compo: {
+    'playerId': [
+      {
+        'rule': 'number',
+        'error': 'playerId must be an int'
+      }
+    ],
+    'star': [
+      {
+        'rule': 'number',
+        'error': 'star must be an int'
+      }
+    ],
+    'type': [
+      {
+        'rule': 'alphaNumeric',
+        'error': 'type must be names and numbers'
+      }
+    ]
+  },
+  decompo: {
+    'playerId': [
+      {
+        'rule': 'number',
+        'error': 'playerId must be an int'
+      }
+    ],
+    'star': [
+      {
+        'rule': 'number',
+        'error': 'star must be an int'
+      }
+    ],
+    'type': [
+      {
+        'rule': 'alphaNumeric',
+        'error': 'type must be names and numbers'
+      }
+    ],
+    'data': [
+      {
+        'rule': 'required',
+        'error': 'you must set goods including name and number'
+      }
+    ]
+  },
   getMissionList: {
     'playerId': [
       {

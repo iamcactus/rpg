@@ -84,21 +84,17 @@ Data.prototype.findBy = function(attr, value) {
 */
 
 /**
- * find items by attribute
+ * find item by attribute
  *
  * @param {String} attribute name
  * @param {String|Number} the value of the attribute
- * @return {Array} result
+ * @return {Object} object or null
  * @api public
  */
 Data.prototype.findBy = function(attr, value) {
   var i, item;
   for (i in this.data) {
     item = this.data[i];
-    //console.log(item);
-    //console.log(attr);
-    //console.log(item[attr]);
-    //console.log(value);
     if (item[attr] == value) {
       return item;
     }
@@ -126,6 +122,27 @@ Data.prototype.findSmaller = function(attr, value) {
   for (i in this.data) {
     item = this.data[i];
     if (Number(item[attr]) <= value) {
+      result.push(item);
+    }
+  }
+  return result;
+};
+
+/**
+ * find items by attribute
+ *
+ * @param {String} attribute name
+ * @param {String|Number} the value of the attribute
+ * @return {Array} result
+ * @api public
+ */
+Data.prototype.findMultiBy = function(attr, value) {
+  var result = [];
+  value = Number(value);
+  var i, item;
+  for (i in this.data) {
+    item = this.data[i];
+    if (Number(item[attr]) == value) {
       result.push(item);
     }
   }
