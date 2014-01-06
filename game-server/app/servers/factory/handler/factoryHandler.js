@@ -20,7 +20,7 @@ var CardDecompoTrans  = require('../../../trans/CardDecompoTrans');
 var gameInit = require('../../../../../shared/gameInit');
 var CODE = require('../../../../../shared/code');
 var commonUtils = require('../../../../../shared/util/commonUtils');
-var drawPrize = require('../../../../../shared/util/drawPrize');
+var drawPrize = require('../../../util/drawPrize');
 
 module.exports = function(app) {
   return new Handler(app);
@@ -315,6 +315,7 @@ pro.decompo = function(msg, session, next) {
  * @returns {Object} data of composed item 
  * @api public
  */
+/*
 pro.compo = function(msg, session, next) {
   var resValidation = commonUtils.validate('compo', msg);
 	if(!resValidation) {
@@ -408,9 +409,6 @@ pro.compo = function(msg, session, next) {
         callback(null, null);
       }
     }, // end of sequenceId
-    newItem:  ['', function(callback) {
-      
-    }],
     compoTrans: ['sequenceId', function(callback, result) {
       console.log(result);
       if (!!sid) {
@@ -469,3 +467,4 @@ pro.compo = function(msg, session, next) {
     }
   });
 };
+*/
