@@ -6,7 +6,6 @@ var playerFractionDao = require('../dao/playerFractionDao');
 var playerParamDao = require('../dao/playerParamDao');
 var playerItemDao = require('../dao/playerItemDao');
 var playerCardDao = require('../dao/playerCardDao');
-var seqPlayerCard = require('../dao/seqPlayerCard');
 
 var async = require('async');
 var cardConf = require('../../../shared/cardConf');
@@ -27,8 +26,18 @@ var CardCompoTrans = module.exports;
  * @returns {Boolean} true or false
  */
 CardCompoTrans.exec = function(mysqlc, playerId, star, playerCardId, num, cardId, cb) {
+  console.log('in CardCompoTrans');
+
   var type = gameInit.BAG.CARD.type; // type of fraction, here is "general"
   var typeId = commonUtils.getInitID(gameInit.BAG, type);
+
+  star = Number(star);
+  // compose fraction will get star level up one lv
+  var alpha = cardConf.getAlpha(star+1);
+
+  var maxLv = alpha.INITIAL_LV;
+  var exp = 0;
+  var lv  = 1;
 
   mysqlc.query('BEGIN', function(err, rows) { // start TRANSACTION
     if (err) {
@@ -38,17 +47,13 @@ CardCompoTrans.exec = function(mysqlc, playerId, star, playerCardId, num, cardId
     async.auto({
       // delete fraction
       deleteFraction: function(callback) {
-        playerFractionDao.update(mysqlc, playerId, type, star, num, callback);
+        playerFractionDao.update(mysqlc, playerId, typeId, star, num, callback);
       },
-      setPlayerCardId: ['newCard', function(callback, result) {
-        var cardData = result.newCard;
-        var alpha = cardConf.getAlpha(cardData.star);
-        playerCardDao.add(mysqlc, playerCardId, playerId, cardId, 0, 1, alpha.INITIAL_LV, callback); // 0: exp, 1: level
-      }]
+      setPlayerCardId: function(callback) {
+        playerCardDao.add(mysqlc, playerCardId, playerId, cardId, exp, lv, maxLv, callback);
+      }
     }, function(err, res) {
       var q; // query cmd
-      console.log('-----111-----');
-      console.log(res);
       if (err || !res) {
         q = 'ROLLBACK';
       }
@@ -64,13 +69,11 @@ CardCompoTrans.exec = function(mysqlc, playerId, star, playerCardId, num, cardId
         else {
           if (err) {
             console.log('[CardCompo] transaction query failed ');
-            console.log(err);
             utils.invokeCallback(cb, err, null);
             return;
           }
           else {
             console.log('[CardCompo] transaction query finished');
-            console.log(res);
             //mysqlc.transRelease(); // TODO: test
             utils.invokeCallback(cb, null, res);
             return;

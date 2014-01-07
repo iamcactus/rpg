@@ -60,11 +60,10 @@ playerCardDao.add = function(
     'insert into player_card(id, player_id, card_id, exp, level, max_level, created_on, updated_on) values (?,?,?, ?,?,?, ?,?)';
   var createdOn = Math.round(new Date().getTime()/1000); //unixtime
   var args = [id, playerId, cardId, exp, level, maxLevel, createdOn, createdOn];
-  console.log(id, playerId, cardId, exp, level, maxLevel, createdOn, createdOn);
 
   mysqlc.query(insertSQL, args, function(err, res) {
     if (err !== null) {
-      cb({code: err.number, msg: err.message}, null);
+      utils.invokeCallback(cb, err, null);
     }
     else {
       if (!!res && res.affectedRows > 0) {
@@ -90,7 +89,6 @@ playerCardDao.arm = function(mysqlc, id, cb) {
     'update player_card set is_onarm=1, updated_on=? where id=?';
   var updatedOn = Math.round(new Date().getTime()/1000); //unixtime
   var args = [updatedOn, id];
-  console.log(id, updatedOn);
 
   mysqlc.query(updateSQL, args, function(err, res) {
     if (err !== null) {
@@ -114,8 +112,7 @@ playerCardDao.delete = function(mysqlc, id, cb) {
 
   mysqlc.query(deleteSQL, args, function(err, res) {
     if (err !== null) {
-      console.log(err);
-      cb({code: err.number, msg: err.message}, null);
+      utils.invokeCallback(cb, err, null);
     }
     else {
       if (!!res && res.affectedRows > 0) {
@@ -142,7 +139,6 @@ playerCardDao.delMulti = function(mysqlc, ids, cb) {
 
   mysqlc.query(deleteSQL, args, function(err, res) {
     if (err !== null) {
-      console.log(err);
       utils.invokeCallback(cb, err, null);
     }
     else {

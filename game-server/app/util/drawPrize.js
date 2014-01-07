@@ -15,6 +15,8 @@ var calcParam = require('../../../shared/forceConf');
 var cardConf = require('../../../shared/cardConf');
 var equipConf = require('../../../shared/equipConf');
 var gameInit  = require('../../../shared/gameInit');
+var oddsConf  = require('../../../shared/oddsConf');
+var PROP_CONST = require('../../../shared/propertyConsts');
 
 var _ = require('underscore');
 
@@ -40,6 +42,7 @@ var cardPrize = function(type, star, num) {
       result.push(cardArray[idx]);
     }
   }
+  console.log(result);
   return result;
 };
 
@@ -49,12 +52,24 @@ drawPrize.hero = function(type, star, num) {
 };
 
 var equipPrize = function(type, star, num) {
-  console.log(type);
-  console.log(star);
-  console.log(num);
   var result = [];
-  var equipArray = dataApi.equip.findMultiBy('star', Number(star));
-  
+  var equipArray;
+  if (type == 0) {
+    equipArray = dataApi.equip.findMultiBy('star', Number(star));
+  }
+  else if (type == PROP_CONST.ATK) {
+    equipArray = dataApi.weapon.findMultiBy('star', Number(star));
+  }
+  else if (type == PROP_CONST.DEF) {
+    equipArray = dataApi.defender.findMultiBy('star', Number(star));
+  }
+  else if (type == PROP_CONST.AGI) {
+    equipArray = dataApi.shoe.findMultiBy('star', Number(star));
+  }
+  else if (type == PROP_CONST.HP) {
+    equipArray = dataApi.jewelry.findMultiBy('star', Number(star));
+  }
+
   var len = equipArray.length;
   if (len > 0) {
     len--; // idx in [0..len-1];
@@ -68,6 +83,22 @@ var equipPrize = function(type, star, num) {
 
 drawPrize.equip = function(type, star, num) {
   console.log('in drawPrize.equip');
+  if (type == 0) {
+    var odds = oddsConf.COMPO;
+    var r = _.random(odds.MAX - 1);
+    if (r < odds.WEAPON) {
+      type = PROP_CONST.ATK; // weapon
+    }
+    else if (r < (odds.WEAPON + odds.DEFENDER)) {
+      type = PROP_CONST.DEF; // defender
+    }
+    else if (r < (odds.WEAPON + odds.DEFENDER + odds.SHOE)) {
+      type = PROP_CONST.AGI; // shoe
+    }
+    else if (r < odds.MAX) {
+      type = PROP_CONST.HP; // jewelry
+    }
+  }
   return equipPrize(type, star, num);
 };
 

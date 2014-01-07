@@ -506,7 +506,7 @@ $(document).ready(function() {
 		});
 	});
 
-	//deal with bagSell button click.
+	//deal with decompo button click.
 	$("#decompo").click(function() {
 		userId    = $("#userIdDecompo").attr("value");
 		playerId  = $("#playerIdDecompo").attr("value");
@@ -544,6 +544,48 @@ $(document).ready(function() {
             {"id": itemSID2, "num":itemNum2},
             {"id": itemSID3, "num":itemNum3},
           ],
+          star: star,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
+	//deal with compo button click.
+	$("#compo").click(function() {
+		userId    = $("#userIdCompo").attr("value");
+		playerId  = $("#playerIdCompo").attr("value");
+		bagType   = $("#bagTypeCompo").attr("value");
+		star      = $("#starCompo").attr("value");
+
+    alert(userId);
+    alert(playerId);
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "factory.factoryHandler.compo";
+				pomelo.request(route, {
+          playerId:playerId,
+          bagType:bagType,
           star: star,
           uid:userId,
           rid: rid

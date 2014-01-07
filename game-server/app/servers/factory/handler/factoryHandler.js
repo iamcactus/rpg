@@ -10,12 +10,19 @@ var utils = require('../../../util/utils');
 //var Bag = require('../../domain/bag'); // TODO: prepare bag object 
 var bagAllData = require('../../../dao/union/bagAllData');
 
+var seqPlayerCard = require('../../../dao/seqPlayerCard');
+var seqPlayerEquip = require('../../../dao/seqPlayerEquip');
+var seqPlayerPet = require('../../../dao/seqPlayerPet');
+
+
 var playerCardDao     = require('../../../dao/playerCardDao');
 var playerEquipDao    = require('../../../dao/playerEquipDao');
 var playerPetDao      = require('../../../dao/playerPetDao');
 var playerFractionDao = require('../../../dao/playerFractionDao');
 var BagSellTrans = require('../../../trans/BagSellTrans');
 var CardDecompoTrans  = require('../../../trans/CardDecompoTrans');
+
+var CardCompoTrans  = require('../../../trans/CardCompoTrans');
 
 var gameInit = require('../../../../../shared/gameInit');
 var CODE = require('../../../../../shared/code');
@@ -52,7 +59,6 @@ pro.getFraction = function(msg, session, next) {
 		return;
 	}
   console.log('enter getFraction');
-  console.log(msg);
 
   // playerId should be checked with session
 	var playerId = msg.playerId; // just for debug, playerId should be got from session
@@ -168,7 +174,6 @@ pro.decompo = function(msg, session, next) {
   for (var i=0; i< materialData.length; i++) {
     ids.push(Number(materialData[i].id));
   }
-  console.log(ids);
   if (!ids || ids.length === 0) {
     console.log('decompo has not enough items');
 		next(null, {code: CODE.FACTORY.ERR_MATERIAL_NUM});
@@ -259,7 +264,6 @@ pro.decompo = function(msg, session, next) {
         }
         // transaction: delete item and add fraction
         mysqlPool.acquire(function(err, client) {
-          console.log(materialData );
           if (typeId === gameInit.BAG.CARD.id) {
             CardDecompoTrans.exec(client, materialData, playerId, star, fractionNum, function(err, res) {
               if (!!err || !!res) {
@@ -321,7 +325,6 @@ pro.decompo = function(msg, session, next) {
  * @returns {Object} data of composed item 
  * @api public
  */
-/*
 pro.compo = function(msg, session, next) {
   var resValidation = commonUtils.validate('compo', msg);
 	if(!resValidation) {
@@ -338,6 +341,7 @@ pro.compo = function(msg, session, next) {
   var star    = msg.star;
   var sid;  // sequence id for item from fraction 
   var prizeData; // conf data for composed item
+  var prizeNum = 1; // by default, compose fractions into 1 item;
 
   var typeId = commonUtils.getInitID(gameInit.BAG, bagType);
   if (!typeId) {
@@ -348,17 +352,17 @@ pro.compo = function(msg, session, next) {
   // prepare item composed
   var dataArray;
   if (typeId === gameInit.BAG.CARD.id) {
-    //0: only for resorved, 1: numbers of prize
-    dataArray = drawPrize.hero(0, star, 1);
+    //0: only for resorved
+    dataArray = drawPrize.hero(0, star, prizeNum);
   }
   else if (typeId === gameInit.BAG.EQUIP.id) {
-    dataArray = drawPrize.equip(0, star, 1);
+    dataArray = drawPrize.equip(0, star, prizeNum);
   }
   else if (typeId === gameInit.BAG.PET.id) {
-    dataArray = drawPrize.pet(0, star, 1);
+    dataArray = drawPrize.pet(0, star, prizeNum);
   }
   if (!!dataArray && dataArray.length > 0) {
-    prizeData = dataArray[0];
+    prizeData = dataArray[0]; // only 1 prize
   }
 
   if (!prizeData) {
@@ -377,6 +381,7 @@ pro.compo = function(msg, session, next) {
 
   // TODO: refactoring
   async.auto({
+    // sequenceId is used for id in player_card, player_equip or player_pet
     sequenceId:   function(callback) {
       if (typeId === gameInit.BAG.CARD.id) {
         seqPlayerCard.getSequenceID(mysqlc_master, function(err, sid) {
@@ -384,10 +389,9 @@ pro.compo = function(msg, session, next) {
             callback(err, null);
           }
           else {
-            sid = sid;
             callback(null, sid);
           }
-        }
+        });
       }
       else if (typeId === gameInit.BAG.EQUIP.id) { 
         seqPlayerEquip.getSequenceID(mysqlc_master, function(err, sid) {
@@ -395,10 +399,9 @@ pro.compo = function(msg, session, next) {
             callback(err, null);
           }
           else {
-            sid = sid;
             callback(null, sid);
           }
-        }
+        });
       }
       else if (typeId === gameInit.BAG.PET.id) { 
         seqPlayerPet.getSequenceID(mysqlc_master, function(err, sid) {
@@ -406,23 +409,21 @@ pro.compo = function(msg, session, next) {
             callback(err, null);
           }
           else {
-            sid = sid;
             callback(null, sid);
           }
-        }
+        });
       }
       else {
         callback(null, null);
       }
     }, // end of sequenceId
     compoTrans: ['sequenceId', function(callback, result) {
-      console.log(result);
-      if (!!sid) {
+      if (!!result.sequenceId) {
         // transaction: delete fraction and add item
         mysqlPool.acquire(function(err, client) {
           if (typeId === gameInit.BAG.CARD.id) { // general (also means card)
             var fractionNum = gameInit.COMPO.CARD_NUM;
-            CardCompoTrans.exec(client, playerId, star, sid, fractionNum, function(err, res) {
+            CardCompoTrans.exec(client, playerId, star, result.sequenceId, fractionNum, prizeData.card_id, function(err, res) {
               if (!!err || !!res) {
                 mysqlPool.release(client);
               }
@@ -431,7 +432,7 @@ pro.compo = function(msg, session, next) {
           }
           else if (typeId === gameInit.BAG.EQUIP.id) { // equip
             var fractionNum = gameInit.COMPO.EQUIP_NUM;
-            EquipCompoTrans.exec(client, playerId, star, sid, fractionNum, function(err, res) {
+            EquipCompoTrans.exec(client, playerId, star, result.sequenceId, fractionNum, prizeData.equip_id, function(err, res) {
               if (!!err || !!res) {
                 mysqlPool.release(client);
               }
@@ -440,7 +441,7 @@ pro.compo = function(msg, session, next) {
           }
           else if (typeId === gameInit.BAG.PET.id) { // pet
             var fractionNum = gameInit.COMPO.PET_NUM;
-            PetCompoTrans.exec(client, playerId, star, sid, fractionNum, function(err, res) {
+            PetCompoTrans.exec(client, playerId, star, result.sequenceId, fractionNum, prizeData.pet_id, function(err, res) {
               if (!!err || !!res) {
                 mysqlPool.release(client);
               }
@@ -450,7 +451,7 @@ pro.compo = function(msg, session, next) {
         }); // end of mysqlPool.acquire
       }
       else {
-        callback({code: CODE.FACTORY.ERR_MATERIAL_NUM}, null);
+        callback({code: CODE.FAIL}, null);
       }
     }] // end of compoTrans
   }, function(err, res) {
@@ -465,7 +466,7 @@ pro.compo = function(msg, session, next) {
     }
     else {
       if (!!res) { // gets
-        next(null, {code: 200, data: {star: msg.star, num: fractionNum}}); 
+        next(null, {code: 200, data: {id: prizeData.card_id, num: prizeNum}}); 
       }
       else {
         next(null, {code: CODE.FAIL});
@@ -473,4 +474,3 @@ pro.compo = function(msg, session, next) {
     }
   });
 };
-*/

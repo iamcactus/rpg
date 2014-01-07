@@ -3,6 +3,12 @@
 
 var card      = require('../../config/data/card');
 var equip     = require('../../config/data/equip');
+
+var weapon    = require('../../config/data/weapon');
+var defender  = require('../../config/data/defender');
+var shoe      = require('../../config/data/shoe');
+var jewelry   = require('../../config/data/jewelry');
+
 var mission   = require('../../config/data/mission');
 var map       = require('../../config/data/map');
 var nature    = require('../../config/data/nature'); // hero's zuhe
@@ -178,6 +184,10 @@ module.exports = {
 	//role: new Data(role)
 	card:     new Data(card),
 	equip:    new Data(equip),
+	weapon:   new Data(weapon),
+	defender: new Data(defender),
+	shoe:     new Data(shoe),
+	jewelry:  new Data(jewelry),
 	mission:  new Data(mission),
 	map:      new Data(map),
 	nature:   new Data(nature),

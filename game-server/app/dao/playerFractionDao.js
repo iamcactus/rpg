@@ -17,7 +17,6 @@ playerFractionDao.getByTypeAndStar = function(mysqlc, playerId, typeId, star, cb
 	var args = [playerId, typeId, star];
 
 	mysqlc.query(selectSQL, args, function(err, res) {
-    console.log('in playerFractionDao.getByTypeAndStar');
 		if(err) {
 			utils.invokeCallback(cb, err, null);
 			return;
@@ -43,7 +42,6 @@ playerFractionDao.getByType = function(mysqlc, playerId, typeId, cb) {
 	var args = [playerId, typeId];
 
 	mysqlc.query(selectSQL, args, function(err, res) {
-    console.log('in playerFractionDao.getByType');
 		if(err) {
 			utils.invokeCallback(cb, err, null);
 			return;
@@ -68,7 +66,6 @@ playerFractionDao.getAll = function(mysqlc, playerId, cb) {
 	var args = [playerId];
 
 	mysqlc.query(selectSQL, args, function(err, res) {
-    console.log('in playerFractionDao.getAll');
 		if(err) {
 			utils.invokeCallback(cb, err, null);
 			return;
@@ -88,17 +85,13 @@ playerFractionDao.add = function(mysqlc, playerId, type, star, num, cb) {
     'insert into player_fraction (player_id, type, star, num, created_on, updated_on) values (?,?,?,?, ?,?)';
   var createdOn = Math.round(new Date().getTime()/1000); //unixtime
   var args = [playerId, type, star, num, createdOn, createdOn];
-  console.log(playerId, type, star, num, createdOn, createdOn);
 
   mysqlc.query(insertSQL, args, function(err, res) {
     if (err !== null) {
-      console.log(err);
       utils.invokeCallback(cb, err, null);
     }
     else {
       if (!!res && res.affectedRows > 0) {
-        console.log('in playerFractionDao.add');
-        console.log(res);
         utils.invokeCallback(cb, null, res);
       }
       else {
@@ -114,17 +107,13 @@ playerFractionDao.replace = function(mysqlc, playerId, type, star, num, cb) {
     'replace into player_fraction (player_id, type, star, num, created_on, updated_on) values (?,?,?,?, ?,?)';
   var updatedOn = Math.round(new Date().getTime()/1000); //unixtime
   var args = [playerId, type, star, num, updatedOn, updatedOn];
-  console.log(playerId, type, star, num, updatedOn, updatedOn);
 
   mysqlc.query(replaceSQL, args, function(err, res) {
     if (err !== null) {
-      console.log(err);
       utils.invokeCallback(cb, err, null);
     }
     else {
       if (!!res && res.affectedRows > 0) {
-        console.log('in playerFractionDao.add');
-        console.log(res);
         utils.invokeCallback(cb, null, true);
       }
       else {
@@ -137,7 +126,7 @@ playerFractionDao.replace = function(mysqlc, playerId, type, star, num, cb) {
 
 playerFractionDao.update = function(mysqlc, playerId, type, star, fractionNum, cb) {
   var updateSQL = 
-    'update player_fraction set num=num-?, updated_on=? where player_id=? and type=? and star =?';
+    'update player_fraction set num=num-?, updated_on=? where player_id=? and type=? and star=?';
   var updatedOn = Math.round(new Date().getTime()/1000); //unixtime
   var args = [fractionNum, updatedOn, playerId, type, star];
 
@@ -150,7 +139,7 @@ playerFractionDao.update = function(mysqlc, playerId, type, star, fractionNum, c
         utils.invokeCallback(cb, null, true);
       }
       else {
-        logger.error('add player_equip Failed!');
+        logger.error('update player_fraction Failed!');
         utils.invokeCallback(cb, null, false);
       }
     }
