@@ -40,9 +40,12 @@ playerEquipDao.get = function(mysqlc, playerId, isOnarm, cb) {
  * @param {function} cb Callback function.
  * @returns {Object} player's item data
  */
-playerEquipDao.getByEquipId = function(mysqlc, playerId, equipId, cb) {
-	var selectSQL = 'select * from player_equip where player_id=? and equip_id=?';
-	var args = [playerId, equipId];
+playerEquipDao.getByEquipId = function(mysqlc, playerId, serialId, cb) {
+	var selectSQL = 'select * from player_equip where player_id=? and id=?';
+	var args = [playerId, serialId];
+
+  console.log(selectSQL);
+  console.log(args);
 
 	mysqlc.query(selectSQL, args, function(err, res) {
 		if(err) {
@@ -50,6 +53,8 @@ playerEquipDao.getByEquipId = function(mysqlc, playerId, equipId, cb) {
 			return;
 		}
     else {
+      console.log('in playerEquipDao.getByEquipId');
+      console.log(res);
       if(!!res && res.length > 0) { //exists
         utils.invokeCallback(cb, null, res);
 		  } else {

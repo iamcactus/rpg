@@ -33,6 +33,9 @@ module.exports = {
   TRANSMISSION: {
     ERR_MATERIAL: 7101,
   },
+  STRENGTHEN: {
+    ERR_MATERIAL: 7101,
+  },
 
 	GATE: {
 		FA_NO_SERVER_AVAILABLE: 2001

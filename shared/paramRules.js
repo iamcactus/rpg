@@ -170,5 +170,20 @@ module.exports = {
         'error': 'transType must be names'
       }
     ]
+  },
+  equipStrengthen: {
+    'equipId': [
+      {
+        'rule': 'int',
+        'error': 'equipId must be an int'
+      }
+    ],
+    'targetLevel': [
+      {
+        'rule': 'between',
+        'args': [1, 200],
+        'error': 'targetLevel must be between 1-200'
+      }
+    ],
   }
 };

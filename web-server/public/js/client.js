@@ -2,10 +2,12 @@ var pomelo = window.pomelo;
 var username;
 var userId;
 var cardId;
+var equipId;
 var worldId;
 var sexType;
 var bagType;
 var star;
+var targetLevel;
 
 var transferId;
 var receiverId;
@@ -639,6 +641,48 @@ $(document).ready(function() {
           receiverId:receiverId,
           transType:transType,
           transNum:transNum,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
+	//deal with transmission button click.
+	$("#equipStrengthen").click(function() {
+		userId    = $("#userIdStr").attr("value");
+		playerId  = $("#playerIdStr").attr("value");
+		equipId   = $("#equipIdStr").attr("value");
+		targetLevel = $("#targetLevel").attr("value");
+
+    alert(userId);
+    alert(playerId);
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "strengthen.equipHandler.equipStrengthen";
+				pomelo.request(route, {
+          playerId:playerId,
+          equipId:equipId,
+          targetLevel:targetLevel,
           uid:userId,
           rid: rid
 				}, function(data) {
