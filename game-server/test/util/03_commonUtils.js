@@ -36,6 +36,17 @@ var obj = {
     });
   });
 
+var obj2 = {
+  "type": "super",
+  "id":   202
+};
+  describe('getInitID test', function() {
+    it('should get id', function() {
+      var res = commonUtils.getInitID(gameInit.TRANSMISSION, obj2.type);
+      res.should.equal(obj2.id);
+    });
+  });
+
   describe('masterDBW test', function() {
     it('should get master dbhandle', function() {
       var res = commonUtils.masterDBW();

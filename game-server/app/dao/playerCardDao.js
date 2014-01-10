@@ -34,9 +34,9 @@ playerCardDao.get = function(mysqlc, playerId, cb) {
  * @param {Array} ids id in player_card
  * @param {function} cb Callback function.
  */
-playerCardDao.getMulti = function(mysqlc, ids, cb) {
-	var selectSQL = 'select * from player_card where id in (?)';
-	var args = [ids];
+playerCardDao.getMulti = function(mysqlc, playerId, ids, cb) {
+	var selectSQL = 'select * from player_card where id in (?) and player_id=?';
+	var args = [ids, playerId];
 
 	mysqlc.query(selectSQL, args, function(err, res) {
 		if(err) {
@@ -71,6 +71,28 @@ playerCardDao.add = function(
       }
       else {
         logger.error('add player_card Failed!');
+        utils.invokeCallback(cb, null, false);
+      }
+    }
+  });
+};
+
+playerCardDao.update = function(mysqlc, id, exp, lv, cb) {
+  var updateSQL = 
+    'update player_card set exp=?, level=?, updated_on=? where id=?';
+  var updatedOn = Math.round(new Date().getTime()/1000); //unixtime
+  var args = [exp, lv, updatedOn, id];
+
+  mysqlc.query(updateSQL, args, function(err, res) {
+    if (err !== null) {
+      utils.invokeCallback(cb, err, null);
+    }
+    else {
+      if (!!res && res.affectedRows > 0) {
+        utils.invokeCallback(cb, null, true);
+      }
+      else {
+        logger.error('update player_card Failed!');
         utils.invokeCallback(cb, null, false);
       }
     }

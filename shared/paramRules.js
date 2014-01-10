@@ -56,8 +56,9 @@ module.exports = {
     ],
     'star': [
       {
-        'rule': 'number',
-        'error': 'star must be an int'
+        'rule': 'between',
+        'args': [1, 5],
+        'error': 'star must be between 1-5'
       }
     ],
     'type': [
@@ -76,8 +77,9 @@ module.exports = {
     ],
     'star': [
       {
-        'rule': 'number',
-        'error': 'star must be an int'
+        'rule': 'between',
+        'args': [1, 5],
+        'error': 'star must be between 1-5'
       }
     ],
     'type': [
@@ -124,7 +126,7 @@ module.exports = {
       {
         'rule': 'between',
         'args': [0, 1],
-        'error': 'sexType must be between 0, 1'
+        'error': 'sexType must be between 0-1'
       }
     ],
   },
@@ -134,6 +136,39 @@ module.exports = {
         'rule': 'required',
         'error': 'You must specify a token'
       },
+    ]
+  },
+  transmission: {
+    'playerId': [
+      {
+        'rule': 'number',
+        'error': 'playerId must be an int'
+      }
+    ],
+    'transferId': [
+      {
+        'rule': 'number',
+        'error': 'transferId must be an int'
+      }
+    ],
+    'receiverId': [
+      {
+        'rule': 'number',
+        'error': 'receiverId must be an int'
+      }
+    ],
+    'transNum': [
+      {
+        'rule': 'between',
+        'args': [1, 100],
+        'error': 'transNum must be between 1-100'
+      }
+    ],
+    'transType': [
+      {
+        'rule': 'alphaNumeric',
+        'error': 'transType must be names'
+      }
     ]
   }
 };

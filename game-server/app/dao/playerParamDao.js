@@ -46,12 +46,13 @@ playerParamDao.init = function(mysqlc, playerId, lead, cb) {
   var insertSQL = 
     'insert into player_param(player_id, max_power, max_energy, lead, power, energy) values (?,?,?, ?,?,?)';
   var updatedOn = Math.round(new Date().getTime()/1000); //unixtime
+  var LEVELONE = LEVELCONF["1"];
   var args = [playerId, 
-              LEVELCONF.ONE.POWER,
-              LEVELCONF.ONE.ENERGY,
+              LEVELONE.POWER,
+              LEVELONE.ENERGY,
               lead,
-              LEVELCONF.ONE.POWER,
-              LEVELCONF.ONE.ENERGY
+              LEVELONE.POWER,
+              LEVELONE.ENERGY
               ];
   console.log('playerParamDao.initPlayerParam:' +playerId + lead + updatedOn);
   mysqlc.query(insertSQL, args, function(err, res) {

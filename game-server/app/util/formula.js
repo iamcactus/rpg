@@ -15,6 +15,8 @@ var calcParam = require('../../../shared/forceConf');
 var cardConf = require('../../../shared/cardConf');
 var equipConf = require('../../../shared/equipConf');
 var gameInit  = require('../../../shared/gameInit');
+var generalExp= require('../../../shared/generalExp');
+var equipStrongConf = require('../../../shared/equipStrongConf');
 
 var _ = require('underscore');
 
@@ -448,3 +450,113 @@ formula.damage = function(atkerObj, atkeeObj, atkSkillObj) {
 
   return damage;
 };
+
+/*
+ * TRANSMISSION
+ * @param {Number} typeId transmission type 
+ * @param {Number} transNum number of pill used
+ * @param {Number} transferExp current exp of transfer
+ */
+formula.transmission = function(typeId, transNum, transferExp) {
+  var receiverExp = 0;  // exp be transmissed to receiver
+
+  var trans     = gameInit.TRANSMISSION;
+  var discount  = 0;
+  var basicExp  = 0;
+  if (typeId === trans.NORMAL.id) { 
+    discount = trans.NORMAL.DISCOUNT;
+    basicExp = trans.NORMAL.EXP;
+  }
+  else if (typeId === trans.SUPER.id) {
+    discount = trans.SUPER.DISCOUNT;
+    basicExp = trans.SUPER.EXP;
+  }
+
+  if (transferExp >= basicExp * transNum) {
+    receiverExp = transferExp * discount;
+  }
+  else {
+    // TODO: up security for cheat
+    var t = (transferExp > basicExp) ? basicExp : transferExp;
+    receiverExp = t * discount;
+  }
+
+  return Math.ceil(receiverExp);
+};
+
+// TODO: refactoring
+// expArray, sorted array like [0, 30, 62, 139, ...]
+// exp, value in the expArray
+var findLv = function(expArray, exp) {
+  var len = expArray.length;
+  for (var i=0; i<len; i++) {
+    if (exp < expArray[i+1] && exp > expArray[i]) {
+      return expArray[i];
+    }
+  }
+  return expArray[len-1]; // TODO: confirm:out of range
+}
+
+/*
+ * card level up calculation
+ * @param {Number} initExp current exp of the card
+ * @param {Number} addOnExp added exp to the card
+ * @param {Number} initLv current level of the card
+ * @param {Number} maxLv max level of the card depends on star and evolved count
+ * @returns {Number} newLv new level of the card, maybe same as initLv if no level up
+ */
+formula.cardLevelUp = function(initExp, addOnExp, initLv, maxLv) {
+  var exp = initExp + addOnExp;
+  var newLv = initLv;
+  var tempLv = 0;
+
+  if (initLv === maxLv) {
+    return newLv; // no more level up
+  }
+
+  if (!generalExp[initLv+1]) { // max level, no more level up
+    return newLv;
+  }
+
+  if (exp >= generalExp[initLv+1]) {
+    if (!!generalExp[initLv+2]) {
+      if (exp < generalExp[initLv+2]) {
+        tempLv = initLv + 1; // one level up
+        newLv = (tempLv > maxLv) ? maxLv: tempLv;
+      }
+      else {
+        // more then one level up
+        var expArray = _.values(generalExp);
+        var lineExp = findLv(expArray, exp);
+
+        tempLv = _.indexOf(expArray, lineExp, true) + 1;
+        newLv = (tempLv > maxLv) ? maxLv: tempLv;
+      }
+    }
+    else {
+      tempLv = initLv + 1; // one level up
+      newLv = (tempLv > maxLv) ? maxLv: tempLv;
+    }
+  }
+
+  return newLv;
+};
+
+/*
+ * equip level up calculation
+ * @param {Number} initLv current level of the equip
+ * @param {Number} targetLv target level of the equip
+ * @param {Number} star star of the equip
+ * @returns {Number} sivler how many silver cost
+ */
+formula.equipLvUpCost = function(initLv, targetLv, star) {
+  if (targetLv > gameInit.STRENGTHEN.EQUIP.MAXLV) {
+  // cheat
+    return -1;
+  }
+  var s = equipStrongConf.cost(initLv);
+  var initCost = s[star];
+  var t = equipStrongConf.cost(targetLv);
+  var targetCost = t[star];
+  return targetCost - initCost;
+}

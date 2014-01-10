@@ -1,9 +1,9 @@
-// test for playerParamDao.js
+// test for playerCardDao.js
 
 var async = require('async');
 var mysql = require('mysql');
 var util = require('util');
-var playerParamDao = require('../../../app/dao/playerParamDao');
+var playerCardDao = require('../../../app/dao/playerCardDao');
 
 var connection = mysql.createConnection(
   {
@@ -16,23 +16,18 @@ var connection = mysql.createConnection(
 );
 
 // pre set
-var uid   = 1014;
-var id    = uid;
-var lead  = 10;
-var silver  = 100;
-var exp     = 10;
+var uid = 10035;
+var id = uid;
+
+var exp = 10;
+var lv = 2;
 
 var worldId = 1001;
 var playerId = uid;
-var params1 = {
-  "exp":    exp,
-  "silver": silver
-};
-
-var params2 = {
-  "exp":    exp * 2,
-  "silver": silver * 3
-};
+var id1 = 10033;
+var id2 = 10034;
+var id3 = 10035;
+var ids = [id1, id2, id3];
 
 connection.connect();
 
@@ -44,19 +39,11 @@ connection.connect();
     }
  
     async.series([
-    /*
       function(callback) {
-        playerParamDao.update(connection, params1, playerId, callback);
+        playerCardDao.update(connection, id, exp, lv, callback);
       },
       function(callback) {
-        playerParamDao.update(connection, params2, playerId, callback);
-      },
-      */
-      function(callback) {
-        playerParamDao.init(connection, playerId, lead, callback);
-      },
-      function(callback) {
-        playerParamDao.get(connection, playerId, callback);
+        playerCardDao.getMulti(connection, playerId, ids, callback);
       }
     ],
     function(err, res) {
@@ -64,21 +51,19 @@ connection.connect();
       if (err) {
         q = 'ROLLBACK';
   	  	console.log('transaction query failed ' + err);
-        console.log(err);
       }
       else {
         q = 'COMMIT';
       }
       connection.query(q, function(err, res1) {
+        connection.end();
         if (err) {
+          console.log(err);
           console.log('---114---');
         }
         else {
-          console.log('---115---');
           console.log(res);
           console.log('---116---');
-          console.log(res1);
-          connection.end();
         }
       });
     });

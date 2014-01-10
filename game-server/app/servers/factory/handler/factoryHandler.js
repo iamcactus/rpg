@@ -193,7 +193,7 @@ pro.decompo = function(msg, session, next) {
   async.auto({
     hasMaterial: function(callback) {
       if (typeId === gameInit.BAG.CARD.id) {
-        playerCardDao.getMulti(mysqlPool_s, ids, function(err, res) {
+        playerCardDao.getMulti(mysqlPool_s, playerId, ids, function(err, res) {
           if (!!res && res.length === ids.length) {
             if (verifyMaterial(res, typeId, star)) {
               callback(null, true);

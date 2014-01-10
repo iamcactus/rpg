@@ -44,7 +44,7 @@ npcUnitAllData.get = function(mysqlc, playerId, cb) {
     playerCard: ['playerCardIds', function(callback, res) {
       //var ids = res.playerCardIds;
       console.log(ids);
-      playerCardDao.getMulti(mysqlc, ids, function(err, res) {
+      playerCardDao.getMulti(mysqlc, playerId, ids, function(err, res) {
         if (!!res && res.length > 0) {
           callback(err, res); // res cant be []
         }

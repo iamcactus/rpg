@@ -4,6 +4,7 @@ module.exports = {
 
 	FAIL: 500, 
   ERR_WRONG_PARAM: 501,
+  ERR_MATERIAL_NUM: 502,
 
   REGIST: {
     ERR_WRONG_PARAM: 4001,
@@ -28,6 +29,9 @@ module.exports = {
   FACTORY: {
     ERR_MATERIAL_NUM: 7001,
     ERR_MATERIAL_STAR: 7002,
+  },
+  TRANSMISSION: {
+    ERR_MATERIAL: 7101,
   },
 
 	GATE: {

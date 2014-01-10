@@ -49,5 +49,26 @@ module.exports = {
     CARD_NUM: 3,
     PET_NUM:  3,
     EQUIP_NUM:6
+  },
+  TRANSMISSION: {
+    NORMAL: {
+      "type":     "normal", // used by commonUtils.getInitID
+      "id":       201,
+      ITEMID:   16001,
+      DISCOUNT: 0.6,
+      EXP:      5033
+    },
+    SUPER: {
+      "type":     "super", // used by commonUtils.getInitID
+      "id":       202,
+      ITEMID:   16002,
+      DISCOUNT: 0.8,
+      EXP:      80525
+    }
+  },
+  STRENGTHEN: {
+    EQUIP: {
+      MAXLV: 200
+    }
   }
 };

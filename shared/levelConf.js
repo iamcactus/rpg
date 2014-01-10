@@ -1,5 +1,8 @@
+// conf for the player's level up, not the player_card
+// EXP is the exp line for  that level
+// EXP_A is the exp addon in each battle
 module.exports = {
-  ONE: {
+  1: {
     EXP:0,
     EXP_A:30,
     EXP_S:15,
@@ -7,7 +10,7 @@ module.exports = {
     ENERGY:10,
     LEAD:34
   },
-  TWO: {
+  2: {
     EXP:30,
     EXP_A:40,
     EXP_S:24,
@@ -15,7 +18,7 @@ module.exports = {
     ENERGY:10,
     LEAD:35
   },
-  THREE: {
+  3: {
     EXP:100,
     EXP_A:43,
     EXP_S:33,
@@ -23,7 +26,7 @@ module.exports = {
     ENERGY:10,
     LEAD:38
   },
-  FOUR: {
+  4: {
     EXP:220,
     EXP_A:46,
     EXP_S:42,
@@ -31,7 +34,7 @@ module.exports = {
     ENERGY:10,
     LEAD:40
   },
-  FIVE: {
+  5: {
     EXP:390,
     EXP_A:49,
     EXP_S:51,
@@ -39,7 +42,7 @@ module.exports = {
     ENERGY:10,
     LEAD:42
   },
-  SIX: {
+  6: {
     EXP:610,
     EXP_A:52,
     EXP_S:60,

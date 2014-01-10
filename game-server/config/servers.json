@@ -16,6 +16,9 @@
     "factory": [
       {"id":"factory-server-1", "host":"127.0.0.1", "port":3760}
     ],
+    "strengthen": [
+      {"id":"strengthen-server-1", "host":"127.0.0.1", "port":3780}
+    ],
     "arena": [
       {"id":"arena-server-1", "host":"127.0.0.1", "port":3770}
     ],
@@ -37,6 +40,9 @@
     ],
     "factory": [
       {"id":"factory-server-1", "host":"127.0.0.1", "port":3760}
+    ],
+    "strengthen": [
+      {"id":"strengthen-server-1", "host":"127.0.0.1", "port":3780}
     ],
     "arena": [
       {"id":"arena-server-1", "host":"127.0.0.1", "port":3770}

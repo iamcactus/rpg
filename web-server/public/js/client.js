@@ -6,6 +6,12 @@ var worldId;
 var sexType;
 var bagType;
 var star;
+
+var transferId;
+var receiverId;
+var transType;
+var transNum;
+
 var token;
 var users;
 var rid;
@@ -587,6 +593,52 @@ $(document).ready(function() {
           playerId:playerId,
           bagType:bagType,
           star: star,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
+	//deal with transmission button click.
+	$("#transmission ").click(function() {
+		userId    = $("#userIdtm").attr("value");
+		playerId  = $("#playerIdtm").attr("value");
+		transferId= $("#transferId").attr("value");
+		receiverId= $("#receiverId").attr("value");
+		transNum  = $("#transNum").attr("value");
+		transType = $("#transType").attr("value");
+
+    alert(userId);
+    alert(playerId);
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "strengthen.strengthenHandler.transmission";
+				pomelo.request(route, {
+          playerId:playerId,
+          transferId:transferId,
+          receiverId:receiverId,
+          transType:transType,
+          transNum:transNum,
           uid:userId,
           rid: rid
 				}, function(data) {

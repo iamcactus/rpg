@@ -12,5 +12,6 @@ CREATE TABLE player_equip (
   created_on  int(10) unsigned NOT NULL,
   updated_on  int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
-  KEY on_player_id_and_is_onarm (player_id, is_onarm)
+  KEY on_player_id_and_is_onarm (player_id, is_onarm),
+  KEY on_player_id_and_item_id (player_id, item_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

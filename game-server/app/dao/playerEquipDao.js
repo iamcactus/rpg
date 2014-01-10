@@ -34,6 +34,32 @@ playerEquipDao.get = function(mysqlc, playerId, isOnarm, cb) {
 };
 
 /**
+ * Get an user's equip by playerId and equipId
+ * @param {Number} playerId.
+ * @param {Number} itemId item_id in game_master.item_data
+ * @param {function} cb Callback function.
+ * @returns {Object} player's item data
+ */
+playerEquipDao.getByEquipId = function(mysqlc, playerId, equipId, cb) {
+	var selectSQL = 'select * from player_equip where player_id=? and equip_id=?';
+	var args = [playerId, equipId];
+
+	mysqlc.query(selectSQL, args, function(err, res) {
+		if(err) {
+			utils.invokeCallback(cb, err, null);
+			return;
+		}
+    else {
+      if(!!res && res.length > 0) { //exists
+        utils.invokeCallback(cb, null, res);
+		  } else {
+			  utils.invokeCallback(cb, null, []);
+		  }
+    }
+	});
+};
+
+/**
  * Get an user's all equips by playerId
  * @param {String} mysqlc mysql client for Master DB or Slave DB
  * @param {Array} ids id in player_equip

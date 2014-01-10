@@ -1,9 +1,9 @@
-// test for playerParamDao.js
+// test for playerItemDao.js
 
 var async = require('async');
 var mysql = require('mysql');
 var util = require('util');
-var playerParamDao = require('../../../app/dao/playerParamDao');
+var playerItemDao = require('../../../app/dao/playerItemDao');
 
 var connection = mysql.createConnection(
   {
@@ -16,23 +16,11 @@ var connection = mysql.createConnection(
 );
 
 // pre set
-var uid   = 1014;
-var id    = uid;
-var lead  = 10;
-var silver  = 100;
-var exp     = 10;
-
+var uid = 10035;
 var worldId = 1001;
 var playerId = uid;
-var params1 = {
-  "exp":    exp,
-  "silver": silver
-};
-
-var params2 = {
-  "exp":    exp * 2,
-  "silver": silver * 3
-};
+var id = 4;
+var num = 5;
 
 connection.connect();
 
@@ -44,41 +32,31 @@ connection.connect();
     }
  
     async.series([
-    /*
       function(callback) {
-        playerParamDao.update(connection, params1, playerId, callback);
+        playerItemDao.update(connection, id, num, callback);
       },
       function(callback) {
-        playerParamDao.update(connection, params2, playerId, callback);
-      },
-      */
-      function(callback) {
-        playerParamDao.init(connection, playerId, lead, callback);
-      },
-      function(callback) {
-        playerParamDao.get(connection, playerId, callback);
+        playerItemDao.get(connection, playerId, callback);
       }
     ],
     function(err, res) {
       var q; // query
       if (err) {
         q = 'ROLLBACK';
-  	  	console.log('transaction query failed ' + err);
-        console.log(err);
+  	  	console.log('transaction query failed ' + err.message);
       }
       else {
         q = 'COMMIT';
       }
       connection.query(q, function(err, res1) {
+        connection.end();
         if (err) {
+          console.log(err);
           console.log('---114---');
         }
         else {
-          console.log('---115---');
           console.log(res);
           console.log('---116---');
-          console.log(res1);
-          connection.end();
         }
       });
     });
