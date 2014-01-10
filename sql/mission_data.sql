@@ -5,6 +5,8 @@ CREATE TABLE mission_data (
   id          int(10) unsigned NOT NULL AUTO_INCREMENT, # serial id
   map_id      int(10) unsigned NOT NULL, # 章节ID
   mission_id  int(10) unsigned NOT NULL, 
+  mission_lv  int(10) unsigned NOT NULL, # npc lv in the misson
+  pet_star    tinyint(3) unsigned DEFAULT NULL, # star of pet in the mission
   is_talk     int(10) unsigned NOT NULL,
   pic         int(10) unsigned NOT NULL,
   power       int(10) unsigned NOT NULL,
