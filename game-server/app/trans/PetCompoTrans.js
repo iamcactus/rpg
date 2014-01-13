@@ -1,41 +1,35 @@
 var logger = require('pomelo-logger').getLogger(__filename);
 var utils = require('../util/utils');
-var worldPlayerDao = require('../dao/worldPlayerDao');
-var playerEquipDao = require('../dao/playerEquipDao');
+var worldPlayerDao  = require('../dao/worldPlayerDao');
+var playerEquipDao  = require('../dao/playerEquipDao');
 var playerFractionDao = require('../dao/playerFractionDao');
-var playerParamDao = require('../dao/playerParamDao');
-var playerItemDao = require('../dao/playerItemDao');
-var playerCardDao = require('../dao/playerCardDao');
+var playerParamDao  = require('../dao/playerParamDao');
+var playerItemDao   = require('../dao/playerItemDao');
+var playerPetDao    = require('../dao/playerPetDao');
 
 var async = require('async');
-var cardConf = require('../../../shared/cardConf');
+//var petConf = require('../../../shared/petConf');
 var gameInit = require('../../../shared/gameInit');
 var commonUtils = require('../../../shared/util/commonUtils');
 var dataApi = require('../util/dataApi');
 
-var CardCompoTrans = module.exports;
+var PetCompoTrans = module.exports;
 
 /**
  * Compose fraction into hero
  * @param {Object} mysqlc mysql client reference
  * @param {Number} playerId
- * @param {Number} star fraction star, also card star
- * @param {Number} playerCardId sequence id for id in player_card
+ * @param {Number} star fraction star, also pet star
+ * @param {Number} playerPetId sequence id for id in player_pet
  * @param {Number} num how many fractions used for one compo
- * @param {Number} cardId card_id in card_data
+ * @param {Number} petId pet_id in pet_data
  * @returns {Boolean} true or false
  */
-CardCompoTrans.exec = function(mysqlc, playerId, star, playerCardId, num, cardId, cb) {
-  var type = gameInit.BAG.CARD.type; // type of fraction, here is "general"
+PetCompoTrans.exec = function(mysqlc, playerId, star, playerPetId, num, petId, cb) {
+  var type = gameInit.BAG.PET.type; // type of fraction, here is "pet"
   var typeId = commonUtils.getInitID(gameInit.BAG, type);
 
   star = Number(star);
-  // compose fraction will get star level up one lv
-  var alpha = cardConf.getAlpha(star+1);
-
-  var maxLv = alpha.INITIAL_LV;
-  var exp = 0;
-  var lv  = 1;
 
   mysqlc.query('BEGIN', function(err, rows) { // start TRANSACTION
     if (err) {
@@ -47,8 +41,8 @@ CardCompoTrans.exec = function(mysqlc, playerId, star, playerCardId, num, cardId
       deleteFraction: function(callback) {
         playerFractionDao.update(mysqlc, playerId, typeId, star, num, callback);
       },
-      setPlayerCardId: function(callback) {
-        playerCardDao.add(mysqlc, playerCardId, playerId, cardId, exp, lv, maxLv, callback);
+      setPlayerPetId: function(callback) {
+        playerPetDao.add(mysqlc, playerPetId, playerId, petId, callback);
       }
     }, function(err, res) {
       var q; // query cmd
@@ -66,12 +60,12 @@ CardCompoTrans.exec = function(mysqlc, playerId, star, playerCardId, num, cardId
         }
         else {
           if (err) {
-            console.log('[CardCompo] transaction query failed ');
+            console.log('[PetCompo] transaction query failed ');
             utils.invokeCallback(cb, err, null);
             return;
           }
           else {
-            console.log('[CardCompo] transaction query finished');
+            console.log('[PetCompo] transaction query finished');
             //mysqlc.transRelease(); // TODO: test
             utils.invokeCallback(cb, null, res);
             return;

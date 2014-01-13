@@ -20,7 +20,9 @@ CardDecompoTrans.exec = function(mysqlc, params, playerId, star, num, cb) {
   console.log(params);
   var playerCardId; // serial id in player_card
   var cardId;       // card_id in card_data
-  var typeId = commonUtils.getInitID(gameInit.BAG, "general"); 
+
+  var type = gameInit.BAG.CARD.type; // type of fraction, here is "general"
+  var typeId = commonUtils.getInitID(gameInit.BAG, type);
 
   var ids = [];
   for (var i in params) {
@@ -35,39 +37,6 @@ CardDecompoTrans.exec = function(mysqlc, params, playerId, star, num, cb) {
       return;
     }
     async.auto({
-    /*
-      // generate a new playerCardId 
-      newPlayerCardId: function(callback) {
-        seqPlayerCard.getSequenceID(mysqlc_master, function(err, id1) {
-          if (err) {
-          	logger.error('[register] fail to get playerCardId for ' + err.stack);
-        	  next(null, {code: CODE.FAIL, error:err});
-        		return;
-          }
-          else {
-            playerCardId = id1;
-            console.log(id1 + ' is generated as newPlayerCardId');
-            callback(null, id1);
-          }
-        });
-      },
-      newCard: function(callback) {
-        // TODO: generate card function
-        cardId = 1229;
-        callback(null, cardId);
-      },
-      setPlayerCardId: function(callback) {
-        var cardData = dataApi.card.findBy('card_id', cardId);
-        var alpha = cardConf.getAlpha(cardData.star);
-        playerCardDao.add(mysqlc, playerCardId, playerId, cardId, 0, 1, alpha.INITIAL_LV, callback);
-      },
-    */
-    /*
-      // get fraction
-      getFraction: function(callbac) {
-        playerFractionDao.getByType(mysqlc, playerId, typeId, callback);
-      },
-      */
       // set fraction
       addFraction: function(callback) {
         playerFractionDao.replace(mysqlc, playerId, typeId, star, num, callback);

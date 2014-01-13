@@ -5,36 +5,33 @@ var playerEquipDao = require('../dao/playerEquipDao');
 var playerFractionDao = require('../dao/playerFractionDao');
 var playerParamDao = require('../dao/playerParamDao');
 var playerItemDao = require('../dao/playerItemDao');
-var playerCardDao = require('../dao/playerCardDao');
+var playerEquipDao = require('../dao/playerEquipDao');
 
 var async = require('async');
-var cardConf = require('../../../shared/cardConf');
+var equipConf = require('../../../shared/equipConf');
 var gameInit = require('../../../shared/gameInit');
 var commonUtils = require('../../../shared/util/commonUtils');
 var dataApi = require('../util/dataApi');
 
-var CardCompoTrans = module.exports;
+var EquipCompoTrans = module.exports;
 
 /**
  * Compose fraction into hero
  * @param {Object} mysqlc mysql client reference
  * @param {Number} playerId
- * @param {Number} star fraction star, also card star
- * @param {Number} playerCardId sequence id for id in player_card
+ * @param {Number} star fraction star, also equip star
+ * @param {Number} playerEquipId sequence id for id in player_equip
  * @param {Number} num how many fractions used for one compo
- * @param {Number} cardId card_id in card_data
+ * @param {Number} equipId equip_id in equip_data
  * @returns {Boolean} true or false
  */
-CardCompoTrans.exec = function(mysqlc, playerId, star, playerCardId, num, cardId, cb) {
-  var type = gameInit.BAG.CARD.type; // type of fraction, here is "general"
+EquipCompoTrans.exec = function(mysqlc, playerId, star, playerEquipId, num, equipId, cb) {
+  console.log('in EquipCompoTrans');
+
+  var type = gameInit.BAG.EQUIP.type; // type of fraction, here is "equip"
   var typeId = commonUtils.getInitID(gameInit.BAG, type);
 
   star = Number(star);
-  // compose fraction will get star level up one lv
-  var alpha = cardConf.getAlpha(star+1);
-
-  var maxLv = alpha.INITIAL_LV;
-  var exp = 0;
   var lv  = 1;
 
   mysqlc.query('BEGIN', function(err, rows) { // start TRANSACTION
@@ -47,8 +44,8 @@ CardCompoTrans.exec = function(mysqlc, playerId, star, playerCardId, num, cardId
       deleteFraction: function(callback) {
         playerFractionDao.update(mysqlc, playerId, typeId, star, num, callback);
       },
-      setPlayerCardId: function(callback) {
-        playerCardDao.add(mysqlc, playerCardId, playerId, cardId, exp, lv, maxLv, callback);
+      setPlayerEquipId: function(callback) {
+        playerEquipDao.add(mysqlc, playerEquipId, playerId, equipId, lv, callback);
       }
     }, function(err, res) {
       var q; // query cmd
@@ -66,12 +63,12 @@ CardCompoTrans.exec = function(mysqlc, playerId, star, playerCardId, num, cardId
         }
         else {
           if (err) {
-            console.log('[CardCompo] transaction query failed ');
+            console.log('[EquipCompo] transaction query failed ');
             utils.invokeCallback(cb, err, null);
             return;
           }
           else {
-            console.log('[CardCompo] transaction query finished');
+            console.log('[EquipCompo] transaction query finished');
             //mysqlc.transRelease(); // TODO: test
             utils.invokeCallback(cb, null, res);
             return;

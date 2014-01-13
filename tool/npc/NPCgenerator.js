@@ -340,14 +340,18 @@ var makeUnit = function(mysqlc, unit, playerId, cb) {
 // pet: Array of player_pet
 var makePet = function(mysqlc, pet, playerId, cb) {
   async.map(pet, function(item, callback) {
-    var id    = item.id; // current position in the unit
+    var petId = item.id; // current position in the unit
     var level = item.level; 
+    var id    = playerId; // id in player_pet
 
     //console.log("id : " + id);
     async.auto({
       pp: function(callback) {
-        playerPetDao.add(mysqlc, playerId, playerId, id, 1, cb); // 1: isOnarm
-      }
+        playerPetDao.add(mysqlc, id, playerId, petId, cb);
+      },
+      arm: ['pp', function(callback) {
+        playerPetDao.arm(mysqlc, id, cb);
+      }]
     }, function(err, res) {
       if (err) {
         //console.log('unitMeridianDao.init failed' + err);

@@ -20,9 +20,14 @@ var playerEquipDao    = require('../../../dao/playerEquipDao');
 var playerPetDao      = require('../../../dao/playerPetDao');
 var playerFractionDao = require('../../../dao/playerFractionDao');
 var BagSellTrans = require('../../../trans/BagSellTrans');
-var CardDecompoTrans  = require('../../../trans/CardDecompoTrans');
 
-var CardCompoTrans  = require('../../../trans/CardCompoTrans');
+// transaction modules
+var CardDecompoTrans  = require('../../../trans/CardDecompoTrans');
+var EquipDecompoTrans = require('../../../trans/EquipDecompoTrans');
+var PetDecompoTrans   = require('../../../trans/PetDecompoTrans');
+var CardCompoTrans    = require('../../../trans/CardCompoTrans');
+var EquipCompoTrans   = require('../../../trans/EquipCompoTrans');
+var PetCompoTrans     = require('../../../trans/PetCompoTrans');
 
 var gameInit = require('../../../../../shared/gameInit');
 var CODE = require('../../../../../shared/code');
@@ -103,7 +108,7 @@ var verifyMaterial = function(mArray, typeId, star) {
     for (var i=0; i<aLength; i++) {
       var confData = dataApi.card.findBy('card_id', mArray[i].card_id);
       if (confData.star != star) {
-        console.log('card star is wrond');
+        console.log('card star is wrong');
         return false;
       }
     }
@@ -115,7 +120,7 @@ var verifyMaterial = function(mArray, typeId, star) {
     for (var i=0; i<aLength; i++) {
       var confData = dataApi.equip.findBy('equip_id', mArray[i].equip_id);
       if (confData.star !== star) {
-        console.log('equip star is wrond');
+        console.log('equip star is wrong');
         return false;
       }
     }
@@ -125,9 +130,9 @@ var verifyMaterial = function(mArray, typeId, star) {
       return false;
     }
     for (var i=0; i<aLength; i++) {
-      var confData = dataApi.card.findBy('pet_id', mArray[i].pet_id);
+      var confData = dataApi.pet.findBy('pet_id', mArray[i].pet_id);
       if (confData.star !== star) {
-        console.log('pet star is wrond');
+        console.log('pet star is wrong');
         return false;
       }
     }
@@ -160,7 +165,7 @@ pro.decompo = function(msg, session, next) {
   var worldId = 1001; // just for debug, worldId shoule be got from session
   var bagType = msg.bagType; // use local variabal has better performance
   var materialData = msg.data;
-  var star    = msg.star;
+  var star    = Number(msg.star);
 
   var fractionNum = 1; // fraction number
 
@@ -338,7 +343,9 @@ pro.compo = function(msg, session, next) {
 	var playerId = msg.playerId; // just for debug, playerId should be got from session
   var worldId = 1001; // just for debug, worldId shoule be got from session
   var bagType = msg.bagType; // use local variabal has better performance
-  var star    = msg.star;
+  var fractionStar    = Number(msg.star); // the star of fraction
+  var targetStar      = fractionStar + 1;
+
   var sid;  // sequence id for item from fraction 
   var prizeData; // conf data for composed item
   var prizeNum = 1; // by default, compose fractions into 1 item;
@@ -353,13 +360,13 @@ pro.compo = function(msg, session, next) {
   var dataArray;
   if (typeId === gameInit.BAG.CARD.id) {
     //0: only for resorved
-    dataArray = drawPrize.hero(0, star, prizeNum);
+    dataArray = drawPrize.hero(0, targetStar, prizeNum);
   }
   else if (typeId === gameInit.BAG.EQUIP.id) {
-    dataArray = drawPrize.equip(0, star, prizeNum);
+    dataArray = drawPrize.equip(0, targetStar, prizeNum);
   }
   else if (typeId === gameInit.BAG.PET.id) {
-    dataArray = drawPrize.pet(0, star, prizeNum);
+    dataArray = drawPrize.pet(0, targetStar, prizeNum);
   }
   if (!!dataArray && dataArray.length > 0) {
     prizeData = dataArray[0]; // only 1 prize
@@ -423,7 +430,7 @@ pro.compo = function(msg, session, next) {
         mysqlPool.acquire(function(err, client) {
           if (typeId === gameInit.BAG.CARD.id) { // general (also means card)
             var fractionNum = gameInit.COMPO.CARD_NUM;
-            CardCompoTrans.exec(client, playerId, star, result.sequenceId, fractionNum, prizeData.card_id, function(err, res) {
+            CardCompoTrans.exec(client, playerId, fractionStar, result.sequenceId, fractionNum, prizeData.card_id, function(err, res) {
               if (!!err || !!res) {
                 mysqlPool.release(client);
               }
@@ -432,7 +439,7 @@ pro.compo = function(msg, session, next) {
           }
           else if (typeId === gameInit.BAG.EQUIP.id) { // equip
             var fractionNum = gameInit.COMPO.EQUIP_NUM;
-            EquipCompoTrans.exec(client, playerId, star, result.sequenceId, fractionNum, prizeData.equip_id, function(err, res) {
+            EquipCompoTrans.exec(client, playerId, fractionStar, result.sequenceId, fractionNum, prizeData.equip_id, function(err, res) {
               if (!!err || !!res) {
                 mysqlPool.release(client);
               }
@@ -441,7 +448,7 @@ pro.compo = function(msg, session, next) {
           }
           else if (typeId === gameInit.BAG.PET.id) { // pet
             var fractionNum = gameInit.COMPO.PET_NUM;
-            PetCompoTrans.exec(client, playerId, star, result.sequenceId, fractionNum, prizeData.pet_id, function(err, res) {
+            PetCompoTrans.exec(client, playerId, fractionStar, result.sequenceId, fractionNum, prizeData.pet_id, function(err, res) {
               if (!!err || !!res) {
                 mysqlPool.release(client);
               }

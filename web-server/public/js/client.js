@@ -615,6 +615,226 @@ $(document).ready(function() {
 		});
 	});
 
+	//deal with decompo button click.
+	$("#decompoPet").click(function() {
+		userId    = $("#userIdDecompoPet").attr("value");
+		playerId  = $("#playerIdDecompoPet").attr("value");
+		bagType   = $("#bagTypeDecompoPet").attr("value");
+		star      = $("#starDecompoPet").attr("value");
+		itemSID1  = $("#PetSIDDecompo1").attr("value");
+		itemNum1  = $("#PetNumDecompo1").attr("value");
+		itemSID2  = $("#PetSIDDecompo2").attr("value");
+		itemNum2  = $("#PetNumDecompo2").attr("value");
+		itemSID3  = $("#PetSIDDecompo3").attr("value");
+		itemNum3  = $("#PetNumDecompo3").attr("value");
+
+    alert(userId);
+    alert(playerId);
+    alert(itemSID1);
+    alert(itemNum1);
+    alert(itemSID2);
+    alert(itemNum2);
+    alert(itemSID3);
+    alert(itemNum3);
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "factory.factoryHandler.decompo";
+				pomelo.request(route, {
+          playerId:playerId,
+          bagType:bagType,
+          data: [
+            {"id": itemSID1, "num":itemNum1},
+            {"id": itemSID2, "num":itemNum2},
+            {"id": itemSID3, "num":itemNum3},
+          ],
+          star: star,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
+	//deal with compo button click.
+	$("#compoPet").click(function() {
+		userId    = $("#userIdCompoPet").attr("value");
+		playerId  = $("#playerIdCompoPet").attr("value");
+		bagType   = $("#bagTypeCompoPet").attr("value");
+		star      = $("#starCompoPet").attr("value");
+
+    alert(userId);
+    alert(playerId);
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "factory.factoryHandler.compo";
+				pomelo.request(route, {
+          playerId:playerId,
+          bagType:bagType,
+          star: star,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
+	//deal with decompo button click.
+	$("#decompoEquip").click(function() {
+		userId    = $("#userIdDecompoEquip").attr("value");
+		playerId  = $("#playerIdDecompoEquip").attr("value");
+		bagType   = $("#bagTypeDecompoEquip").attr("value");
+		star      = $("#starDecompoEquip").attr("value");
+		itemSID1  = $("#EquipSIDDecompo1").attr("value");
+		itemNum1  = $("#EquipNumDecompo1").attr("value");
+		itemSID2  = $("#EquipSIDDecompo2").attr("value");
+		itemNum2  = $("#EquipNumDecompo2").attr("value");
+		itemSID3  = $("#EquipSIDDecompo3").attr("value");
+		itemNum3  = $("#EquipNumDecompo3").attr("value");
+		itemSID4  = $("#EquipSIDDecompo4").attr("value");
+		itemNum4  = $("#EquipNumDecompo4").attr("value");
+		itemSID5  = $("#EquipSIDDecompo5").attr("value");
+		itemNum5  = $("#EquipNumDecompo5").attr("value");
+		itemSID6  = $("#EquipSIDDecompo6").attr("value");
+		itemNum6  = $("#EquipNumDecompo6").attr("value");
+
+
+    alert(userId);
+    alert(playerId);
+    alert(itemSID1);
+    alert(itemNum1);
+    alert(itemSID2);
+    alert(itemNum2);
+    alert(itemSID3);
+    alert(itemNum3);
+    alert(itemSID4);
+    alert(itemNum4);
+    alert(itemSID5);
+    alert(itemNum5);
+    alert(itemSID6);
+    alert(itemNum6);
+
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "factory.factoryHandler.decompo";
+				pomelo.request(route, {
+          playerId:playerId,
+          bagType:bagType,
+          data: [
+            {"id": itemSID1, "num":itemNum1},
+            {"id": itemSID2, "num":itemNum2},
+            {"id": itemSID3, "num":itemNum3},
+            {"id": itemSID4, "num":itemNum4},
+            {"id": itemSID5, "num":itemNum5},
+            {"id": itemSID6, "num":itemNum6},
+          ],
+          star: star,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
+	//deal with compo button click.
+	$("#compoEquip").click(function() {
+		userId    = $("#userIdCompoEquip").attr("value");
+		playerId  = $("#playerIdCompoEquip").attr("value");
+		bagType   = $("#bagTypeCompoEquip").attr("value");
+		star      = $("#starCompoEquip").attr("value");
+
+    alert(userId);
+    alert(playerId);
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "factory.factoryHandler.compo";
+				pomelo.request(route, {
+          playerId:playerId,
+          bagType:bagType,
+          star: star,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
+
 	//deal with transmission button click.
 	$("#transmission ").click(function() {
 		userId    = $("#userIdtm").attr("value");

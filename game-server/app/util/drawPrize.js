@@ -28,9 +28,6 @@ var _ = require('underscore');
  * @returns {object} array of card data
  */ 
 var cardPrize = function(type, star, num) {
-  console.log(type);
-  console.log(star);
-  console.log(num);
   var result = [];
   var cardArray = dataApi.card.findMultiBy('star', Number(star));
   
@@ -42,7 +39,6 @@ var cardPrize = function(type, star, num) {
       result.push(cardArray[idx]);
     }
   }
-  console.log(result);
   return result;
 };
 
@@ -54,6 +50,7 @@ drawPrize.hero = function(type, star, num) {
 var equipPrize = function(type, star, num) {
   var result = [];
   var equipArray;
+
   if (type == 0) {
     equipArray = dataApi.equip.findMultiBy('star', Number(star));
   }
@@ -103,9 +100,6 @@ drawPrize.equip = function(type, star, num) {
 };
 
 var petPrize = function(type, star, num) {
-  console.log(type);
-  console.log(star);
-  console.log(num);
   var result = [];
   var petArray = dataApi.pet.findMultiBy('star', Number(star));
   
