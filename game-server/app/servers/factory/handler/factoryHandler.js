@@ -264,7 +264,7 @@ pro.decompo = function(msg, session, next) {
         if (!!results.getFraction) {
           var t = results.getFraction;
           if (t.length > 0) {
-            fractionNum = t[0].num + 1;
+            fractionNum += t[0].num; // number after decompo
           }
         }
         // transaction: delete item and add fraction
@@ -310,8 +310,15 @@ pro.decompo = function(msg, session, next) {
       next(null, {code: code});
     }
     else {
-      if (!!res) { // gets
-        next(null, {code: 200, data: {star: msg.star, num: fractionNum}}); 
+      if (!!res && !!res.decompoTrans) {
+        playerFractionDao.getByType(mysqlPool_s, playerId, typeId, function(err, res) {
+          if (!!err || !res) {
+            next(null, {code: 200}); // cant get fraction, should not be here
+          }
+          else {
+            next(null, {code: 200, data: res});
+          }
+        });
       }
       else {
         next(null, {code: CODE.FAIL});
@@ -472,7 +479,7 @@ pro.compo = function(msg, session, next) {
       next(null, {code: code});
     }
     else {
-      if (!!res) { // gets
+      if (!!res && !!res.compoTrans) {
         next(null, {code: 200, data: {id: prizeData.card_id, num: prizeNum}}); 
       }
       else {

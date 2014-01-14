@@ -41,7 +41,7 @@ PetCompoTrans.exec = function(mysqlc, playerId, star, playerPetId, num, petId, c
       deleteFraction: function(callback) {
         playerFractionDao.update(mysqlc, playerId, typeId, star, num, callback);
       },
-      setPlayerPetId: function(callback) {
+      setPlayerPet: function(callback) {
         playerPetDao.add(mysqlc, playerPetId, playerId, petId, callback);
       }
     }, function(err, res) {
@@ -66,9 +66,12 @@ PetCompoTrans.exec = function(mysqlc, playerId, star, playerPetId, num, petId, c
           }
           else {
             console.log('[PetCompo] transaction query finished');
-            //mysqlc.transRelease(); // TODO: test
-            utils.invokeCallback(cb, null, res);
-            return;
+            if (!res.deleteFraction || !res.setPlayerPet) {
+              utils.invokeCallback(cb, null, false);
+            }
+            else {
+              utils.invokeCallback(cb, null, true);
+            }
           }
         }
       });

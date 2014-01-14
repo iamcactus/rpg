@@ -44,7 +44,7 @@ EquipCompoTrans.exec = function(mysqlc, playerId, star, playerEquipId, num, equi
       deleteFraction: function(callback) {
         playerFractionDao.update(mysqlc, playerId, typeId, star, num, callback);
       },
-      setPlayerEquipId: function(callback) {
+      setPlayerEquip: function(callback) {
         playerEquipDao.add(mysqlc, playerEquipId, playerId, equipId, lv, callback);
       }
     }, function(err, res) {
@@ -70,8 +70,12 @@ EquipCompoTrans.exec = function(mysqlc, playerId, star, playerEquipId, num, equi
           else {
             console.log('[EquipCompo] transaction query finished');
             //mysqlc.transRelease(); // TODO: test
-            utils.invokeCallback(cb, null, res);
-            return;
+            if (!res.deleteFraction || !res.setPlayerEquip) {
+              utils.invokeCallback(cb, null, false);
+            }
+            else {
+              utils.invokeCallback(cb, null, true);
+            }
           }
         }
       });

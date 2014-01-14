@@ -47,7 +47,7 @@ CardCompoTrans.exec = function(mysqlc, playerId, star, playerCardId, num, cardId
       deleteFraction: function(callback) {
         playerFractionDao.update(mysqlc, playerId, typeId, star, num, callback);
       },
-      setPlayerCardId: function(callback) {
+      setPlayerCard: function(callback) {
         playerCardDao.add(mysqlc, playerCardId, playerId, cardId, exp, lv, maxLv, callback);
       }
     }, function(err, res) {
@@ -73,8 +73,12 @@ CardCompoTrans.exec = function(mysqlc, playerId, star, playerCardId, num, cardId
           else {
             console.log('[CardCompo] transaction query finished');
             //mysqlc.transRelease(); // TODO: test
-            utils.invokeCallback(cb, null, res);
-            return;
+            if (!res.deleteFraction || !res.setPlayerCard) {
+              utils.invokeCallback(cb, null, false);
+            }
+            else {
+              utils.invokeCallback(cb, null, true);
+            }
           }
         }
       });

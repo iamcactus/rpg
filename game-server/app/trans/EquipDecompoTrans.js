@@ -72,9 +72,12 @@ EquipDecompoTrans.exec = function(mysqlc, params, playerId, star, num, cb) {
           else {
             console.log('[EquipDecompo] transaction query finished');
             console.log(res);
-            //mysqlc.transRelease(); // TODO: test
-            utils.invokeCallback(cb, null, res);
-            return;
+            if (!res.addFraction || !res.deleteItem) {
+              utils.invokeCallback(cb, null, false);
+            }
+            else {
+              utils.invokeCallback(cb, null, true);
+            }
           }
         }
       });
