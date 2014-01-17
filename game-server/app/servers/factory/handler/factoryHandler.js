@@ -1,3 +1,11 @@
+/*
+ * compose or decompose for card, equip, pet
+ * 
+ * return 
+ * 2013-2014
+ * @iamcactus
+ */
+
 /**
  * Module dependencies
  */

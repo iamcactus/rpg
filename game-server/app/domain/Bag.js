@@ -205,3 +205,23 @@ Bag.prototype.toJSON4PROP = function() {
   return e;
 };
 
+/**
+ * Parse String to json for "_G_pet_on" in KN
+ *
+ * @return {Number} playerPetId on arm if exist
+ */
+Bag.prototype.toJSON4PETON = function() {
+  var playerPetId = 0;
+  if (!!this.playerPet) {
+    var temp = this.playerPet;
+    for (var i=0; i<temp.length; i++) {
+      var P = new Pet(temp[i]);
+      if (P.isOnarm) {
+        playerPetId = P.id;
+      }
+    }
+  }
+
+  return playerPetId;
+};
+

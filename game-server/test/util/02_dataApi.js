@@ -24,3 +24,14 @@ describe('JSON data api test', function() {
   });
 });
 
+describe('JSON data api test', function() {
+  var level = 10;
+  var equipId = 5201;
+
+  it('should get equipPrice', function() {
+    var data = api.equip.findMultiBy('equip_id', equipId);
+    console.log(data);
+    //s.should.eql(t);
+  });
+});
+

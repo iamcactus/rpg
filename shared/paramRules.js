@@ -110,10 +110,10 @@ module.exports = {
     ]
   },
   createPlayer: {
-    'worldId': [
+    'name': [
       {
-        'rule': 'int',
-        'error': 'worldId must be an int'
+        'rule': 'required',
+        'error': 'you must set name'
       }
     ],
     'cardId': [
@@ -128,7 +128,7 @@ module.exports = {
         'args': [0, 1],
         'error': 'sexType must be between 0-1'
       }
-    ],
+    ]
   },
   entry: {
     'token': [

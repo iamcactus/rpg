@@ -694,7 +694,10 @@ formula.equipPrice = function(level, equipId) {
   }
   else {
     // TODO: get config for equip price
-    price = equipObj.price * level; // temprary
+    var initLv = 1;
+    var price = formula.equipLvUpCost(initLv, level, equipObj.star);
+    var param = 0.7 // tempary, not 0.7 for all cases. And it should be defined some else
+    price = Math.ceil(price * param); // tempary
   }
   return price;
 }

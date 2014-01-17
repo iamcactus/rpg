@@ -2,7 +2,6 @@ var logger = require('pomelo-logger').getLogger(__filename);
 var LEVELCONF = require('../../../shared/levelConf');
 var assert = require('assert');
 var utils = require('../util/utils');
-var PlayerData = require('../domain/PlayerData');
 
 var playerDao = module.exports;
 
@@ -49,7 +48,7 @@ playerDao.getPlayerByName = function(mysqlc, name, cb) {
 		}
 
 		if(!!res && res.length > 0) { //exists
-			utils.invokeCallback(cb, null, new PlayerData(res[0]));
+			utils.invokeCallback(cb, null, res[0]);
 		} else {
 			utils.invokeCallback(cb, null, null); // the last "null" make sure "if(player)" be failed
 		}

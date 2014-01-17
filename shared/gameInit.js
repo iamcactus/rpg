@@ -106,5 +106,12 @@ module.exports = {
       TYPE: 'shoe',
       EFFECT: 'agi',
     }
+  },
+  LEAD_CONF: {
+    1:  3,
+    2:  5,
+    3:  10,
+    4:  18,
+    5:  28
   }
 };

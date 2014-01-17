@@ -10,7 +10,9 @@ var util = require('util');
 var PlayerData  = require('./PlayerData');
 var PlayerParam = require('./PlayerParam');
 
+var dataApi = require('../../app/util/dataApi');
 var formula = require('../../app/util/formula');
+
 var gameInit = require('../../../shared/gameInit');
 
 /**
@@ -123,3 +125,26 @@ Player.prototype.toJSON4POWER = function(timeStamp) {
   };
 };
 
+/**
+ * Parse String to json for "_G_mission_cur" in KN
+ *
+ * @return {Object}
+ */
+Player.prototype.toJSON4MISSIONCUR = function() {
+  if (!this.playerParam.mission_data_id) {
+    return {};
+  }
+
+  var missionObj = dataApi.mission.findBy('id', temp[i].id);
+  console.log(missionObj);
+
+  if (!!missionObj) {
+    return {
+      map_id:     missionObj.map_id,
+      mission_id: missionObj.mission_id
+    };
+  }
+  else {
+    return {};
+  }
+};

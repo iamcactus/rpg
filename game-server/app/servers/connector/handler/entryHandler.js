@@ -82,14 +82,15 @@ var _makeReport = function(data) {
   o["_G_bag_prop"] = PlayerBag.toJSON4PROP();
 
   // "_G_pet_on"
-  //o["_G_pet_on"] = PlayerBag.PlayerPetIdonArm();
+  var playerPetIdOn = PlayerBag.toJSON4PETON();
+  if (playerPetIdOn) {
+    o["_G_pet_on"] = playerPetIdOn;
+  }
   //o["_G_pet_attach_attr"] = PlayerBag.toJSON4PETATTACHATTR();
 
-/*
-  var PlayerMission = new Mission(data);
   // "_G_mission_cur"
-  o["_G_mission_cur"] = PlayerMission.toJSON4MISSIONCUR();
-*/
+  o["_G_mission_cur"] = PlayerData.toJSON4MISSIONCUR();
+
   return o;
 };
 
@@ -181,7 +182,11 @@ pro.entry = function(msg, session, next) {
     */
 	], function(err, result) {
 		if (!!err || !result) {
-			next(err, {code: CODE.FAIL});
+      var code = CODE.FAIL;
+      if (err.code) {
+        code = err.code;
+      }
+      next(null, {code: code});
 			return;
 		}
     else {

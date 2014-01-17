@@ -47,7 +47,7 @@ playerMissionLog.insert = function(mysqlc, playerId, missionDataId, clearNum, cb
   console.log('playerMissionLog.add:' +playerId + ':' + missionDataId + ':' + clearNum);
   mysqlc.query(insertSQL, args, function(err, res) {
     if (err !== null) {
-			utils.invokeCallback(cb, err.message, null);
+			utils.invokeCallback(cb, err, null);
     }
     else {
       if (!!res && res.affectedRows > 0) {

@@ -1,6 +1,7 @@
 var logger = require('pomelo-logger').getLogger(__filename);
 var utils = require('../util/utils');
 var worldPlayerDao = require('../dao/worldPlayerDao');
+
 var worldPlayerTrans = module.exports;
 
 worldPlayerTrans.createWorldPlayer = function(mysqlc, uid, worldId, playerId, cb) {
@@ -19,20 +20,28 @@ worldPlayerTrans.createWorldPlayer = function(mysqlc, uid, worldId, playerId, cb
       else {
         q = 'COMMIT';
       }
-      mysqlc.query(q, function(err, res1) {
-        if (err) {
-          utils.invokeCallback(cb, err, null);
+      mysqlc.query(q, function(err1, res1) {
+        if (err1) {
+          utils.invokeCallback(cb, err1, null);
           return;
         }
         else {
-          console.log('[createWorldPlayer] transaction finished ');
-          console.log(res);
-          mysqlc.end(); // TODO: test
-          utils.invokeCallback(cb, null, res);
-          return;
+          if (err) {
+            utils.invokeCallback(cb, err, null);
+            return;
+          }
+          else {
+            if (!!res) {
+              console.log('[createWorldPlayer] transaction finished ');
+              utils.invokeCallback(cb, null, true);
+            }
+            else {
+              utils.invokeCallback(cb, null, false);
+            }
+          }
         }
       });
     });
   });
-}
+};
 

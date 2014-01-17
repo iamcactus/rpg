@@ -1,6 +1,5 @@
 var logger = require('pomelo-logger').getLogger(__filename);
 var utils = require('../util/utils');
-var worldPlayerDao = require('../dao/worldPlayerDao');
 var playerDao = require('../dao/playerDao');
 var playerParamDao = require('../dao/playerParamDao');
 var playerMissionLog = require('../dao/playerMissionLog');
@@ -44,32 +43,48 @@ playerTrans.initPlayer = function(mysqlc, params, cb) {
       },
       // init playerUnitData
       initPlayerUnit: ['initPlayerCard', function(callback) {
-        // playerId, positionId, playerCardId
+        // playerId, positionId: default is 1, playerCardId
         playerUnitDao.add(mysqlc, params.playerId, 1, params.serialId, callback); 
       }]
     }, function(err, res) {
       var q; // query cmd
-      if (err || !res) {
-        q = 'ROLLBACK';
-        console.log('[initPlayer] transaction query failed ');
-        console.log(err);
-      }
-      else {
+      if (!!res.initPlayerData && 
+          !!res.initPlayerParam && 
+          !!res.initPlayerMissionLog && 
+          !!res.initPlayerCard && 
+          !!res.initPlayerUnit) 
+      {
         q = 'COMMIT';
       }
-      mysqlc.query(q, function(err, res1) {
-        if (err) {
-          utils.invokeCallback(cb, err, null);
+      else {
+        q = 'ROLLBACK';
+      }
+      mysqlc.query(q, function(err1, res1) {
+        if (err1) {
+          utils.invokeCallback(cb, err1, null);
           return;
         }
         else {
-          console.log('[initPlayer] transaction query finished');
-          console.log(res);
-          mysqlc.end(); // TODO: test
-          utils.invokeCallback(cb, null, res);
-          return;
+          if (err) {
+            utils.invokeCallback(cb, err, null);
+            return;
+          }
+          else {
+            if (!!res.initPlayerData && 
+                !!res.initPlayerParam && 
+                !!res.initPlayerMissionLog && 
+                !!res.initPlayerCard && 
+                !!res.initPlayerUnit) 
+            {
+              console.log('[initPlayer] transaction query finished');
+              utils.invokeCallback(cb, null, true);
+            }
+            else {
+              utils.invokeCallback(cb, null, false);
+            }
+          }
         }
-      });
-    });
-  });
+      }); // end of mysqlc.query(q
+    }); // end of async.auto
+  }); // end of mysqlc.query('BEGIN'
 };

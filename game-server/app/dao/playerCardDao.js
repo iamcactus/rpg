@@ -67,7 +67,7 @@ playerCardDao.add = function(
     }
     else {
       if (!!res && res.affectedRows > 0) {
-        utils.invokeCallback(cb, null, res);
+        utils.invokeCallback(cb, null, true);
       }
       else {
         logger.error('add player_card Failed!');

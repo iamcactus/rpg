@@ -45,6 +45,7 @@ module.exports = {
     ERR_WRONG_NAME: 6001,
     ERR_NAME_EXIST: 6002,
     ERR_NG_NAME: 6003,
+    ERR_NG_CARD: 6004,
   },
 
   MISSION: {
