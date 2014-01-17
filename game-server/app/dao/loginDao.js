@@ -13,18 +13,20 @@ var gdb = require('util');
  * @param {Number} uid
  * @returns {Object} loginData
  */
-loginDao.getLoginDataByUid = function (mysqlc, uid, cb) {
+loginDao.getByUid = function (mysqlc, uid, cb) {
   var selectSQL = 'select * from login_data where uid = ?';
   var args = [uid];
 
   mysqlc.query(selectSQL, args, function(err, res) {
     if (err !== null) {
-      utils.invokeCallback(cb, err.message, null);
+      utils.invokeCallback(cb, err, null);
       return;
     }
 
     if (!!res && res.length === 1) {
-      utils.invokeCallback(cb, null, new User(res[0]));
+      var rs = res[0];
+      var loginData = {uid:rs.uid, login_name:rs.login_name};
+      utils.invokeCallback(cb, null, loginData);
     }
     else {
       utils.invokeCallback(cb, null, null);

@@ -20,7 +20,7 @@ var playerSkillDao = require('../playerSkillDao');
 var playerUnitDao = require('../playerUnitDao');
 var unitMeridianDao = require('../unitMeridianDao');
 
-var Bag = require('../../domain/bag');
+var Bag = require('../../domain/Bag');
 
 bagAllData.get = function(mysqlc, playerId, cb) {
   async.auto({

@@ -9,17 +9,17 @@ var worldPlayerDao = module.exports;
  * @param {Number} worldId
  * @returns {Object} world_player data
  */
-worldPlayerDao.getWorldPlayerByUid = function (mysqlc, uid, cb) {
+worldPlayerDao.getByUid = function (mysqlc, uid, cb) {
   var selectSQL = 'select * from world_player where uid=?';
   var args = [uid];
 
   mysqlc.query(selectSQL, args, function(err, res) {
-    if (err !== null) {
+    if (!!err) {
       utils.invokeCallback(cb, err, null);
       return;
     }
 
-    if (!!res && res.length === 1) {
+    if (!!res && res.length > 0) {
       utils.invokeCallback(cb, null, res);
     }
     else {
@@ -35,17 +35,16 @@ worldPlayerDao.getWorldPlayerByUid = function (mysqlc, uid, cb) {
  * @param {Number} world_id
  * @returns {Object} world_player data
  */
-worldPlayerDao.getWorldPlayerByUidAndWorldId = function (mysqlc, uid, worldId, cb) {
+worldPlayerDao.getByUidAndWorldId = function (mysqlc, uid, worldId, cb) {
   var selectSQL = 'select * from world_player where uid=? and world_id=?';
   var args = [uid, worldId];
 
   mysqlc.query(selectSQL, args, function(err, res) {
-    if (err !== null) {
-      utils.invokeCallback(cb, err.message, null);
+    if (!!err) {
+      utils.invokeCallback(cb, err, null);
       return;
     }
-
-    if (!!res && res.length === 1) {
+    if (!!res && res.length > 0) {
       utils.invokeCallback(cb, null, res);
     }
     else {
@@ -67,7 +66,7 @@ worldPlayerDao.createWorldPlayer = function (mysqlc, uid, worldId, playerId, cb)
   var args = [uid, worldId, playerId, createdOn];
   mysqlc.query(insertSQL, args, function(err, res) {
     if (err !== null) {
-      utils.invokeCallback(cb, err.message, null);
+      utils.invokeCallback(cb, err, null);
     }
     else {
       if (!!res && res.affectedRows > 0) {

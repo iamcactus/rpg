@@ -2,7 +2,7 @@ var logger = require('pomelo-logger').getLogger(__filename);
 var LEVELCONF = require('../../../shared/levelConf');
 var assert = require('assert');
 var utils = require('../util/utils');
-var Player = require('../domain/player');
+var PlayerData = require('../domain/playerData');
 
 var playerDao = module.exports;
 
@@ -19,12 +19,12 @@ playerDao.getPlayerByPlayerId = function(mysqlc, playerId, cb) {
 
 	mysqlc.query(selectSQL,args,function(err, res) {
 		if(err) {
-			utils.invokeCallback(cb, err.message, null);
+			utils.invokeCallback(cb, err, null);
 			return;
 		}
 
 		if(!!res && res.length > 0) { //exists
-			utils.invokeCallback(cb, null, new Player(res[0]));
+			utils.invokeCallback(cb, null, res[0]);
 		} else {
 			utils.invokeCallback(cb, null, null); // the last "null" make sure "if(player)" be failed
 		}
@@ -44,12 +44,12 @@ playerDao.getPlayerByName = function(mysqlc, name, cb) {
 
 	mysqlc.query(selectSQL,args,function(err, res) {
 		if(err) {
-			utils.invokeCallback(cb, err.message, null);
+			utils.invokeCallback(cb, err, null);
 			return;
 		}
 
 		if(!!res && res.length > 0) { //exists
-			utils.invokeCallback(cb, null, new Player(res[0]));
+			utils.invokeCallback(cb, null, new PlayerData(res[0]));
 		} else {
 			utils.invokeCallback(cb, null, null); // the last "null" make sure "if(player)" be failed
 		}

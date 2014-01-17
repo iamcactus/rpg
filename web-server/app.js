@@ -1,3 +1,10 @@
+/*
+ * web api for registration/login/worldList
+ * now web server is express
+ * 2013-2014
+ * @iamcactus
+ */
+
 var express = require('express');
 var async = require('async');
 
@@ -6,6 +13,8 @@ var Token = require('../shared/token');
 var tokenSecret = require('../shared/config/token').DEFAULT_SECRET;
 var tokenExpire = require('../shared/config/token').DEFAULT_EXPIRE;
 var loginDao = require('./lib/dao/loginDao');
+var seqLogin = require('./lib/dao/seqLogin');
+var registTrans = require('./lib/trans/registTrans');
 var worldDao = require('./lib/dao/worldDao');
 var worldPlayerDao = require('./lib/dao/worldPlayerDao');
 
@@ -78,20 +87,19 @@ app.post('/login', function(req, res) {
   var msg = req.body;
   console.log(msg);
   if (!msg.name || !msg.password) {
-    alert(11);
     res.send({code: CODE.LOGIN.ERR_WRONG_PARAM}); // code:5001
     return;
   }
 
+  // verification
   if ( !regEng.test(msg.name) || !regEng.test(msg.password)) {
-    alert(12);
     res.send({code: CODE.LOGIN.ERR_WRONG_PARAM}); // code:5001
     return;
   }
 
   // check deviceInfo exists or not
-  loginDao.getLoginDataByLoginName(mysql_s, msg.name, function (err, user) {
-    if (err) {
+  loginDao.getByLoginName(mysql_s, msg.name, function (err, user) {
+    if (!!err) {
       res.send({code: CODE.FAIL});
       return;
     }
@@ -99,15 +107,20 @@ app.post('/login', function(req, res) {
       res.send({code: CODE.LOGIN.ERR_NOT_EXIST});
       return;
     }
-
     var passwordHash = Token.cryptPass(msg.password);
     if (user.psw != passwordHash) {
       res.send({code: CODE.LOGIN.ERR_WRONG_PASSWORD}); // code: 5003
       return;
     }
     console.log(msg.name + ' login! userId:' + user.uid);
-    res.send({code: CODE.OK, token: Token.create(user.uid, Date.now(), tokenSecret), uid: user.uid});
-  });
+    res.send(
+      {
+        code:   CODE.OK, 
+        token:  Token.create(user.uid, Date.now(), tokenSecret), 
+        uid: user.uid
+      }
+    );
+  }); // end of loginDao.getByLoginName
 });
 
 // app/apk first request, 
@@ -126,20 +139,21 @@ app.post('/entry', function(req, res) {
       worldDao.getWorldList(mysql_s, callback);
     },
     loginData: function(callback) {
+      // verify token
       if (!!token && regEng.test(token)) {
         var rHash = Token.parse(token, tokenSecret);
         if (!!rHash && !!rHash.uid && rHash.uid === uid && Token.checkExpire(rHash, tokenExpire)) {
-          loginDao.getLoginDataByUid(mysql_s, rHash.uid, callback);
+          loginDao.getByUid(mysql_s, rHash.uid, callback);
         }
         else {
-          callback(null);
+          callback(null, null);
         }
       }
       else if (!!deviceInfo && regEng.test(deviceInfo)) {
-        loginDao.getLoginDataByDeviceInfo(mysql_s, deviceInfo, callback);
+        loginDao.getByDeviceInfo(mysql_s, deviceInfo, callback);
       }
       else {
-        callback(null);
+        callback(null, null);
       }
     },
     worldPlayer: ['loginData', function(callback, arg) {
@@ -147,27 +161,37 @@ app.post('/entry', function(req, res) {
         worldPlayerDao.getWorldPlayerByUid(mysql_s, uid, callback);
       }
       else {
-        callback(null);
+        callback(null, null);
       }
     }]
   }, function(err, results) {
-    if (err) {
+    if (!!err) {
       res.send({code: CODE.FAIL});
       return;
     }
     else {
+      console.log('before res for /entry');
+      console.log(results);
       if (!!results.loginData) {
         // for security issues, stop publish token here
         // results.loginData['token'] = Token.create(results.loginData.uid, Date.now(), tokenSecret);
-      }
 
-      console.log('before res for /entry');
-      console.log(results);
-      res.send({code: CODE.OK,
-                res: results});
-      return;
+        // make data
+        res.send(
+          {code: CODE.OK,
+           res: results
+          });
+        return;
+      }
+      else {
+        // any else data need here?
+        res.send(
+          {code: CODE.OK
+          });
+        return;
+      }
     }
-  });
+  }); // end of async.auto
 });
 
 // quick login
@@ -176,63 +200,92 @@ app.post('/quick_reg', function(req, res) {
   var msg = req.body;
   var deviceInfo = msg.deviceInfo;
 
-  // deviceInfo is must in case of quickInfo
+  // verification
   if (!deviceInfo || !regEng.test(deviceInfo)) {
     res.send({code: CODE.REGIST.ERR_WRONG_PARAM}); //code: 4001
     return;
   }
 
   // check deviceInfo exists or not
-  loginDao.getLoginDataByDeviceInfo(mysql_m, deviceInfo, function (err, user) {
+  loginDao.getByDeviceInfo(mysql_s, deviceInfo, function (err, user) {
     if (user) { // exists
-      res.send({code: CODE.REGIST.ERR_EXIST, 
-                token: Token.create(user.uid, Date.now(), tokenSecret), 
-                uid: user.uid});
+      res.send(
+        {
+          code:   CODE.REGIST.ERR_EXIST, 
+          token:  Token.create(user.uid, Date.now(), tokenSecret), 
+          uid:    user.uid
+        });
       return;
     }
     else {
       // regist
       var loginName   = quickRegUtil.getName(deviceInfo);
       var passwordHash = Token.cryptPass(quickRegUtil.getPasswordHash(deviceInfo));
-      mysql_m.query('BEGIN', function(err, rows) {  // start TRANSACTION
-        if (err) {
-          console.log('[register] transaction begin failed' + err.stack);
-          res.send({code: CODE.FAIL});
-          //mysql_m.end(); // need here??
-        }
 
-        loginDao.createUser(mysql_m, deviceInfo, loginName, passwordHash, function(err, user) {
-          var q; // query
-          if (err || !user) {
-            q = 'ROLLBACK';
-            console.log('[register] transaction query failed ' + err.message);
-          }
-          else {
-            q = 'COMMIT';
-          }
-          mysql_m.query(q, function(err, res1) {
-            if (err) {
-              if (err.code === 1062) {
-                res.send({code: CODE.REGIST.ERR_DUPLICATED});
-                //mysql_m.end();
-              }
-              else {
-                res.send({code: CODE.FAIL});
-                //mysql_m.end();
-              }
+      async.auto({
+        // generate uid
+        sequenceId: function(callback) {
+          seqLogin.getSequenceID(mysql_s, function(err, sid) {
+            if (!!sid) {
+              callback(null, sid);
             }
             else {
-              console.log('A new user was created! --' + msg.name + user.uid);
-              res.send({code: CODE.OK, token: Token.create(user.uid, Date.now(), tokenSecret), uid: user.uid});
-              //mysql_m.end();
+              callback(err, null);
             }
           });
-        });
-      });
-    }
-  });
+        },
+        // do regist
+        registTrans: ['sequenceId', function(callback, result) {
+          if (!!result.sequenceId) {
+            mysql_m.acquire(function(err, client) {
+              registTrans.regist(
+                client, 
+                result.sequenceId, 
+                deviceInfo, 
+                loginName, 
+                passwordHash, 
+                function(err, res) {
+                  if (!!err || !!res) {
+                    mysql_m.release(client);
+                  }
+                  callback(err, res);
+                }
+              );
+            }); // end of mysql_m.acquire
+          } // end of if
+          else {
+            callback({code: CODE.FAIL}, null);
+          }
+        }] // end of registTrans
+      }, function(err, results) {
+        if (!!err) {
+          if (err.code === 1062) {
+            res.send({code: CODE.REGIST.ERR_DUPLICATED}); // db duplication
+          }
+          else {
+            res.send({code: CODE.FAIL});
+          }
+        }
+        else {
+          if (!!results.sequenceId && !!results.registTrans) {
+          console.log('A new user was created! --' + msg.name + ' with uid: ' + results.sequenceId);
+          res.send(
+            {
+              code:   CODE.OK, 
+              token:  Token.create(results.sequenceId, Date.now(), tokenSecret), 
+              uid:    results.sequenceId
+            });
+          }
+          else {
+            res.send({code: CODE.FAIL});
+          }
+        }
+      }); // end of async.auto
+    } // end of else
+  }); // end of loginDao.getByDeviceInfo
 });
 
+// normal registration
 app.post('/regist', function(req, res) {
   var msg = req.body;
   if (!msg.name || !msg.password) {
@@ -240,19 +293,21 @@ app.post('/regist', function(req, res) {
     return;
   }
 
+  // verification
   if ( !regEng.test(msg.name) || !regEng.test(msg.password)) {
     res.send({code: CODE.REGIST.ERR_WRONG_PARAM}); //code: 4001
     return;
   }
 
   var deviceInfo = msg.deviceInfo;
-  console.log('di:' + deviceInfo);
-  if ( !deviceInfo || !regEng.test(deviceInfo)) {
-    deviceInfo = msg.name; // deviceInfo is unique, so set unvalid deviceInfo to msg.name
+
+  if (!deviceInfo || !regEng.test(deviceInfo)) {
+    // set unique value for unvalid deviceInfo
+    deviceInfo = new Date().getTime();
   }
 
   // check deviceInfo exists or not
-  loginDao.getLoginDataByLoginName(mysql_m, msg.name, function (err, user) {
+  loginDao.getByLoginName(mysql_s, msg.name, function (err, user) {
     if (user) { // exists
       console.log(' Got exists ' + user.uid);
       res.send({code: CODE.REGIST.ERR_EXIST});
@@ -261,41 +316,67 @@ app.post('/regist', function(req, res) {
     else {
       // regist
       var passwordHash = Token.cryptPass(msg.password);
-      mysql_m.query('BEGIN', function(err, rows) {  // start TRANSACTION
-        if (err) {
-          console.log('[register] transaction begin failed' + err.stack);
-          res.send({code: CODE.FAIL});
-          //mysql_m.end(); // need here??
-        }
-
-        loginDao.createUser(mysql_m, deviceInfo, msg.name, passwordHash, function(err, user) {
-          var q; // query
-          if (err || !user) {
-            q = 'ROLLBACK';
-            console.log('[register] transaction query failed ' + err.message);
-          }
-          else {
-            q = 'COMMIT';
-          }
-          mysql_m.query(q, function(err, res1) {
-            if (err) {
-              if (err.code === 1062) {
-                res.send({code: CODE.REGIST.ERR_DUPLICATED});
-              }
-              else {
-                res.send({code: CODE.FAIL});
-              }
+      async.auto({
+        // generate uid
+        sequenceId: function(callback) {
+          seqLogin.getSequenceID(mysql_s, function(err, sid) {
+            if (!!sid) {
+              callback(null, sid);
             }
             else {
-              console.log('A new user was created! --' + msg.name + user.uid);
-              res.send({code: CODE.OK, token: Token.create(user.uid, Date.now(), tokenSecret), uid: user.uid});
-              //mysql_m.end();
+              callback(err, null);
             }
           });
-        });
-      });
-    }
-  });
+        },
+        // do regist
+        registTrans: ['sequenceId', function(callback, result) {
+          if (!!result.sequenceId) {
+            mysql_m.acquire(function(err, client) {
+              registTrans.regist(
+                client, 
+                result.sequenceId, 
+                deviceInfo, 
+                msg.name, 
+                passwordHash, 
+                function(err, res) {
+                  if (!!err || !!res) {
+                    mysql_m.release(client);
+                  }
+                  callback(err, res);
+                }
+              );
+            }); // end of mysql_m.acquire
+          } // end of if
+          else {
+            callback({code: CODE.FAIL}, null);
+          }
+        }] // end of registTrans
+      }, function(err, results) {
+        if (!!err) {
+          if (err.code === 1062) {
+            res.send({code: CODE.REGIST.ERR_DUPLICATED}); // db duplication
+          }
+          else {
+            res.send({code: CODE.FAIL});
+          }
+        }
+        else {
+          if (!!results.sequenceId && !!results.registTrans) {
+          console.log('A new user was created! --' + msg.name + ' with uid: ' + results.sequenceId);
+          res.send(
+            {
+              code:   CODE.OK, 
+              token:  Token.create(results.sequenceId, Date.now(), tokenSecret), 
+              uid:    results.sequenceId
+            });
+          }
+          else {
+            res.send({code: CODE.FAIL});
+          }
+        }
+      }); // end of async.auto
+    } // end of else
+  }); // end of loginDao.getByLoginName
 });
 
 console.log("Web server has started.\nPlease log on http://127.0.0.1:3001/index.html");

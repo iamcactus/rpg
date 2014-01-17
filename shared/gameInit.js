@@ -70,5 +70,41 @@ module.exports = {
     EQUIP: {
       MAXLV: 200
     }
+  },
+  VIP: {
+    MAXLV: 10
+  },
+  UNIT_INIT: {
+    COUNT:  "comment: level up condition for next position open",
+    COUNT:  3,
+    CONF:   "position: level",
+    CONF: {
+      1:  1,
+      2:  4,
+      3:  7,
+      4:  10,
+      5:  13,
+      6:  16,
+      7:  19,
+      9:  22
+    }
+  },
+  EQUIP_CONF: {
+    1: {
+      TYPE: 'jewelry',
+      EFFECT: 'hp',
+    },
+    2: {
+      TYPE: 'weapon',
+      EFFECT: 'atk',
+    },
+    3: {
+      TYPE: 'defender',
+      EFFECT: 'def',
+    },
+    4: {
+      TYPE: 'shoe',
+      EFFECT: 'agi',
+    }
   }
 };

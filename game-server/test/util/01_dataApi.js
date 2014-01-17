@@ -45,7 +45,7 @@ describe('JSON data api test', function() {
     var skillId = '4601';
     var item = api.petSkill.findBy('skill_id', skillId);
     var s = item["2"].debuff;
-    console.log(item["2"]);
+    //console.log(item["2"]);
     var t = 5880; // game_master.pet_skill_effect.debuff with skill_id = 4601
     s.should.eql(t);
     //should.strictEqual(undefined, item);
@@ -55,7 +55,7 @@ describe('JSON data api test', function() {
     var skillId = '3005';
     var item = api.skill.findBy('skill_id', skillId);
     var s = item["2"].effect;
-    console.log(item["2"]);
+    //console.log(item["2"]);
     var t = 18; // game_master.skill_data.effect with skill_id = 3005
     s.should.eql(t);
     //should.strictEqual(undefined, item);
@@ -65,8 +65,8 @@ describe('JSON data api test', function() {
     var skillId = '3007';
     var item = api.skill.findBy('skill_id', skillId);
     var s = item["2"].effect;
-    console.log(item["2"]);
-    var t = 18; // game_master.skill_data.effect with skill_id = 3005
+    //console.log(item["2"]);
+    var t = 28; // game_master.skill_data.effect with skill_id = 3005
     s.should.eql(t);
     //should.strictEqual(undefined, item);
   });
@@ -75,8 +75,8 @@ describe('JSON data api test', function() {
     var skillId = '3010';
     var item = api.skill.findBy('skill_id', skillId);
     var s = item["2"].effect;
-    console.log(item["2"]);
-    var t = 18; // game_master.skill_data.effect with skill_id = 3005
+    //console.log(item["2"]);
+    var t = 16; // game_master.skill_data.effect with skill_id = 3005
     s.should.eql(t);
     //should.strictEqual(undefined, item);
   });
@@ -92,5 +92,13 @@ describe('JSON data api test', function() {
     //console.log(alpha.cardConf(item.star));
   });
 
+  it('should get item id', function() {
+    var itemId = 8002;
+    var item = api.item.findBy('item_id', itemId);
+    console.log(item);
+    var s = item.star;
+    var t = 4; // game_master.item_data.star with item_id = 8002
+    s.should.eql(t);
+  });
 
 });

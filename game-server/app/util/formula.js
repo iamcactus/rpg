@@ -12,10 +12,13 @@ var petSkill  = require('../../config/data/petSkill');
 var skill     = require('../../config/data/skill');
 var dataApi   = require('../../app/util/dataApi');
 var calcParam = require('../../../shared/forceConf');
-var cardConf = require('../../../shared/cardConf');
+var cardConf  = require('../../../shared/cardConf');
+var levelConf = require('../../../shared/levelConf');
 var equipConf = require('../../../shared/equipConf');
 var gameInit  = require('../../../shared/gameInit');
 var generalExp= require('../../../shared/generalExp');
+var vipExp    = require('../../../shared/vipExp');
+var petExp    = require('../../../shared/petExp');
 var equipStrongConf = require('../../../shared/equipStrongConf');
 
 var _ = require('underscore');
@@ -429,6 +432,9 @@ formula.replaceIndex = function(team) {
   return -1;
 };
 
+/*
+ * Battle damage
+ */
 formula.damage = function(atkerObj, atkeeObj, atkSkillObj) {
   var damage = gameInit.BATTLE_INIT.DAMAGE; // default damage
 
@@ -559,4 +565,136 @@ formula.equipLvUpCost = function(initLv, targetLv, star) {
   var t = equipStrongConf.cost(targetLv);
   var targetCost = t[star];
   return targetCost - initCost;
+}
+
+/*
+ * current exp for card
+ * all exp is stored in player_param
+ * current exp is all exp minus current level exp
+ * @param {Number} exp all exp
+ * @param {Number} lv current lv
+ * @returns {Number} current exp
+ */
+formula.currentExp = function(exp, lv) {
+  var t = exp - generalExp[lv];
+  return (t > 0) ? t : 0;
+};
+
+/*
+ * lvup exp for card
+ * exp is stored in player_param
+ * lvup exp is next level exp minus exp
+ * @param {Number} exp all exp
+ * @param {Number} lv current lv
+ * @returns {Number} current exp
+ */
+formula.lvupExp = function(exp, lv) {
+  if (!!generalExp[lv+1]) {
+    var t = generalExp[lv+1] - exp;
+    return (t > 0) ? t : 0;
+  }
+  else {
+    return 0;
+  }
+};
+
+/*
+ * current exp for vip
+ * all vip_exp is stored in player_param
+ * current exp is all exp minus current level exp
+ * @param {Number} exp all exp
+ * @param {Number} lv current lv
+ * @returns {Number} current exp
+ */
+formula.currentVipExp = function(exp, lv) {
+  var t = exp - vipExp[lv];
+  return (t > 0) ? t : 0;
+};
+
+/*
+ * lvup exp for vip
+ * exp is stored in player_param
+ * lvup exp is next level exp minus exp
+ * @param {Number} exp all exp
+ * @param {Number} lv current lv
+ * @returns {Number} current exp
+ */
+formula.lvupVipExp = function(exp, lv) {
+  if (!!vipExp[lv+1]) {
+    var t = vipExp[lv+1] - exp;
+    return (t > 0) ? t : 0;
+  }
+  else {
+    return 0;
+  }
+};
+
+/*
+ * current exp for pet
+ * all pet_exp is stored in player_pet
+ * current exp is all exp minus current level exp
+ * @param {Number} exp all exp
+ * @param {Number} lv current lv
+ * @returns {Number} current exp
+ */
+formula.currentPetExp = function(exp, lv) {
+  var t = exp - petExp[lv];
+  return (t > 0) ? t : 0;
+};
+
+/*
+ * lvup exp for pet
+ * exp is stored in player_pet
+ * lvup exp is next level exp minus exp
+ * @param {Number} exp all exp
+ * @param {Number} lv current lv
+ * @returns {Number} current exp
+ */
+formula.lvupPetExp = function(exp, lv) {
+  if (!!petExp[lv+1]) {
+    var t = petExp[lv+1] - exp;
+    return (t > 0) ? t : 0;
+  }
+  else {
+    return 0;
+  }
+};
+
+/*
+ * recover time of power
+ * @param {Number} timeStamp unix time stamp of target time
+ * @param {Number} powerRecoveredOn unix time stamp when power will full revocer
+ * @param {Number} lv current lv
+ * @returns {Number} seconds to recover next power
+ */
+formula.nextRecoverTime = function(timeStamp, powerRecoveredOn, lv) {
+  if (!!levelConf[lv]) {
+    var diff = powerRecoveredOn - timeStamp;
+    var t = diff % levelConf[lv].POWER_RECOVER;
+    // if t eq 0, nextRecoverTime will be default recover time
+    return (t > 0) ? t : levelConf[lv].POWER_RECOVER;
+  }
+  else {
+    // should not be here
+    return 0;
+  }
+};
+
+/*
+ * equip sells price
+ * @param {Number} level current level of the equip
+ * @param {Number} equipId equip_id of equip_data
+ * @returns {Number} sivler how many silver 
+ */
+formula.equipPrice = function(level, equipId) {
+  var equipObj   = dataApi.equip.findBy('equip_id', equipId);
+  var price = 0;
+  if (level === 1) {
+    price = equipObj.price;
+  }
+  else {
+    // TODO: get config for equip price
+    price = equipObj.price * level; // temprary
+  }
+  return price;
 }

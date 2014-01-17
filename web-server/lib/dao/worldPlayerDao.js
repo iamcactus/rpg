@@ -7,12 +7,12 @@ var worldPlayerDao = module.exports;
  * @param {Number} worldId
  * @returns {Object} world_player data or null
  */
-worldPlayerDao.getWorldPlayerByUid = function (mysqlc, uid, cb) {
+worldPlayerDao.getByUid = function (mysqlc, uid, cb) {
   var selectSQL = 'select * from world_player where uid=?';
   var args = [uid];
 
   mysqlc.query(selectSQL, args, function(err, res) {
-    if (err !== null) {
+    if (!!err) {
       cb(err, null);
       return;
     }
@@ -23,4 +23,22 @@ worldPlayerDao.getWorldPlayerByUid = function (mysqlc, uid, cb) {
       cb(null, null);
     }
   });
-}
+};
+
+worldPlayerDao.getByUidAndWorldId = function (mysqlc, uid, worldId, cb) {
+  var selectSQL = 'select * from world_player where uid=? and world_id=?';
+  var args = [uid, worldId];
+
+  mysqlc.query(selectSQL, args, function(err, res) {
+    if (!!err) {
+      cb(err, null);
+      return;
+    }
+    if (!!res && res.length > 0) {
+      cb(null, res);
+    }
+    else {
+      cb(null, null);
+    }
+  });
+};

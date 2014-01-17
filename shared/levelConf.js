@@ -1,53 +1,1007 @@
-// conf for the player's level up, not the player_card
-// EXP is the exp line for  that level
-// EXP_A is the exp addon in each battle
+/* 
+ * conf for the player level up, not the player_card
+ * EXP is the exp line for  that level
+ * EXP_A is the exp addon in each battle
+ */
 module.exports = {
-  1: {
-    EXP:0,
-    EXP_A:30,
-    EXP_S:15,
-    POWER:30,
-    ENERGY:10,
-    LEAD:34
-  },
-  2: {
-    EXP:30,
-    EXP_A:40,
-    EXP_S:24,
-    POWER:30,
-    ENERGY:10,
-    LEAD:35
-  },
-  3: {
-    EXP:100,
-    EXP_A:43,
-    EXP_S:33,
-    POWER:30,
-    ENERGY:10,
-    LEAD:38
-  },
-  4: {
-    EXP:220,
-    EXP_A:46,
-    EXP_S:42,
-    POWER:30,
-    ENERGY:10,
-    LEAD:40
-  },
-  5: {
-    EXP:390,
-    EXP_A:49,
-    EXP_S:51,
-    POWER:30,
-    ENERGY:10,
-    LEAD:42
-  },
-  6: {
-    EXP:610,
-    EXP_A:52,
-    EXP_S:60,
-    POWER:30,
-    ENERGY:10,
-    LEAD:44
-  }
+	1 : {
+		EXP   : 0,
+		EXP_A : 30,
+		EXP_S : 15,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY  : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD  : 34
+		},
+	2 : {
+		EXP : 30,
+		EXP_A : 40,
+		EXP_S : 24,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 36
+		},
+	3 : {
+		EXP : 100,
+		EXP_A : 43,
+		EXP_S : 33,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 38
+		},
+	4 : {
+		EXP : 220,
+		EXP_A : 46,
+		EXP_S : 42,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 40
+		},
+	5 : {
+		EXP : 390,
+		EXP_A : 49,
+		EXP_S : 51,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 42
+		},
+	6 : {
+		EXP : 610,
+		EXP_A : 52,
+		EXP_S : 60,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 44
+		},
+	7 : {
+		EXP : 920,
+		EXP_A : 55,
+		EXP_S : 69,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 48
+		},
+	8 : {
+		EXP : 1360,
+		EXP_A : 58,
+		EXP_S : 78,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 52
+		},
+	9 : {
+		EXP : 1998,
+		EXP_A : 61,
+		EXP_S : 87,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 56
+		},
+	10 : {
+		EXP : 2852,
+		EXP_A : 64,
+		EXP_S : 96,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 60
+		},
+	11 : {
+		EXP : 4004,
+		EXP_A : 67,
+		EXP_S : 105,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 64
+		},
+	12 : {
+		EXP : 5729,
+		EXP_A : 70,
+		EXP_S : 114,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 68
+		},
+	13 : {
+		EXP : 7585,
+		EXP_A : 73,
+		EXP_S : 123,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 72
+		},
+	14 : {
+		EXP : 9635,
+		EXP_A : 76,
+		EXP_S : 132,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 76
+		},
+	15 : {
+		EXP : 12006,
+		EXP_A : 79,
+		EXP_S : 141,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 84
+		},
+	16 : {
+		EXP : 14779,
+		EXP_A : 82,
+		EXP_S : 150,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 94
+		},
+	17 : {
+		EXP : 18105,
+		EXP_A : 85,
+		EXP_S : 159,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 104
+		},
+	18 : {
+		EXP : 22149,
+		EXP_A : 88,
+		EXP_S : 168,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 114
+		},
+	19 : {
+		EXP : 27023,
+		EXP_A : 91,
+		EXP_S : 177,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 124
+		},
+	20 : {
+		EXP : 32914,
+		EXP_A : 94,
+		EXP_S : 186,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 134
+		},
+	21 : {
+		EXP : 39953,
+		EXP_A : 97,
+		EXP_S : 195,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 144
+		},
+	22 : {
+		EXP : 48351,
+		EXP_A : 100,
+		EXP_S : 204,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 154
+		},
+	23 : {
+		EXP : 58257,
+		EXP_A : 103,
+		EXP_S : 213,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 164
+		},
+	24 : {
+		EXP : 69906,
+		EXP_A : 106,
+		EXP_S : 222,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 174
+		},
+	25 : {
+		EXP : 83548,
+		EXP_A : 109,
+		EXP_S : 231,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 184
+		},
+	26 : {
+		EXP : 99362,
+		EXP_A : 112,
+		EXP_S : 240,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 194
+		},
+	27 : {
+		EXP : 117533,
+		EXP_A : 115,
+		EXP_S : 249,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 204
+		},
+	28 : {
+		EXP : 138343,
+		EXP_A : 118,
+		EXP_S : 258,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 214
+		},
+	29 : {
+		EXP : 162090,
+		EXP_A : 121,
+		EXP_S : 267,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 224
+		},
+	30 : {
+		EXP : 188988,
+		EXP_A : 124,
+		EXP_S : 276,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 229
+		},
+	31 : {
+		EXP : 219358,
+		EXP_A : 127,
+		EXP_S : 285,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 234
+		},
+	32 : {
+		EXP : 253435,
+		EXP_A : 130,
+		EXP_S : 294,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 239
+		},
+	33 : {
+		EXP : 291967,
+		EXP_A : 133,
+		EXP_S : 303,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 244
+		},
+	34 : {
+		EXP : 334915,
+		EXP_A : 136,
+		EXP_S : 312,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 249
+		},
+	35 : {
+		EXP : 382333,
+		EXP_A : 139,
+		EXP_S : 321,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 254
+		},
+	36 : {
+		EXP : 433182,
+		EXP_A : 142,
+		EXP_S : 330,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 259
+		},
+	37 : {
+		EXP : 487565,
+		EXP_A : 145,
+		EXP_S : 339,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 264
+		},
+	38 : {
+		EXP : 545020,
+		EXP_A : 148,
+		EXP_S : 348,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 269
+		},
+	39 : {
+		EXP : 605049,
+		EXP_A : 151,
+		EXP_S : 357,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 274
+		},
+	40 : {
+		EXP : 667354,
+		EXP_A : 154,
+		EXP_S : 366,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 279
+		},
+	41 : {
+		EXP : 731859,
+		EXP_A : 157,
+		EXP_S : 375,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 284
+		},
+	42 : {
+		EXP : 798477,
+		EXP_A : 160,
+		EXP_S : 384,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 289
+		},
+	43 : {
+		EXP : 867367,
+		EXP_A : 163,
+		EXP_S : 393,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 294
+		},
+	44 : {
+		EXP : 938311,
+		EXP_A : 166,
+		EXP_S : 402,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 299
+		},
+	45 : {
+		EXP : 1011337,
+		EXP_A : 169,
+		EXP_S : 411,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 304
+		},
+	46 : {
+		EXP : 1086475,
+		EXP_A : 172,
+		EXP_S : 420,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 309
+		},
+	47 : {
+		EXP : 1163617,
+		EXP_A : 175,
+		EXP_S : 429,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 314
+		},
+	48 : {
+		EXP : 1242787,
+		EXP_A : 178,
+		EXP_S : 438,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 319
+		},
+	49 : {
+		EXP : 1324008,
+		EXP_A : 181,
+		EXP_S : 447,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 324
+		},
+	50 : {
+		EXP : 1407304,
+		EXP_A : 184,
+		EXP_S : 456,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 329
+		},
+	51 : {
+		EXP : 1492699,
+		EXP_A : 187,
+		EXP_S : 468,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 334
+		},
+	52 : {
+		EXP : 1580215,
+		EXP_A : 190,
+		EXP_S : 475,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 339
+		},
+	53 : {
+		EXP : 1669876,
+		EXP_A : 193,
+		EXP_S : 483,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 344
+		},
+	54 : {
+		EXP : 1761705,
+		EXP_A : 196,
+		EXP_S : 490,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 349
+		},
+	55 : {
+		EXP : 1855726,
+		EXP_A : 199,
+		EXP_S : 498,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 354
+		},
+	56 : {
+		EXP : 1951963,
+		EXP_A : 202,
+		EXP_S : 505,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 359
+		},
+	57 : {
+		EXP : 2050438,
+		EXP_A : 205,
+		EXP_S : 513,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 364
+		},
+	58 : {
+		EXP : 2151175,
+		EXP_A : 208,
+		EXP_S : 520,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 369
+		},
+	59 : {
+		EXP : 2254197,
+		EXP_A : 211,
+		EXP_S : 528,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 374
+		},
+	60 : {
+		EXP : 2359528,
+		EXP_A : 214,
+		EXP_S : 535,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 379
+		},
+	61 : {
+		EXP : 2467192,
+		EXP_A : 217,
+		EXP_S : 543,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 384
+		},
+	62 : {
+		EXP : 2577211,
+		EXP_A : 220,
+		EXP_S : 550,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 389
+		},
+	63 : {
+		EXP : 2689609,
+		EXP_A : 223,
+		EXP_S : 558,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 394
+		},
+	64 : {
+		EXP : 2804409,
+		EXP_A : 226,
+		EXP_S : 565,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 399
+		},
+	65 : {
+		EXP : 2921635,
+		EXP_A : 229,
+		EXP_S : 573,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 404
+		},
+	66 : {
+		EXP : 3041311,
+		EXP_A : 232,
+		EXP_S : 580,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 409
+		},
+	67 : {
+		EXP : 3163459,
+		EXP_A : 235,
+		EXP_S : 588,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 414
+		},
+	68 : {
+		EXP : 3288103,
+		EXP_A : 238,
+		EXP_S : 595,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 419
+		},
+	69 : {
+		EXP : 3415266,
+		EXP_A : 241,
+		EXP_S : 603,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 424
+		},
+	70 : {
+		EXP : 3544972,
+		EXP_A : 244,
+		EXP_S : 610,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 429
+		},
+	71 : {
+		EXP : 3677245,
+		EXP_A : 247,
+		EXP_S : 618,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 434
+		},
+	72 : {
+		EXP : 3812107,
+		EXP_A : 250,
+		EXP_S : 625,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 439
+		},
+	73 : {
+		EXP : 3949582,
+		EXP_A : 253,
+		EXP_S : 633,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 444
+		},
+	74 : {
+		EXP : 4089693,
+		EXP_A : 256,
+		EXP_S : 640,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 449
+		},
+	75 : {
+		EXP : 4232464,
+		EXP_A : 259,
+		EXP_S : 648,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 454
+		},
+	76 : {
+		EXP : 4377919,
+		EXP_A : 262,
+		EXP_S : 655,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 459
+		},
+	77 : {
+		EXP : 4526080,
+		EXP_A : 265,
+		EXP_S : 663,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 464
+		},
+	78 : {
+		EXP : 4676971,
+		EXP_A : 268,
+		EXP_S : 670,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 469
+		},
+	79 : {
+		EXP : 4830615,
+		EXP_A : 271,
+		EXP_S : 678,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 474
+		},
+	80 : {
+		EXP : 4987036,
+		EXP_A : 274,
+		EXP_S : 685,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 479
+		},
+	81 : {
+		EXP : 5146258,
+		EXP_A : 277,
+		EXP_S : 693,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 484
+		},
+	82 : {
+		EXP : 5308303,
+		EXP_A : 280,
+		EXP_S : 700,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 489
+		},
+	83 : {
+		EXP : 5473195,
+		EXP_A : 283,
+		EXP_S : 708,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 494
+		},
+	84 : {
+		EXP : 5640957,
+		EXP_A : 286,
+		EXP_S : 715,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 499
+		},
+	85 : {
+		EXP : 5811613,
+		EXP_A : 289,
+		EXP_S : 723,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 504
+		},
+	86 : {
+		EXP : 5985187,
+		EXP_A : 292,
+		EXP_S : 730,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 509
+		},
+	87 : {
+		EXP : 6161701,
+		EXP_A : 295,
+		EXP_S : 738,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 514
+		},
+	88 : {
+		EXP : 6341179,
+		EXP_A : 298,
+		EXP_S : 745,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 519
+		},
+	89 : {
+		EXP : 6523644,
+		EXP_A : 301,
+		EXP_S : 753,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 524
+		},
+	90 : {
+		EXP : 6709120,
+		EXP_A : 304,
+		EXP_S : 760,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 529
+		},
+	91 : {
+		EXP : 6897631,
+		EXP_A : 307,
+		EXP_S : 768,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 534
+		},
+	92 : {
+		EXP : 7089199,
+		EXP_A : 310,
+		EXP_S : 775,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 539
+		},
+	93 : {
+		EXP : 7283848,
+		EXP_A : 313,
+		EXP_S : 783,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 544
+		},
+	94 : {
+		EXP : 7481601,
+		EXP_A : 316,
+		EXP_S : 790,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 549
+		},
+	95 : {
+		EXP : 7682482,
+		EXP_A : 319,
+		EXP_S : 798,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 554
+		},
+	96 : {
+		EXP : 7886515,
+		EXP_A : 322,
+		EXP_S : 805,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 559
+		},
+	97 : {
+		EXP : 8093722,
+		EXP_A : 325,
+		EXP_S : 813,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 564
+		},
+	98 : {
+		EXP : 8304127,
+		EXP_A : 328,
+		EXP_S : 820,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 569
+		},
+	99 : {
+		EXP : 8517753,
+		EXP_A : 331,
+		EXP_S : 828,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 574
+		},
+	100 : {
+		EXP : 8734624,
+		EXP_A : 334,
+		EXP_S : 835,
+		POWER : 30,
+		POWER_RECOVER : 1800,
+		ENERGY : 10,
+		ENERGY_RECOVER : 1800,
+		LEAD : 579
+		}
 };

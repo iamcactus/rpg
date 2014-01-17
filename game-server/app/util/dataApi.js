@@ -9,6 +9,7 @@ var defender  = require('../../config/data/defender');
 var shoe      = require('../../config/data/shoe');
 var jewelry   = require('../../config/data/jewelry');
 
+var item      = require('../../config/data/item');
 var mission   = require('../../config/data/mission');
 var map       = require('../../config/data/map');
 var nature    = require('../../config/data/nature'); // hero's zuhe
@@ -188,6 +189,7 @@ module.exports = {
 	defender: new Data(defender),
 	shoe:     new Data(shoe),
 	jewelry:  new Data(jewelry),
+	item:     new Data(item),
 	mission:  new Data(mission),
 	map:      new Data(map),
 	nature:   new Data(nature),

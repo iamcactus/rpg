@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS player_param;
 CREATE TABLE player_param (
   player_id   int(10) unsigned NOT NULL COMMENT '主角ID',
   vip_level   tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '当前VIP等级',
+  vip_exp     int(10) unsigned NOT NULL DEFAULT 0 COMMENT '当前VIP经验',
   exp         int(10) unsigned NOT NULL DEFAULT 0 COMMENT '当前经验',
   level       int(10) unsigned NOT NULL DEFAULT 1 COMMENT '当前等级',
   mission_data_id int(10) unsigned NOT NULL DEFAULT 1 COMMENT '当前关卡ID',
