@@ -11,7 +11,7 @@ var _ = require('underscore');
 
 var npcUnitAllData = require('../../dao/union/npcUnitAllData');
 var playerUnitAllData = require('../../dao/union/playerUnitAllData');
-var Player    = require('../../domain/player');
+var Player    = require('../../domain/Player');
 var formula   = require('../../util/formula');
 var dataApi   = require('../../util/dataApi');
 var utils     = require('../../util/utils');

@@ -9,7 +9,7 @@ var gameInit = require('../../../../shared/gameInit');
 
 var dataApi = require('../../util/dataApi');
 var utils = require('../../util/utils');
-var Player = require('../../domain/player');
+var Player = require('../../domain/Player');
 var playerDao = require('../playerDao');
 var playerParamDao = require('../playerParamDao');
 var playerCardDao = require('../playerCardDao');

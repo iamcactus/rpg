@@ -2,7 +2,7 @@ var logger = require('pomelo-logger').getLogger(__filename);
 var LEVELCONF = require('../../../shared/levelConf');
 var assert = require('assert');
 var utils = require('../util/utils');
-var PlayerData = require('../domain/playerData');
+var PlayerData = require('../domain/PlayerData');
 
 var playerDao = module.exports;
 
