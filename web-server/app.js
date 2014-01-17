@@ -158,7 +158,7 @@ app.post('/entry', function(req, res) {
     },
     worldPlayer: ['loginData', function(callback, arg) {
       if (!!arg.loginData) {
-        worldPlayerDao.getWorldPlayerByUid(mysql_s, uid, callback);
+        worldPlayerDao.getByUid(mysql_s, uid, callback);
       }
       else {
         callback(null, null);
