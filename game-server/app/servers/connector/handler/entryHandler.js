@@ -27,6 +27,73 @@ var Player      = require('../../../domain/Player');
 var PlayerUnit  = require('../../../domain/PlayerUnit');
 //var Mission     = require('../../../domain/Mission');
 
+/**
+ * make report for KN
+ */
+var _makeReport = function(data) {
+  var o = {};
+
+  console.log('in makeReport');
+  console.log(data);
+
+  var PlayerData = new Player(data);
+
+  // "_G_userinfo"
+  o["_G_userinfo"] = PlayerData.toJSON4USERINFO();
+
+  // "_G_vipinfo"
+  o["_G_vipinfo"] = PlayerData.toJSON4VIPINFO();
+  o["_G_viplv"]   = o["_G_vipinfo"].lv;
+
+  // "_G_account"
+  o["_G_account"] = PlayerData.toJSON4ACCOUNT();
+
+  // "_G_power"
+  o["_G_power"] = PlayerData.toJSON4POWER();
+
+  var Unit = new PlayerUnit(data);
+
+  // "_G_formation"
+  o["_G_formation"] = Unit.toJSON4FORMATION();
+
+  // "_G_formation_max"
+  o["_G_formation_max"] = gameInit.UNIT_INIT.COUNT; // ??? what is this
+
+  // "_G_formation_conf"
+  o["_G_formation_conf"] = gameInit.UNIT_INIT.CONF;
+
+  // "_G_general_dress"
+  o["_G_general_dress"] = Unit.toJSON4DRESS();
+
+  var PlayerBag = new Bag(data);
+  // "_G_bag_equip"
+  o["_G_bag_equip"] = PlayerBag.toJSON4EQUIP();
+
+  // "_G_bag_skill"
+  o["_G_bag_skill"] = PlayerBag.toJSON4SKILL();
+
+  // "_G_bag_pet"
+  o["_G_bag_pet"] = PlayerBag.toJSON4PET();
+
+  // "_G_bag_general"
+  o["_G_bag_genral"] = PlayerBag.toJSON4GENERAL();
+
+  // "_G_bag_prop"
+  o["_G_bag_prop"] = PlayerBag.toJSON4PROP();
+
+  // "_G_pet_on"
+  var playerPetIdOn = PlayerBag.toJSON4PETON();
+  if (playerPetIdOn) {
+    o["_G_pet_on"] = playerPetIdOn;
+  }
+  //o["_G_pet_attach_attr"] = PlayerBag.toJSON4PETATTACHATTR();
+
+  // "_G_mission_cur"
+  o["_G_mission_cur"] = PlayerData.toJSON4MISSIONCUR();
+
+  return o;
+};
+
 module.exports = function(app) {
 	return new Handler(app);
 };
@@ -45,7 +112,7 @@ var pro = Handler.prototype;
  * @param  {Object}   msg     request message
  * @param  {Object}   session current session object
  * @param  {Function} next    next stemp callback
- * @return {Object} return session with uid, with playerId if exists
+ * @return {Void}
  */
 pro.entry = function(msg, session, next) {
   console.log('enter connector.entry');
@@ -58,12 +125,16 @@ pro.entry = function(msg, session, next) {
   // db handle
   var dbhandle_master_s = commonUtils.masterDBR();
   var mysqlc_master_s = this.app.get(dbhandle_master_s);
+  var dbhandle_s = commonUtils.worldDBR(worldId);
+  var mysqlc = this.app.get(dbhandle_s);
+  var playerId;
 
-	if (!token) {
+	if(!token) {
 		next(null, {code: CODE.ENTRY.FA_TOKEN_INVALID});
 		return;
 	}
 
+  console.log(111);
 	async.waterfall([
 	  // auth token, and get userData
 		function(cb) {
@@ -84,7 +155,31 @@ pro.entry = function(msg, session, next) {
     function(cb) {
       // get player_id if exists
       worldPlayerDao.getByUidAndWorldId(mysqlc_master_s, uid, worldId, cb);
+		}, 
+    function(res, cb) {
+      console.log('After worldPlayerDao.getWorldPlayerByUidAndWorldId');
+      console.log(res);
+
+      // TODO if there is no further process,
+      // following shoule be removed into callback function "function(err, result)"
+      // return result there would be more reasonable
+
+      var playerObj = res[0];
+			if(!playerObj || playerObj.length === 0) {
+        // no player data, app/apk should show player generation scene
+        cb({code: CODE.NONE_PLAYER}, null);
+			}
+      else {
+        playerId = playerObj.player_id;
+        playerAllData.get(mysqlc, playerId, cb);
+      }
+    }
+    /*
+    , function(cb) {
+			self.app.rpc.chat.chatRemote.add(session, player.userId, player.name,
+				channelUtil.getGlobalChannelName(), cb);
 		}
+    */
 	], function(err, result) {
 		if (!!err || !result) {
       var code = CODE.FAIL;
@@ -97,61 +192,18 @@ pro.entry = function(msg, session, next) {
     else {
       // bind and set session
 			session.bind(uid);
-      session.set('worldId', worldId);
-
-      var playerObj = result[0];
-			if (!playerObj || playerObj.length === 0 || !playerObj.player_id) {
-        // no player data, app/apk should show player generation scene
-		    next(null, {code: CODE.NONE_PLAYER});
-        return;
-			}
-      else {
-        var playerId = playerObj.player_id;
+      if (!!playerId) {
 			  session.set('playerId', playerId);
-		    next(null, {code: CODE.OK, player: playerId});
-        return;
       }
+      session.set('worldId', worldId);
+      //console.log(session);
+
+      console.log('before makeReport');
+      var report = _makeReport(result);
+		  next(null, {code: CODE.OK, result: report});
+      return;
     }
 	});
-};
-
-/**
- * get all info for player
- * @param  {Object}   msg     request message
- * @param  {Object}   session current session object
- * @param  {Function} next    next stemp callback
- * @return {Object} all info in KN format
- */
-pro.playerAllInfo = function(msg, session, next) {
-  console.log(msg);
-	var self = this;
-  //var worldId = commonUtils.normalizeWorldId(msg.worldId);
-  var worldId   = session.get('worldId');
-  var playerId  = session.get('playerId');
-
-  if (!!playerId) {
-    // db handle
-    var dbhandle_s = commonUtils.worldDBR(worldId);
-    var mysqlc = this.app.get(dbhandle_s);
-
-    playerAllData.get(mysqlc, playerId, function(err, result) {
-  		if (!!err || !result) {
-        var code = CODE.FAIL;
-        if (err.code) {
-          code = err.code;
-        }
-        next(null, {code: code});
-  		}
-      else {
-        var report = _makeReport(result);
-  		  next(null, {code: CODE.OK, result: report});
-      }
-    });
-	}
-  else {
-    // case of no player in game_master.world_player
-    next(null, {code: CODE.NONE_PLAYER});
-  }
 };
 
 
