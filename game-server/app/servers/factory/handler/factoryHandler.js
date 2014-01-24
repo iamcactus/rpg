@@ -15,6 +15,9 @@ var _ = require('underscore');
 
 var dataApi = require('../../../util/dataApi');
 var utils = require('../../../util/utils');
+var formula = require('../../../util/formula');
+var drawPrize = require('../../../util/drawPrize');
+
 //var Bag = require('../../domain/bag'); // TODO: prepare bag object 
 var bagAllData = require('../../../dao/union/bagAllData');
 
@@ -40,7 +43,6 @@ var PetCompoTrans     = require('../../../trans/PetCompoTrans');
 var gameInit = require('../../../../../shared/gameInit');
 var CODE = require('../../../../../shared/code');
 var commonUtils = require('../../../../../shared/util/commonUtils');
-var drawPrize = require('../../../util/drawPrize');
 
 module.exports = function(app) {
   return new Handler(app);
@@ -97,7 +99,12 @@ pro.getFraction = function(msg, session, next) {
     }
     else {
       if (!!res) { // gets
-        next(null, {code: 200, fraction:res}); 
+        next(null, 
+          { code: 200, 
+              result:{
+                "_G_chip":res
+              }
+          });
       }
       else {
         next(null, {code: 200});
@@ -109,6 +116,7 @@ pro.getFraction = function(msg, session, next) {
 var verifyMaterial = function(mArray, typeId, star) {
   var aLength = mArray.length;
 
+console.log(mArray);
   if (typeId === gameInit.BAG.CARD.id) {
     if (aLength !== gameInit.DECOMPO.CARD_NUM) {
       return false;
@@ -147,6 +155,195 @@ var verifyMaterial = function(mArray, typeId, star) {
   }
 
   return true;
+};
+
+/*
+ * @param {Number} typeId typeId for card, equip or pet
+ * @param {Object} fraction fraction obj
+ * @param {Object} ids array of id for card, equip or pet
+ */
+var _makeReport4DEC = function(typeId, fraction, ids) {
+  var o = {};
+
+  var typeF = ''; // type for fraction
+  var typeM = ''; // type for material
+  if (typeId === gameInit.BAG.CARD.id) {
+    typeM = gameInit.BAG.CARD.type;
+    typeF = "_G_soul";
+  }
+  else if (typeId === gameInit.BAG.EQUIP.id) {
+    typeM = gameInit.BAG.EQUIP.type;
+    typeF = "_G_chip";
+  }
+  else if (typeId === gameInit.BAG.PET.id) {
+    typeM = gameInit.BAG.PET.type;
+    typeF = "_G_petsoul";
+  }
+
+  o[typeF] = fraction;
+  
+  var m = {};
+  for (var i=0; i<ids.length; i++) {
+    var k = ids[i];
+    m[k] = {
+      id: k,
+      num:0
+    };
+  }
+  o["_U_bag"] = {};
+  o["_U_bag"][typeM] = m; // apk will update _G_xxx by this key-value
+  return o;
+};
+
+// please remove following into /domain/Card
+// cardU is from player_card
+var cardU = function(id, cardData) {
+  var c = {};
+  var o = {};
+  o.id        = id;
+  o.cardId    = cardData.card_id;
+  o.price     = cardData.price;
+  o.lv        = 1; // fxck
+  o.exp       = 0; // fxck
+  o.type      = gameInit.BAG.CARD.type;
+  o.sell_silver = cardData.price;
+  o.stage     = 0; // TODO: stage is evolution count??
+  c[o.id] = o;
+
+  return c;
+};
+
+// please remove following into /domain/Card
+
+// cardD is from card_data
+var cardD = function(id, cardData) {
+  var c = {};
+  var o = {};
+
+  var conditionObj = dataApi.natureCondition.findBy('card_id', cardData.card_id);
+
+  o.id        = id;
+  o.cardId    = cardData.card_id;
+  o.price     = cardData.price;
+  o.lv        = 1; // fxck
+  o.exp       = 0; // fxck
+  o.star      = cardData.sta;
+  o.role      = cardData.role;
+  o.nature    = conditionObj.natures;
+  o.skill_k   = cardData.skill_k;
+  o.cur_exp   = 0;
+  o.lvup_exp  = formula.lvupExp(o.cur_exp, o.lv);
+  o.rest_exp  = 0;
+  o.atk_i     = cardData.atk_c;
+  o.def_i     = cardData.def_c;
+  o.agi_i     = cardData.agi_c;
+  o.hp_i      = cardData.hp_c;
+
+  o.atk       = cardData.atk_c;
+  o.def       = cardData.def_c;
+  o.agi       = cardData.agi_c;
+  o.hp        = cardData.hp_c;
+
+  o.skill_lv  = 1;
+
+  o.type      = gameInit.BAG.CARD.type;
+  o.stage     = 0; // TODO: stage is evolution count??
+
+  o.atk_xd    = 0;
+  o.def_xd    = 0;
+  o.agi_xd    = 0;
+  o.hp_xd     = 0;
+
+  o.atk_xdlv  = 0;
+  o.def_xdlv  = 0;
+  o.agi_xdlv  = 0;
+  o.hp_xdlv   = 0;
+
+  o.active_natural = [];
+
+  c[o.id] = o;
+
+  return c;
+};
+
+// please remove following into /domain/Equip
+
+// equipU is from player_equip
+var equipU = function(id, equipData) {
+  var e = {};
+  var o = {}; // current equip object
+  var equipObj = dataApi.equip.findBy('equip_id', equipData.equip_id);
+  var equipConf = gameInit.EQUIP_CONF[equipData.type];
+
+  o.id      = id;
+  o.equipId = equipData.equip_id;
+  o.lv      = 1; // fxck
+  o.type    = equipConf.TYPE;
+  o.group   = equipData.group_id;
+  o.initial = equipData.initial;
+  o.price   = formula.equipPrice(o.lv, equipData.equip_id);
+  o.star    = equipData.star;
+  o.figure  = formula.equipOrigForce(equipData.equip_id, o.lv);
+  o.effect  = equipConf.EFFECT;
+  o.clv     = 0; // what is this ???
+  o.cltimes = 0; // what is this ???
+  o.gexp    = 0; // what is this ???
+  o.gfigure = 0; // what is this ???
+
+  e[o.id] = o;
+
+  return e;
+};
+
+// please remove following into /domain/Equip
+// equipD is from equip_data
+var equipD = function(id, equipData) {
+  return equipU(id, equipData);
+};
+
+/*
+ * @param {Number} typeId typeId for card, equip or pet
+ * @param {Number} id id for card, equip or pet in player_xxx
+ * @param {Object} fraction fraction obj
+ * @param {Object} prizeData  obj for card, equip or pet
+ */
+var _makeReport4COM = function(typeId, fraction, id, prizeData) {
+  var o = {}; // temp obj for return
+
+  var typeF = ''; // type for fraction
+  var typeM = ''; // type for material
+
+  var p = {}; // temp obj for U_bag
+  var q = {}; // temp obj for D_bag
+
+  if (typeId === gameInit.BAG.CARD.id) {
+    typeM = gameInit.BAG.CARD.type;
+    typeF = "_G_soul";
+    p = cardU(id, prizeData);
+    q = cardD(id, prizeData);
+  }
+  else if (typeId === gameInit.BAG.EQUIP.id) {
+    typeM = gameInit.BAG.EQUIP.type;
+    typeF = "_G_chip";
+    p = equipU(id, prizeData);
+    q = equipD(id, prizeData);
+  }
+  else if (typeId === gameInit.BAG.PET.id) {
+    typeM = gameInit.BAG.PET.type;
+    typeF = "_G_petsoul";
+    //p = petU(id, prizeData);
+    //q = petD(id, prizeData);
+  }
+
+  o[typeF] = fraction; 
+
+  o["_U_bag"] = {};
+  o["_U_bag"][typeM] = p; // apk will update _G_xxx by this key-value
+
+  o["_D_bag"] = {};
+  o["_D_bag"][typeM] = q; // apk will update _G_xxx by this key-value
+
+  return o;
 };
 
 /**
@@ -319,12 +516,13 @@ pro.decompo = function(msg, session, next) {
     }
     else {
       if (!!res && !!res.decompoTrans) {
-        playerFractionDao.getByType(mysqlPool_s, playerId, typeId, function(err, res) {
-          if (!!err || !res) {
+        playerFractionDao.getByType(mysqlPool_s, playerId, typeId, function(err, res1) {
+          if (!!err || !res1) {
             next(null, {code: 200}); // cant get fraction, should not be here
           }
           else {
-            next(null, {code: 200, data: res});
+            var report = _makeReport4DEC(typeId, res1, ids);
+            next(null, { code: 200, result: report});
           }
         });
       }
@@ -398,6 +596,8 @@ pro.compo = function(msg, session, next) {
   // get db handle
   var dbhandle_m = commonUtils.worldDBW(worldId);
   var mysqlPool = this.app.get(dbhandle_m);
+  var dbhandle_s = commonUtils.worldDBR(worldId);
+  var mysqlPool_s = this.app.get(dbhandle_s);
   var dbhandle_master = commonUtils.masterDBW();
   var mysqlc_master = this.app.get(dbhandle_master);
 
@@ -488,7 +688,15 @@ pro.compo = function(msg, session, next) {
     }
     else {
       if (!!res && !!res.compoTrans) {
-        next(null, {code: 200, data: {id: prizeData.card_id, num: prizeNum}}); 
+        playerFractionDao.getByType(mysqlPool_s, playerId, typeId, function(err, res1) {
+          if (!!err || !res1) {
+            next(null, {code: 200}); // cant get fraction, should not be here
+          }
+          else {
+            var report = _makeReport4COM(typeId, res1, res.sequenceId, prizeData);
+            next(null, { code: 200, result: report});
+          }
+        });
       }
       else {
         next(null, {code: CODE.FAIL});

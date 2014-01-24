@@ -211,7 +211,7 @@ app.post('/quick_reg', function(req, res) {
     if (user) { // exists
       res.send(
         {
-          code:   CODE.REGIST.ERR_EXIST, 
+          code:   CODE.OK, 
           token:  Token.create(user.uid, Date.now(), tokenSecret), 
           uid:    user.uid
         });

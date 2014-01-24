@@ -1,3 +1,9 @@
+/*
+ * pomelo api for card transmission
+ * 2013-2014
+ * @iamcactus
+ */
+
 /**
  * Module dependencies
  */
