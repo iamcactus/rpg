@@ -1,0 +1,71 @@
+{
+  "mission_data_id":    11,
+  "player_unit": [
+    { 
+      "position":       1,
+      "card": [{
+        "id":           1103, 
+        "level":        5,
+        "brnskill":     3021,
+        "evolved_cnt":  0
+      }],
+      "weapon": [{
+        "id":           0,
+        "level":        0
+      }],
+      "defender": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "shoe": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "jewelry": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "stdskill1": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "stdskill2": [{
+        "id":           0,
+        "level":        0
+      }]
+    },
+    { 
+      "position":       2,
+      "card": [{
+        "id":           1310, 
+        "level":        5,
+        "brnskill":     3009,
+        "evolved_cnt":  0
+      }],
+      "weapon": [{
+        "id":           0,
+        "level":        0
+      }],
+      "defender": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "shoe": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "jewelry": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "stdskill1": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "stdskill2": [{
+        "id":           0,
+        "level":        0
+      }]
+    }
+  ]
+}

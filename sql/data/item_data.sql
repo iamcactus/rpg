@@ -1,5 +1,8 @@
 use game_master;
 
+insert into item_data (item_id, star, max, use_lv, price, opened_on, comment) values (16028, 3, 99, 0, 100, 1386819703, 'fuwendan');
+insert into item_data (item_id, star, max, use_lv, price, opened_on, comment) values (16029, 4, 99, 0, 100, 1386819703, 'fuwendan');
+
 insert into item_data (item_id, star, max, use_lv, price, opened_on, effect, comment) values (8001, 4, 99, 0, 500, 1386819703, 'crit', 'stone'); # 1ji
 insert into item_data (item_id, star, max, use_lv, price, opened_on, effect, comment) values (8002, 4, 99, 0, 500, 1386819703, 'block', 'stone');# 1ji
 insert into item_data (item_id, star, max, use_lv, price, opened_on, effect, comment) values (8003, 4, 99, 0, 500, 1386819703, 'dodge', 'stone');# 1ji

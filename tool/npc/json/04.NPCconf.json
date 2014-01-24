@@ -1,0 +1,38 @@
+{
+  "mission_data_id":    4,
+  "player_unit": [
+    { 
+      "position":       1,
+      "card": [{
+        "id":           1220, 
+        "level":        2,
+        "brnskill":     3005,
+        "evolved_cnt":  0
+      }],
+      "weapon": [{
+        "id":           0,
+        "level":        0
+      }],
+      "defender": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "shoe": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "jewelry": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "stdskill1": [{
+        "id":           0,
+        "level":        0
+      }],    
+      "stdskill2": [{
+        "id":           0,
+        "level":        0
+      }]
+    }
+  ]
+}

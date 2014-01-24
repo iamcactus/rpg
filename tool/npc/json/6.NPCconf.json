@@ -1,0 +1,128 @@
+{
+  "mission_data_id":    6,
+  "player_unit": [
+    { 
+      "position":       1,
+      "card": [{
+        "id":           1103, 
+        "level":        3,
+        "brnskill":     3021,
+        "evolved_cnt":  0,
+        "unit_meridian": [
+          {
+            "position": 1,
+            "stone":    
+          },
+		            {
+            "position": 2,
+            "stone":    
+          },
+		            {
+            "position": 3,
+            "stone":    
+          },
+		            {
+            "position": 4,
+            "stone":    
+          },
+          {
+            "position": 5,
+            "stone":    
+          }
+        ]
+      }],
+      "weapon": [{
+        "id":           ,
+        "level":        
+      }],
+      "defender": [{
+        "id":           ,
+        "level":        
+      }],    
+      "shoe": [{
+        "id":           ,
+        "level":        
+      }],    
+      "jewelry": [{
+        "id":           ,
+        "level":        
+      }],    
+      "stdskill1": [{
+        "id":           ,
+        "level":        
+      }],    
+      "stdskill2": [{
+        "id":           ,
+        "level":        
+      }]
+    },
+	 { 
+      "position":       2,
+      "card": [{
+        "id":           1104, 
+        "level":        3,
+        "brnskill":     3023,
+        "evolved_cnt":  0,
+        "unit_meridian": [
+          {
+            "position": 1,
+            "stone":    
+          },
+		            {
+            "position": 2,
+            "stone":    
+          },
+		            {
+            "position": 3,
+            "stone":    
+          },
+		            {
+            "position": 4,
+            "stone":    
+          },
+          {
+            "position": 5,
+            "stone":    
+          }
+        ]
+      }],
+      "weapon": [{
+        "id":           ,
+        "level":        
+      }],
+      "defender": [{
+        "id":           ,
+        "level":        
+      }],    
+      "shoe": [{
+        "id":           ,
+        "level":        
+      }],    
+      "jewelry": [{
+        "id":           ,
+        "level":        
+      }],    
+      "stdskill1": [{
+        "id":           ,
+        "level":        
+      }],    
+      "stdskill2": [{
+        "id":           ,
+        "level":        
+      }]
+    }
+  ],
+  "player_pet":[
+    {
+      "id":             ,
+      "level":          ,
+      "evolved_cnt":    ,
+      "posi_skill1_id": ,
+      "posi_skill2_id": ,
+      "posi_skill3_id": ,
+      "nega_skill1_id": ,
+      "nega_skill2_id": ,
+      "nega_skill3_id": 
+    }
+  ]
+}

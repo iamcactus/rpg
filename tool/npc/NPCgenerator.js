@@ -38,28 +38,33 @@ var connecWorld = mysql.createConnection(
 
 // obj: array for unit_meridian
 var insertMeridian = function(mysqlc, obj, playerCardId, cb) {
-  var insertSQL =
-      'insert into unit_meridian(player_card_id, position_id, stone_id, created_on, updated_on) values (?,?,?, ?,?)';
-  var createdOn = Math.round(new Date().getTime()/1000); //unixtime
-  var updatedOn = createdOn;
-  async.map(obj, function(item, callback) {
-    var args = [playerCardId, item.position, item.stone, createdOn, updatedOn];
-    mysqlc.query(insertSQL, args, function(err, res) {
+  if (!!obj) {
+    var insertSQL =
+        'insert into unit_meridian(player_card_id, position_id, stone_id, created_on, updated_on) values (?,?,?, ?,?)';
+    var createdOn = Math.round(new Date().getTime()/1000); //unixtime
+    var updatedOn = createdOn;
+    async.map(obj, function(item, callback) {
+      var args = [playerCardId, item.position, item.stone, createdOn, updatedOn];
+      mysqlc.query(insertSQL, args, function(err, res) {
+        if (err) {
+          callback(err, null);
+        }
+        else {
+          callback(null, res);
+        }
+      });
+    }, function(err, res) {
       if (err) {
-        callback(err, null);
+        cb(err, null);
       }
       else {
-        callback(null, res);
+        cb(null, res);
       }
     });
-  }, function(err, res) {
-    if (err) {
-      cb(err, null);
-    }
-    else {
-      cb(null, res);
-    }
-  });
+  }
+  else {
+    cb(null, null);
+  }
 };
 
 connecMaster.connect();
@@ -339,37 +344,42 @@ var makeUnit = function(mysqlc, unit, playerId, cb) {
 
 // pet: Array of player_pet
 var makePet = function(mysqlc, pet, playerId, cb) {
-  async.map(pet, function(item, callback) {
-    var petId = item.id; // current position in the unit
-    var level = item.level; 
-    var id    = playerId; // id in player_pet
-
-    //console.log("id : " + id);
-    async.auto({
-      pp: function(callback) {
-        playerPetDao.add(mysqlc, id, playerId, petId, cb);
-      },
-      arm: ['pp', function(callback) {
-        playerPetDao.arm(mysqlc, id, cb);
-      }]
+  if (!!pet) {
+    async.map(pet, function(item, callback) {
+      var petId = item.id; // current position in the unit
+      var level = item.level; 
+      var id    = playerId; // id in player_pet
+  
+      //console.log("id : " + id);
+      async.auto({
+        pp: function(callback) {
+          playerPetDao.add(mysqlc, id, playerId, petId, cb);
+        },
+        arm: ['pp', function(callback) {
+          playerPetDao.arm(mysqlc, id, cb);
+        }]
+      }, function(err, res) {
+        if (err) {
+          //console.log('unitMeridianDao.init failed' + err);
+          callback(err, null);
+        }
+        else {
+          callback(null, res);
+        }
+      });
     }, function(err, res) {
       if (err) {
-        //console.log('unitMeridianDao.init failed' + err);
-        callback(err, null);
+        console.log(err);
+        cb(err, null);
       }
       else {
-        callback(null, res);
+        cb(null, res);
       }
     });
-  }, function(err, res) {
-    if (err) {
-      console.log(err);
-      cb(err, null);
-    }
-    else {
-      cb(null, res);
-    }
-  });
+  }
+  else {
+    cb(null, null);
+  }
 };
 
 connecWorld.query('BEGIN', function(err, rows) {
