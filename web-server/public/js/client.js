@@ -424,6 +424,43 @@ $(document).ready(function() {
 		});
 	});
 
+	//deal with getUnit button click.
+	$("#getUnit").click(function() {
+		userId = $("#userIdUnit").attr("value");
+		playerId = $("#playerIdUnit").attr("value");
+		worldId = $("#worldIdUnit").attr("value");
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "connector.unitHandler.unitInfo";
+				pomelo.request(route, {
+          playerId:playerId,
+          worldId:worldId,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
 	//deal with getMissionList button click.
 	$("#getMissionList").click(function() {
 		userId = $("#userId").attr("value");

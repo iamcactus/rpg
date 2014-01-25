@@ -4,6 +4,7 @@ var async = require('async');
 var mysql = require('mysql');
 var util = require('util');
 var playerUnitAllData = require('../../../app/dao/union/playerUnitAllData');
+var playerAllData = require('../../../app/dao/union/playerAllData');
 var PlayerUnit    = require('../../../app/domain/PlayerUnit');
 var Bag    = require('../../../app/domain/Bag');
 var Player = require('../../../app/domain/Player');
@@ -37,7 +38,8 @@ connection.connect();
  
     async.auto({
       unitAllData: function(callback) {
-        playerUnitAllData.get(connection, playerId, callback);
+        playerAllData.get(connection, playerId, callback);
+        //playerUnitAllData.get(connection, playerId, callback);
       }
     },
     function(err, res) {
@@ -55,10 +57,6 @@ connection.connect();
         }
         else {
           if (!!res.unitAllData) {
-          console.log(res);
-          console.log(res.unitAllData.playerUnit);
-          console.log(res.unitAllData.playerCard);
-          /*
             //if (!!res.unitAllData.playerUnit) {
               var unitObj = new PlayerUnit(res.unitAllData);
               var formation = unitObj.toJSON4FORMATION();
@@ -93,7 +91,6 @@ connection.connect();
               console.log(account);
               console.log(power);
             //}
-            */
           }
           else {
   	  	    console.log('transaction wrong res');

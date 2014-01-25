@@ -40,19 +40,20 @@ var PlayerUnit = function(opts) {
     o.updatedOn    = temp[i].updated_on;
 
     // additional card data
-    var cardData = commonUtils.getObj(opts.playerCard, 'id', temp[i].player_card_id);
-    if (!!cardData) {
-      o.cardId  = cardData.card_id;
+    var cardObj = commonUtils.getObj(opts.playerCard, 'id', temp[i].player_card_id);
+    if (!!cardObj) {
+      o.cardId  = cardObj.card_id;
+      o.cardObj = cardObj;
     }
     
     // additional skill data
     var s = {}; // skill object
     if (!!o.cardId) {
-      var cardObj   = dataApi.card.findBy('card_id', o.cardId);
+      var cardData   = dataApi.card.findBy('card_id', o.cardId);
       // s1 is KN naming. Fxck
       s['s1'] = {
-        skillId:  cardObj.skill_k,
-        lv:       formula.skillLevel(cardData.level),
+        skillId:  cardData.skill_k,
+        lv:       formula.skillLevel(cardObj.level),
       };
       if (!!o.stdskill1Id) {
         var s2Data = commonUtils.getObj(opts.playerSkill, 'id', o.stdskill1Id);
@@ -110,6 +111,10 @@ var PlayerUnit = function(opts) {
 };
 
 module.exports = PlayerUnit;
+
+PlayerUnit.prototype.unit = function() {
+  return this.playerUnit;
+};
 
 /**
  * Parse String to json for "formation" in KN
