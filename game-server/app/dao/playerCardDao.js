@@ -29,6 +29,32 @@ playerCardDao.get = function(mysqlc, playerId, cb) {
 };
 
 /**
+ * Get an user's card by playerId and serial id
+ * @param {String} mysqlc mysql client for Master DB or Slave DB
+ * @param {Number} playerId.
+ * @param {Number} id id player_card
+ * @returns {Object} player_card obj
+ */
+playerCardDao.getById = function(mysqlc, playerId, id, cb) {
+	var selectSQL = 'select * from player_card where player_id=? and id=?';
+	var args = [playerId, id];
+
+	mysqlc.query(selectSQL, args, function(err, res) {
+		if(err) {
+			utils.invokeCallback(cb, err, null);
+			return;
+		}
+    else {
+  		if(!!res && res.length > 0) { //exists
+	  		utils.invokeCallback(cb, null, res);
+		  } else {
+			  utils.invokeCallback(cb, null, []);
+		  }
+    }
+	});
+};
+
+/**
  * Get an user's all cards by playerId
  * @param {String} mysqlc mysql client for Master DB or Slave DB
  * @param {Array} ids id in player_card

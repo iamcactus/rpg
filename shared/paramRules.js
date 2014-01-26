@@ -205,5 +205,19 @@ module.exports = {
         'error': 'id in player_equip,  must be an int'
       }
     ]
+  },
+  onunit: {
+    'positionId': [
+      {
+        'rule': 'int',
+        'error': 'positionId must be an int'
+      }
+    ],
+    'id': [
+      {
+        'rule': 'int',
+        'error': 'id in player_card,  must be an int'
+      }
+    ]
   }
 };
