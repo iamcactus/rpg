@@ -50,6 +50,15 @@ playerUnitDao.add = function(mysqlc, playerId, positionId, playerCardId, cb) {
   });
 };
 
+/**
+ * arm equip
+ * @param {Object} mysqlc mysql client reference
+ * @param {Number} playerId
+ * @param {Number} positionId position_id in player_unit
+ * @param {Number} armPosition short for skill1|skill2|weapon|defender|shoe|jewelry
+ * @param {Number} id id in player_equip
+ * @returns {Boolean}
+ */
 playerUnitDao.arm = function(mysqlc, playerId, positionId, armPosition, armId, cb) {
   var updateStr;
   var updatedOn = Math.round(new Date().getTime()/1000); //unixtime

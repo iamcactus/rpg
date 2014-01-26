@@ -93,18 +93,22 @@ module.exports = {
     1: {
       TYPE: 'jewelry',
       EFFECT: 'hp',
+      POSITION: 6
     },
     2: {
       TYPE: 'weapon',
       EFFECT: 'atk',
+      POSITION: 3
     },
     3: {
       TYPE: 'defender',
       EFFECT: 'def',
+      POSITION: 4
     },
     4: {
       TYPE: 'shoe',
       EFFECT: 'agi',
+      POSITION: 5
     }
   },
   LEAD_CONF: {

@@ -185,5 +185,25 @@ module.exports = {
         'error': 'targetLevel must be between 1-200'
       }
     ],
+  },
+  onarm: {
+    'positionId': [
+      {
+        'rule': 'int',
+        'error': 'positionId must be an int'
+      }
+    ],
+    'armPosition': [
+      {
+        'rule': 'int',
+        'error': 'armPosition must be an int'
+      }
+    ],
+    'id': [
+      {
+        'rule': 'int',
+        'error': 'id in player_equip,  must be an int'
+      }
+    ]
   }
 };

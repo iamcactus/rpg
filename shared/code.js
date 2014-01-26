@@ -5,6 +5,7 @@ module.exports = {
 	FAIL: 500, 
   ERR_WRONG_PARAM: 501,
   ERR_MATERIAL_NUM: 502,
+  ERR_NO_MATERIAL: 511,
 
   REGIST: {
     ERR_WRONG_PARAM: 4001,
@@ -51,7 +52,9 @@ module.exports = {
   MISSION: {
 
   },
-
+  UNIT: {
+    ERR_MATERIAL: 7201,
+  },
 	CHAT: {
 		FA_CHANNEL_CREATE: 		3001, 
 		FA_CHANNEL_NOT_EXIST: 	3002, 

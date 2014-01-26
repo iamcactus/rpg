@@ -551,6 +551,52 @@ $(document).ready(function() {
 		});
 	});
 
+	//deal with onarm button click.
+	$("#onarm").click(function() {
+		userId    = $("#userIdonArm").attr("value");
+		worldId   = $("#worldIdonArm").attr("value");
+		playerId  = $("#playerIdonArm").attr("value");
+		positionId= $("#positionIdonArm").attr("value");
+		armPosition= $("#armPositiononArm").attr("value");
+		id        = $("#idonArm").attr("value");
+
+    alert(playerId);
+    alert(id);
+    rid = 1234;
+		//query entry of connection
+		queryEntry(userId, function(host, port) {
+			pomelo.init({
+				host: host,
+				port: port,
+				log: true
+			}, function() {
+				var route = "connector.unitHandler.onArm";
+				pomelo.request(route, {
+          playerId:playerId,
+          worldId:worldId,
+          positionId:positionId,
+          armPosition:armPosition,
+          id:id,
+          uid:userId,
+          rid: rid
+				}, function(data) {
+        alert(JSON.stringify(data));
+					if(data.error) {
+						showError(DUPLICATE_ERROR);
+						return;
+					}
+          var userName = userId;
+
+          setUserId();
+					setName();
+					setWorld();
+					showChat();
+					//initUserList(data);
+				});
+			});
+		});
+	});
+
 	//deal with decompo button click.
 	$("#decompo").click(function() {
 		userId    = $("#userIdDecompo").attr("value");

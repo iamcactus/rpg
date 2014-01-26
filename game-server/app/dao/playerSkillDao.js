@@ -34,6 +34,33 @@ playerSkillDao.get = function(mysqlc, playerId, isOnarm, cb) {
 };
 
 /**
+ * Get an user's skill by playerId and serial id
+ * @param {Number} playerId.
+ * @param {Number} id id player_skill
+ * @returns {Object} player_skill obj
+ */
+playerSkillDao.getById = function(mysqlc, playerId, serialId, cb) {
+	var selectSQL = 'select * from player_skill where player_id=? and id=?';
+	var args = [playerId, serialId];
+
+	mysqlc.query(selectSQL, args, function(err, res) {
+		if(err) {
+			utils.invokeCallback(cb, err, null);
+			return;
+		}
+    else {
+      console.log('in playerSkillDao.getById');
+      console.log(res);
+      if(!!res && res.length > 0) { //exists
+        utils.invokeCallback(cb, null, res);
+		  } else {
+			  utils.invokeCallback(cb, null, []);
+		  }
+    }
+	});
+};
+
+/**
  * Get an user's all skills by playerId
  * @param {String} mysqlc mysql client for Master DB or Slave DB
  * @param {Array} ids id in player_skill
